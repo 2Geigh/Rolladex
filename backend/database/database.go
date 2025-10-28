@@ -2,18 +2,26 @@ package database
 
 import (
 	"database/sql"
-	"log"
+	"fmt"
+
+	_ "modernc.org/sqlite"
 )
 
-var (
-	DB *sql.DB
-)
+func InitDB() (*sql.DB, error) {
 
-func InitDB() {
-	DB, err := sql.Open("sqlite3", "./myFriends.db")
+	// Establish database connection
+	DB, err := sql.Open("sqlite", "./myFriends.db")
 	if err != nil {
-		log.Fatalf("Could not open database connection: %v", err)
+		return DB, fmt.Errorf("Could not establish database connection: %v", err)
 	}
 
-	log.Println("Connected to database.")
+	// Get database version
+	var sqliteVersion string
+	err = DB.QueryRow("select sqlite_version()").Scan(&sqliteVersion)
+	if err != nil {
+		return DB, fmt.Errorf("Could not get SQLite version: %v", err)
+	}
+
+	return DB, err
+
 }
