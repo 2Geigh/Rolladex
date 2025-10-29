@@ -8,7 +8,7 @@ import (
 func main() {
 
 	// Setup database opening and closure
-	DB, err := database.InitDB()
+	DB, err := database.InitializeDB()
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
@@ -17,6 +17,10 @@ func main() {
 			DB.Close()
 		}
 	}()
+
+	// Initialize database models
+	database.InitializeTables(DB)
+	// database.VerifyUsersTable(DB)
 
 	// adam := models.User{
 	// 	Username: "1",
