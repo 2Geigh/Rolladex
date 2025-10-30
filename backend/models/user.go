@@ -22,7 +22,6 @@ func CreateTable_Users(db *sql.DB) (sql.Result, error) {
 	sql := `CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY,
 		username VARCHAR(255) NOT NULL,
-		email VARCHAR(255),
 		password LONGTEXT
 	);`
 

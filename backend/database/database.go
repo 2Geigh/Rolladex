@@ -67,3 +67,46 @@ func InitializeTables(db *sql.DB) {
 
 }
 
+func VerifyUsersTable(db *sql.DB) {
+	rows, err := db.Query("SELECT * FROM users")
+	if err != nil {
+		log.Fatalf("Could not query users table: %v", err)
+	}
+	defer rows.Close()
+
+	// Check if the table is empty
+	if !rows.Next() {
+		fmt.Println("Users table is empty or doesn't exist.")
+		return
+	}
+
+	// Process the rows if any exist
+	for {
+		var id int
+		var username, email, password string
+
+		if err := rows.Scan(&id, &username, &email, &password); err != nil {
+			break
+		}
+
+		fmt.Printf("User: %d, %s, %s, %s\n", id, username, email, password)
+	}
+}
+
+func FindUser(username string, db *sql.DB) {
+
+	var id int
+
+	query := `SELECT id FROM users WHERE username = ?`
+	row := db.QueryRow(query, username)
+
+	err := row.Scan(&id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("No user found with that username.")
+		} else {
+			log.Fatalf("Query error: %v", err)
+		}
+	}
+
+}

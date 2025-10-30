@@ -20,7 +20,9 @@ func main() {
 
 	// Initialize database models
 	database.InitializeTables(DB)
-	// database.VerifyUsersTable(DB)
+	database.VerifyUsersTable(DB)
+
+	database.FindUser("poopoo", DB)
 
 	// adam := models.User{
 	// 	Username: "1",
