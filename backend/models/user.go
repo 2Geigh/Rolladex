@@ -1,8 +1,6 @@
 package models
 
 import (
-	"database/sql"
-
 	"gorm.io/gorm"
 )
 
@@ -18,12 +16,12 @@ type User struct {
 	// RecievesNotifications    map[string]bool `json:"receivesNotifications"`
 }
 
-func CreateTable_Users(db *sql.DB) (sql.Result, error) {
-	sql := `CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY,
-		username VARCHAR(255) NOT NULL,
-		password LONGTEXT
-	);`
+// func CreateTable_Users(db *gorm.DB) (sql.Result, error) {
+// 	sql := `CREATE TABLE IF NOT EXISTS users (
+// 		id INTEGER PRIMARY KEY,
+// 		username VARCHAR(255) NOT NULL,
+// 		password LONGTEXT
+// 	);`
 
-	return db.Exec(sql)
-}
+// 	return db.Exec(sql)
+// }

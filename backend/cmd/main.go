@@ -7,33 +7,24 @@ import (
 
 func main() {
 
-	// Setup database opening and closure
+	// Open database
 	DB, err := database.InitializeDB()
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
+
+	// Close database as the main function's last operation
 	defer func() {
-		if DB != nil {
-			DB.Close()
+		sqlDB, err := DB.DB()
+		if err != nil {
+			log.Fatalf("Failed to get generic database object: %v", err)
 		}
+
+		err = sqlDB.Close()
+		if err != nil {
+			log.Fatalf("Failed to close database connection: %v", err)
+		}
+
 	}()
-
-	// Initialize database models
-	database.InitializeTables(DB)
-	database.VerifyUsersTable(DB)
-
-	database.FindUser("poopoo", DB)
-
-	// adam := models.User{
-	// 	Username: "1",
-	// 	Email:    "test@example.com",
-	// 	Password: "password",
-	// 	// Birthday:                 util.Date{Year: 2003, Month: 3, Day: 13},
-	// 	// Time_without_interaction: time.Now(),
-	// 	// Time_without_meetup:      time.Now(),
-	// 	// Meetup_plans:             []models.Meetup{},
-	// 	// RecievesNotifications:    map[string]bool{"email": false, "push_notification": true},
-	// }
-	// fmt.Println(adam)
 
 }

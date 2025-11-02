@@ -1,8 +1,6 @@
 package models
 
 import (
-	"database/sql"
-
 	"gorm.io/gorm"
 )
 
@@ -15,11 +13,11 @@ type Friend struct {
 	// Meetup_plans             []Meetup  `json:"meetup_plans"`
 }
 
-func CreateTable_Friends(db *sql.DB) (sql.Result, error) {
-	sql := `CREATE TABLE IF NOT EXISTS friends (
-		id INTEGER PRIMARY KEY,
-		name VARCHAR(255) NOT NULL
-	);`
+// func CreateTable_Friends(db *sql.DB) (sql.Result, error) {
+// 	sql := `CREATE TABLE IF NOT EXISTS friends (
+// 		id INTEGER PRIMARY KEY,
+// 		name VARCHAR(255) NOT NULL
+// 	);`
 
-	return db.Exec(sql)
-}
+// 	return db.Exec(sql)
+// }
