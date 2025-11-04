@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"myfriends-backend/database"
+	"myfriends-backend/handlers"
+	"net/http"
 )
 
 func main() {
@@ -12,6 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to initialize database: %v", err)
 	}
+	fmt.Println("Database initialized successfully.")
 
 	// Close database as the main function's last operation
 	defer func() {
@@ -26,5 +30,11 @@ func main() {
 		}
 
 	}()
+
+	// Routes
+	http.HandleFunc("/", handlers.HandleRoot)
+
+	// Start server
+	http.ListenAndServe(":3000", nil)
 
 }

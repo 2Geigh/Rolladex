@@ -10,7 +10,7 @@ import (
 func InitializeDB() (*gorm.DB, error) {
 
 	// Establish database connection
-	DB, err := gorm.Open(sqlite.Open("./myFriends.db"), &gorm.Config{})
+	DB, err := gorm.Open(sqlite.Open("./database/myFriends.db"), &gorm.Config{})
 	if err != nil {
 		return DB, fmt.Errorf("Could not establish database connection: %v", err)
 	}
