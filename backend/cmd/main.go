@@ -35,6 +35,5 @@ func main() {
 	http.HandleFunc("/", handlers.HandleRoot)
 
 	// Start server
-	http.ListenAndServe(":3000", nil)
-
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
