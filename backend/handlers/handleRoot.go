@@ -18,6 +18,7 @@ func HandleRoot(w http.ResponseWriter, req *http.Request) {
 		}
 
 		models.AddFriend(friend)
+		http.ServeFile(w, req, "./views/index.html")
 
 	} else {
 		http.ServeFile(w, req, "./views/index.html")
