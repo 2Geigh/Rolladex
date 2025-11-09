@@ -1,12 +1,16 @@
-import { createSignal } from 'solid-js'
+import AddFriends from './components/AddFriends'
+import FriendList from './components/FriendList'
 
 function App() {
-  const [count, setCount] = createSignal(0)
 
   return (
-    // <>
-      <h1>Vite + Solid</h1>
-    // </>
+    <>
+      <h1>MyFriends</h1>
+
+      <AddFriends />
+
+      <FriendList />
+    </>
   )
 }
 
