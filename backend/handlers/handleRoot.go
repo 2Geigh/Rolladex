@@ -1,12 +1,26 @@
 package handlers
 
-import "net/http"
+import (
+	"fmt"
+	"myfriends-backend/models"
+	"net/http"
+	"time"
+)
 
 func HandleRoot(w http.ResponseWriter, req *http.Request) {
-	if req.Method != http.MethodPost {
+
+	// Log request type
+	fmt.Printf("%v: %v\n", time.Now(), req.Method)
+
+	if req.Method == http.MethodPost {
+		friend := models.Friend{
+			Name: req.FormValue("name"),
+		}
+
+		models.AddFriend(friend)
+
 	} else {
-		w.Write([]byte("You just recieved a POST request!"))
+		http.ServeFile(w, req, "./views/index.html")
 	}
 
-	http.ServeFile(w, req, "./views/index.html")
 }
