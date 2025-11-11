@@ -5,27 +5,25 @@ import (
 	"fmt"
 	"log"
 	"myfriends-backend/database"
+	"myfriends-backend/util"
 
 	"gorm.io/gorm"
 )
 
-type Friend struct {
-	gorm.Model
-	Name string `json:"name"`
-	// Birthday                 util.Date `json:"birthday"`
-	// Time_of_last_interaction time.Time `json:"time_of_last_interaction"`
-	// Time_of_last_meetup      time.Time `json:"time_of_last_meetup"`
-	// Meetup_plans             []Meetup  `json:"meetup_plans"`
+type LastTime struct {
+	Year  int
+	Month int
+	Day   int
 }
 
-// func CreateTable_Friends(db *sql.DB) (sql.Result, error) {
-// 	sql := `CREATE TABLE IF NOT EXISTS friends (
-// 		id INTEGER PRIMARY KEY,
-// 		name VARCHAR(255) NOT NULL
-// 	);`
-
-// 	return db.Exec(sql)
-// }
+type Friend struct {
+	gorm.Model
+	Name                string `json:"name"`
+	Birthday            string `json:"birthday"`
+	LastInteractionDate string `json:"last_interaction"`
+	LastMeetupDate      string `json:"last_meetup"`
+	// Meetup_plans             []Meetup  `json:"meetup_plans"`
+}
 
 func AddFriend(friend Friend) error {
 
@@ -59,6 +57,16 @@ func AddFriend(friend Friend) error {
 	}
 	fmt.Println("Database migrated successfully. Friends table created.")
 
+	// Validate form data
+	err = util.ValidateDate(friend.LastInteractionDate)
+	if err != nil {
+		return fmt.Errorf("Invalid date of last interaction: %v", err)
+	}
+	err = util.ValidateDate(friend.LastMeetupDate)
+	if err != nil {
+		return fmt.Errorf("Invalid date of last meetup: %v", err)
+	}
+
 	// Create a single record with result
 	result := gorm.WithResult()
 	err = gorm.G[Friend](DB, result).Create(ctx, &friend) // pass pointer of data to Create
@@ -71,3 +79,5 @@ func AddFriend(friend Friend) error {
 	return err
 
 }
+
+// var AddFriend = database.Add_Factory(Friend)

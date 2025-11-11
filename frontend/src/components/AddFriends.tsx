@@ -4,9 +4,9 @@ import type { FormEvent } from "react";
 export default function AddFriends() {
 
     type Friend = {
-        name: string;
-        last_interaction?: string | null;
-        last_meetup?: string | null;
+        name: string | FormDataEntryValue;
+        last_interaction?: string | FormDataEntryValue | null;
+        last_meetup?: string | FormDataEntryValue | null;
     }
 
     const handleSubmit: FormEventHandler = (e: FormEvent<HTMLFormElement>) => {
@@ -19,9 +19,9 @@ export default function AddFriends() {
         const last_meetup = formData.get("last_meetup")
 
         const friendData: Friend = {
-            name: JSON.stringify(name),
-            last_interaction: JSON.stringify(last_interaction),
-            last_meetup: JSON.stringify(last_meetup)
+            name: name!,
+            last_interaction: last_interaction,
+            last_meetup: last_meetup
         };
 
         console.log(friendData)
