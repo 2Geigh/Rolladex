@@ -53,7 +53,7 @@ func AddFriend(friend Friend) error {
 	// Automatically create `friends` table if it doesn't already exist
 	err = DB.AutoMigrate(&Friend{})
 	if err != nil {
-		log.Fatal(fmt.Errorf("Could not account for a 'friends' table: %v", err))
+		return fmt.Errorf("Could not account for a 'friends' table: %v", err)
 	}
 	fmt.Println("Database migrated successfully. Friends table created.")
 
@@ -72,10 +72,9 @@ func AddFriend(friend Friend) error {
 	err = gorm.G[Friend](DB, result).Create(ctx, &friend) // pass pointer of data to Create
 
 	// Output
-	fmt.Printf("Created friend (ID %v).\nAffected the following row(s): %v\nYielded result(s):\n%v",
+	fmt.Printf("Created friend (ID %v).\nAffected %v row(s).\n",
 		friend.ID,
-		result.RowsAffected,
-		result.Result)
+		result.RowsAffected)
 	return err
 
 }

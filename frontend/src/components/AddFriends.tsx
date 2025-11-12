@@ -1,6 +1,8 @@
 import type { FormEventHandler } from "react";
 import type { FormEvent } from "react";
 
+// import backend_root_url from "../util/url";
+
 export default function AddFriends() {
 
     type Friend = {
@@ -9,7 +11,7 @@ export default function AddFriends() {
         last_meetup?: string | FormDataEntryValue | null;
     }
 
-    const handleSubmit: FormEventHandler = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit: FormEventHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
         const formData = new FormData(e.currentTarget);
@@ -25,6 +27,11 @@ export default function AddFriends() {
         };
 
         console.log(friendData)
+        const response = await fetch("http://localhost:3001/friends", {
+            method: "POST",
+            body: JSON.stringify(friendData)
+        })
+        console.log(`${response.status}: ${response.statusText}`)
 
     }
 
