@@ -79,4 +79,57 @@ func AddFriend(friend Friend) error {
 
 }
 
+func DeleteFriend(friend Friend) error {
+
+	ctx := context.Background()
+
+	// Open database
+	DB, err := database.InitializeDB()
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	fmt.Println("Database initialized successfully.")
+
+	// Close database as the main function's last operation
+	defer func() {
+		sqlDB, err := DB.DB()
+		if err != nil {
+			log.Fatalf("Failed to get generic database object: %v", err)
+		}
+
+		err = sqlDB.Close()
+		if err != nil {
+			log.Fatalf("Failed to close database connection: %v", err)
+		}
+
+	}()
+
+	// Automatically create `friends` table if it doesn't already exist
+	err = DB.AutoMigrate(&Friend{})
+	if err != nil {
+		return fmt.Errorf("Could not account for a 'friends' table: %v", err)
+	}
+	fmt.Println("Database migrated successfully. Friends table created.")
+
+	// Validate form data
+	err = util.ValidateDate(friend.LastInteractionDate)
+	if err != nil {
+		return fmt.Errorf("Invalid date of last interaction: %v", err)
+	}
+	err = util.ValidateDate(friend.LastMeetupDate)
+	if err != nil {
+		return fmt.Errorf("Invalid date of last meetup: %v", err)
+	}
+
+	// Delete database entry by ID
+	rows, err := gorm.G[Friend](DB).Where("id = ?", friend.ID).Delete(ctx)
+
+	// Output
+	log.Printf("Deleted %v from database. Affected %d row(s).",
+		friend.Name,
+		rows)
+	return err
+
+}
+
 // var AddFriend = database.Add_Factory(Friend)
