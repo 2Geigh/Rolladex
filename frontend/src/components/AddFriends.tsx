@@ -1,15 +1,10 @@
 import type { FormEventHandler } from "react";
 import type { FormEvent } from "react";
+import type { Friend } from "../types/friend";
 
 // import backend_root_url from "../util/url";
 
 export default function AddFriends() {
-
-    type Friend = {
-        name: string | FormDataEntryValue;
-        last_interaction?: string | FormDataEntryValue | null;
-        last_meetup?: string | FormDataEntryValue | null;
-    }
 
     const handleSubmit: FormEventHandler = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

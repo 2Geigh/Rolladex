@@ -1,3 +1,4 @@
+import type { Friend } from "../types/friend";
 export default function FriendList() {
 
     // Get list of friends
