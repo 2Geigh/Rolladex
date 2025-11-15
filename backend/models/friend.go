@@ -37,18 +37,7 @@ func AddFriend(friend Friend) error {
 	fmt.Println("Database initialized successfully.")
 
 	// Close database as the main function's last operation
-	defer func() {
-		sqlDB, err := DB.DB()
-		if err != nil {
-			log.Fatalf("Failed to get generic database object: %v", err)
-		}
-
-		err = sqlDB.Close()
-		if err != nil {
-			log.Fatalf("Failed to close database connection: %v", err)
-		}
-
-	}()
+	defer database.CloseDB(DB)
 
 	// Automatically create `friends` table if it doesn't already exist
 	err = DB.AutoMigrate(&Friend{})
@@ -129,6 +118,44 @@ func DeleteFriend(friend Friend) error {
 		friend.Name,
 		rows)
 	return err
+
+}
+
+func GetFriends() ([]Friend, error) {
+
+	var (
+		friends []Friend
+		err     error
+	)
+
+	// Open database
+	DB, err := database.InitializeDB()
+	if err != nil {
+		log.Fatalf("Failed to initialize database: %v", err)
+	}
+	log.Println("Database initialized successfully.")
+
+	// Close database as the main function's last operation
+	defer database.CloseDB(DB)
+
+	// Automatically create `friends` table if it doesn't already exist
+	err = DB.AutoMigrate(&Friend{})
+	if err != nil {
+		return friends, fmt.Errorf("Could not account for a 'friends' table: %v", err)
+	}
+	log.Println("Database migrated successfully. Friends table created.")
+
+	// Get all records
+	result := DB.Find(&friends)
+	// SELECT * FROM users;
+
+	// Log results
+	log.Printf("Found %d users", result.RowsAffected) // returns found records count, equals `len(users)`
+	if result.Error != nil {
+		return friends, result.Error
+	}
+
+	return friends, err
 
 }
 
