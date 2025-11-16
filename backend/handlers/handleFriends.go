@@ -15,7 +15,6 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 	// ALLOW CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-	// w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	// Log request type
 	fmt.Printf("%v: %v %v\n", time.Now().Format(time.DateTime), req.Method, req.RequestURI)

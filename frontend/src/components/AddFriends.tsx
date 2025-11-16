@@ -1,6 +1,7 @@
 import type { FormEventHandler } from "react";
 import type { FormEvent } from "react";
 import type { Friend } from "../types/friend";
+import "../../public/static/styles/dist/AddFriends.min.css"
 
 // import backend_root_url from "../util/url";
 
