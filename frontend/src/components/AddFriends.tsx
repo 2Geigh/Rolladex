@@ -79,7 +79,7 @@ export default function AddFriends({ friends, setFriends }: AddFriendsProps) {
                     type="text"
                     name="last_interaction"
                     value={formInputs.last_interaction}
-                    required>
+                    >
                 </input>
             </div>
 
@@ -89,7 +89,7 @@ export default function AddFriends({ friends, setFriends }: AddFriendsProps) {
                     type="text"
                     name="last_meetup"
                     value={formInputs.last_meetup}
-                    required>
+                    >
                 </input>
             </div>
 
