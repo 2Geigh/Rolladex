@@ -1,16 +1,26 @@
+import { useEffect } from "react";
 import type { Friend } from "../types/friend";
-export default function FriendList() {
 
-    // Get list of friends
-    const friends = ["Huey", "Louis", "Bluey"];
+type FriendListProps = {
+    friends: Friend[],
+    fetchFriends: () => Promise<void>
+};
+
+
+export default function FriendList({ friends, fetchFriends }: FriendListProps) {
+
+    useEffect(() => { fetchFriends() }, []) // Empty dependency array makes the effect run when the component mounts
     
-    // Render friends list into UI elements
-    const friendElements = friends.map((item, index) => (
-        <li className="friend" id={JSON.stringify(index)} key={index}>
-            <span className="name">{item}</span>
-            <button>Delete</button>
-        </li>
-    ))
+    // Render friends list into UI elements 
+    const friendElements = friends.map((item: Friend, index: number) => {
+        return(
+
+            <li className="friend" id={JSON.stringify(index)} key={index}>
+                <span className="name">{JSON.stringify(item.name)}</span>
+                <button>Delete</button>
+            </li>
+
+    )})
 
     return (
         <>

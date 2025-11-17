@@ -19,7 +19,6 @@ type LastTime struct {
 type Friend struct {
 	gorm.Model
 	Name                string `json:"name"`
-	Birthday            string `json:"birthday"`
 	LastInteractionDate string `json:"last_interaction"`
 	LastMeetupDate      string `json:"last_meetup"`
 	// Meetup_plans             []Meetup  `json:"meetup_plans"`
@@ -47,13 +46,17 @@ func AddFriend(friend Friend) error {
 	fmt.Println("Database migrated successfully. Friends table created.")
 
 	// Validate form data
-	err = util.ValidateDate(friend.LastInteractionDate)
-	if err != nil {
-		return fmt.Errorf("Invalid date of last interaction: %v", err)
+	if friend.LastInteractionDate != "" {
+		err = util.ValidateDate(friend.LastInteractionDate)
+		if err != nil {
+			return fmt.Errorf("Invalid date of last interaction: %v", err)
+		}
 	}
-	err = util.ValidateDate(friend.LastMeetupDate)
-	if err != nil {
-		return fmt.Errorf("Invalid date of last meetup: %v", err)
+	if friend.LastMeetupDate != "" {
+		err = util.ValidateDate(friend.LastMeetupDate)
+		if err != nil {
+			return fmt.Errorf("Invalid date of last meetup: %v", err)
+		}
 	}
 
 	// Create a single record with result

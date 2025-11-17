@@ -30,6 +30,18 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 			log.Println(err)
 		}
 
+		// Validate data first
+		err = util.ValidateDate(friend.LastInteractionDate)
+		if err != nil {
+			friend.LastInteractionDate = ""
+			util.ReportHttpError(err, w)
+		}
+		err = util.ValidateDate(friend.LastMeetupDate)
+		if err != nil {
+			friend.LastMeetupDate = ""
+			util.ReportHttpError(err, w)
+		}
+
 		// Add friend to database
 		fmt.Println("Adding new friend:")
 		fmt.Printf("Name: %s\n", friend.Name)

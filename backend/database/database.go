@@ -1,7 +1,10 @@
 package database
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"reflect"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -18,84 +21,67 @@ func InitializeDB() (*gorm.DB, error) {
 	return DB, err
 }
 
-// func InitializeTables(db *gorm.DB) {
+func CloseDB(DB *gorm.DB) error {
 
-// 	var wg sync.WaitGroup
+	var err error
 
-// 	wg.Add(1)
-// 	wg.Go(func() {
-// 		defer wg.Done()
-// 		result, err := models.CreateTable_Users(db)
-// 		fmt.Println(result)
-// 		if err != nil {
-// 			log.Fatalf("Could not create table: %v", err)
-// 		}
-// 	})
+	sqlDB, err := DB.DB()
+	if err != nil {
+		log.Fatalf("Failed to get generic database object: %v", err)
+	}
 
-// 	wg.Add(1)
-// 	wg.Go(func() {
-// 		defer wg.Done()
-// 		result, err := models.CreateTable_Friends(db)
-// 		fmt.Println(result)
-// 		if err != nil {
-// 			log.Fatalf("Could not create table: %v", err)
-// 		}
-// 	})
+	err = sqlDB.Close()
+	if err != nil {
+		log.Fatalf("Failed to close database connection: %v", err)
+	}
 
-// 	wg.Add(1)
-// 	wg.Go(func() {
-// 		defer wg.Done()
-// 		result, err := models.CreateTable_Meetups(db)
-// 		fmt.Println(result)
-// 		if err != nil {
-// 			log.Fatalf("Could not create table: %v", err)
-// 		}
-// 	})
+	return err
 
-// 	wg.Wait()
+}
 
-// }
+func Add_Factory[T any](model T) func(model T) error {
 
-// func VerifyUsersTable(db *gorm.DB) {
-// 	rows, err := db.Query("SELECT * FROM users")
-// 	if err != nil {
-// 		log.Fatalf("Could not query users table: %v", err)
-// 	}
-// 	defer rows.Close()
+	return func(model T) error {
+		ctx := context.Background()
 
-// 	// Check if the table is empty
-// 	if !rows.Next() {
-// 		fmt.Println("Users table is empty or doesn't exist.")
-// 		return
-// 	}
+		// Open database
+		DB, err := InitializeDB()
+		if err != nil {
+			log.Fatalf("Failed to initialize database: %v", err)
+		}
+		fmt.Println("Database initialized successfully.")
 
-// 	// Process the rows if any exist
-// 	for {
-// 		var id int
-// 		var username, email, password string
+		// Close database as the main function's last operation
+		defer func() {
+			sqlDB, err := DB.DB()
+			if err != nil {
+				log.Fatalf("Failed to get generic database object: %v", err)
+			}
 
-// 		if err := rows.Scan(&id, &username, &email, &password); err != nil {
-// 			break
-// 		}
+			err = sqlDB.Close()
+			if err != nil {
+				log.Fatalf("Failed to close database connection: %v", err)
+			}
 
-// 		fmt.Printf("User: %d, %s, %s, %s\n", id, username, email, password)
-// 	}
-// }
+		}()
 
-// func FindUser(username string, db *sql.DB) {
+		// Automatically create `friends` table if it doesn't already exist
+		err = DB.AutoMigrate(model)
+		if err != nil {
+			log.Fatal(fmt.Errorf("Could not account for a 'friends' table: %v", err))
+		}
+		fmt.Println("Database migrated successfully. Friends table created.")
 
-// 	var id int
+		// Create a single record with result
+		result := gorm.WithResult()
+		err = gorm.G[T](DB, result).Create(ctx, &model) // pass pointer of data to Create
 
-// 	query := `SELECT id FROM users WHERE username = ?`
-// 	row := db.QueryRow(query, username)
+		// Output
+		fmt.Printf("Created %v.\nAffected %v rows.\nResult(s): %v\n",
+			fmt.Sprint(reflect.TypeOf(model)),
+			result.RowsAffected,
+			result.Result)
+		return err
+	}
 
-// 	err := row.Scan(&id)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			fmt.Println("No user found with that username.")
-// 		} else {
-// 			log.Fatalf("Query error: %v", err)
-// 		}
-// 	}
-
-// }
+}

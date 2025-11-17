@@ -1,13 +1,11 @@
 package util
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 )
 
-func ReportHttpError(err error, w http.ResponseWriter) {
-	errorMessage := fmt.Sprintf("Could not decode POST request JSON: %v", err)
+func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
 	http.Error(w, errorMessage, http.StatusInternalServerError)
 	log.Println(errorMessage)
 }
