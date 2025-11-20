@@ -41,21 +41,21 @@ func AddFriend(friend Friend) error {
 	// Automatically create `friends` table if it doesn't already exist
 	err = DB.AutoMigrate(&Friend{})
 	if err != nil {
-		return fmt.Errorf("Could not account for a 'friends' table: %v", err)
+		return fmt.Errorf("could not account for a 'friends' table: %v", err)
 	}
 	fmt.Println("Database migrated successfully. Friends table created.")
 
 	// Validate form data
 	if friend.LastInteractionDate != "" {
-		err = util.ValidateDate(friend.LastInteractionDate)
+		_, err = util.IsValidDate(friend.LastInteractionDate)
 		if err != nil {
-			return fmt.Errorf("Invalid date of last interaction: %v", err)
+			return fmt.Errorf("invalid date of last interaction: %v", err)
 		}
 	}
 	if friend.LastMeetupDate != "" {
-		err = util.ValidateDate(friend.LastMeetupDate)
+		_, err = util.IsValidDate(friend.LastMeetupDate)
 		if err != nil {
-			return fmt.Errorf("Invalid date of last meetup: %v", err)
+			return fmt.Errorf("invalid date of last meetup: %v", err)
 		}
 	}
 
@@ -99,18 +99,18 @@ func DeleteFriend(friend Friend) error {
 	// Automatically create `friends` table if it doesn't already exist
 	err = DB.AutoMigrate(&Friend{})
 	if err != nil {
-		return fmt.Errorf("Could not account for a 'friends' table: %v", err)
+		return fmt.Errorf("could not account for a 'friends' table: %v", err)
 	}
 	fmt.Println("Database migrated successfully. Friends table created.")
 
 	// Validate form data
-	err = util.ValidateDate(friend.LastInteractionDate)
+	_, err = util.IsValidDate(friend.LastInteractionDate)
 	if err != nil {
-		return fmt.Errorf("Invalid date of last interaction: %v", err)
+		return fmt.Errorf("invalid date of last interaction: %v", err)
 	}
-	err = util.ValidateDate(friend.LastMeetupDate)
+	_, err = util.IsValidDate(friend.LastMeetupDate)
 	if err != nil {
-		return fmt.Errorf("Invalid date of last meetup: %v", err)
+		return fmt.Errorf("invalid date of last meetup: %v", err)
 	}
 
 	// Delete database entry by ID
@@ -144,7 +144,7 @@ func GetFriends() ([]Friend, error) {
 	// Automatically create `friends` table if it doesn't already exist
 	err = DB.AutoMigrate(&Friend{})
 	if err != nil {
-		return friends, fmt.Errorf("Could not account for a 'friends' table: %v", err)
+		return friends, fmt.Errorf("could not account for a 'friends' table: %v", err)
 	}
 	log.Println("Database migrated successfully. Friends table created.")
 

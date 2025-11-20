@@ -5,29 +5,29 @@ import (
 	"unicode"
 )
 
-func ValidateDate(date string) error {
+func IsValidDate(date string) (bool, error) {
 
 	var err error
 
 	// Validate string size
 	if len(date) != 10 {
-		return fmt.Errorf("Date string of incorrect size.")
+		return false, fmt.Errorf("date string of incorrect size")
 	}
 
 	// Validate string composition
 	for i, r := range date {
 		if i == 4 || i == 7 {
 			if string(r) != "-" {
-				return fmt.Errorf("Date should be form form 'YYYY-MM-DD': Missing '-'s.")
+				return false, fmt.Errorf("date should be form form 'YYYY-MM-DD': missing '-'s")
 			}
 		} else {
 			if !unicode.IsNumber(r) {
-				return fmt.Errorf("Date should be form form 'YYYY-MM-DD': Rune at index %d must be a number", i)
+				return false, fmt.Errorf("ate should be form form 'YYYY-MM-DD': Rune at index %d must be a number", i)
 			}
 		}
 	}
 
-	return err
+	return true, err
 
 }
 

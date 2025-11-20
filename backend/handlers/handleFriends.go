@@ -31,12 +31,12 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 		}
 
 		// Validate data first
-		err = util.ValidateDate(friend.LastInteractionDate)
+		_, err = util.IsValidDate(friend.LastInteractionDate)
 		if err != nil {
 			friend.LastInteractionDate = ""
 			util.ReportHttpError(err, w)
 		}
-		err = util.ValidateDate(friend.LastMeetupDate)
+		_, err = util.IsValidDate(friend.LastMeetupDate)
 		if err != nil {
 			friend.LastMeetupDate = ""
 			util.ReportHttpError(err, w)
