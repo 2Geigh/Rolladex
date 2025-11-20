@@ -13,12 +13,12 @@ func TestIsValidDate(t *testing.T) {
 		{"2003-10-10", true, ""},
 		{"2021-01-01", true, ""},
 		{"2003-10-10", true, ""},
-		{"2003-10-1", false, "Date string of incorrect size."},
-		{"2003-10-100", false, "Date string of incorrect size."},
-		{"2003/10/10", false, "Date should be in the form 'YYYY-MM-DD': Missing '-'s."},
-		{"20031010", false, "Date string of incorrect size."},
-		{"2003-1a-10", false, "Date should be in the form 'YYYY-MM-DD': Rune at index 5 must be a number"},
-		{"20a3-10-10", false, "Date should be in the form 'YYYY-MM-DD': Rune at index 2 must be a number"},
+		{"2003-10-1", false, "date string of incorrect size"},
+		{"2003-10-100", false, "date string of incorrect size"},
+		{"2003/10/10", false, "date should be in the form 'YYYY-MM-DD': missing '-'s"},
+		{"20031010", false, "date string of incorrect size"},
+		{"2003-1a-10", false, "date should be in the form 'YYYY-MM-DD': rune at index 6 must be a number"},
+		{"20a3-10-10", false, "date should be in the form 'YYYY-MM-DD': rune at index 2 must be a number"},
 	}
 
 	for _, testCase := range testCases {

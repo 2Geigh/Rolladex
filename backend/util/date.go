@@ -18,11 +18,11 @@ func IsValidDate(date string) (bool, error) {
 	for i, r := range date {
 		if i == 4 || i == 7 {
 			if string(r) != "-" {
-				return false, fmt.Errorf("date should be form form 'YYYY-MM-DD': missing '-'s")
+				return false, fmt.Errorf("date should be in the form 'YYYY-MM-DD': missing '-'s")
 			}
 		} else {
 			if !unicode.IsNumber(r) {
-				return false, fmt.Errorf("ate should be form form 'YYYY-MM-DD': Rune at index %d must be a number", i)
+				return false, fmt.Errorf("date should be in the form 'YYYY-MM-DD': rune at index %d must be a number", i)
 			}
 		}
 	}
