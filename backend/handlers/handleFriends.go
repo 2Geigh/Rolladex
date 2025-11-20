@@ -34,12 +34,12 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 		_, err = util.IsValidDate(friend.LastInteractionDate)
 		if err != nil {
 			friend.LastInteractionDate = ""
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "invalid last_interaction date formatting", http.StatusBadRequest)
 		}
 		_, err = util.IsValidDate(friend.LastMeetupDate)
 		if err != nil {
 			friend.LastMeetupDate = ""
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "invalid last_meetup date formatting", http.StatusBadRequest)
 		}
 
 		// Add friend to database
@@ -49,7 +49,7 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 		fmt.Printf("Last meetup: %s\n", friend.LastMeetupDate)
 		err = models.AddFriend(friend)
 		if err != nil {
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "couldn't add friend to database", http.StatusInternalServerError)
 		}
 
 	}
@@ -62,21 +62,21 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 		// Fetch friends from database
 		friends, err := models.GetFriends()
 		if err != nil {
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "couldn't fetch friends from database", http.StatusInternalServerError)
 		}
 
 		// Marshall friends splice to JSON
 		friendsJSON, err := json.Marshal(friends)
 		log.Printf("friendsJSON:\n%v", string(friendsJSON))
 		if err != nil {
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "couldn't marshall friends data to JSON", http.StatusInternalServerError)
 		}
 
 		// Write response
 		w.Header().Set("Content-Type", "application/json")
 		_, err = w.Write(friendsJSON)
 		if err != nil {
-			util.ReportHttpError(err, w)
+			util.ReportHttpError(err, w, "couldn't write response", http.StatusInternalServerError)
 		}
 
 		// Log output
