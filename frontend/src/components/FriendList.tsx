@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import type { Friend } from "../types/friend";
 
+import "../../public/static/styles/dist/FriendList.min.css"
+
 type FriendListProps = {
     friends: Friend[],
     fetchFriends: () => Promise<void>
@@ -15,9 +17,11 @@ export default function FriendList({ friends, fetchFriends }: FriendListProps) {
     const friendElements = friends.map((item: Friend, index: number) => {
         return(
 
-            <li className="friend" id={JSON.stringify(index)} key={index}>
-                <span className="name">{JSON.stringify(item.name)}</span>
-                <button>Delete</button>
+            <li className="friendListItem" id={String(index)} key={index}>
+                <span className="name">{String(item.name)}</span>
+                <span className="friendLastInteraction">Last interaction: {String(item.last_interaction)}</span>
+                <span className="friendLastMeetup">Last meetup: {String(item.last_meetup)}</span>
+                <button>Delete friend</button>
             </li>
 
     )})

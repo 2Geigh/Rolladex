@@ -1,10 +1,24 @@
 # myFriends To-Do List
 
 ## Front-end
+
+- [ ] Add React-Router routes to Main() or App()
+- [ ] Create login page component
+- [ ] Create registration page component
+- [ ] Create homepage
+  - [ ] Create header/nav component
+  - [ ] Create friends list component
+    - [ ] Create individual friend component
+  - [ ] Create meetups list component
+    - [ ] Create individual meetup component
+- [ ] Create Friends page component
+- [ ] Create Meetups page component
 - [ ] Go through the following: [HowToTestFrontEnd.com](https://howtotestfrontend.com/courses/jest-vitest-fundamentals "A Vitest tutorial") to add tests to the front-end
+- [ ] Add Node(/Express?) routing middleware
 
 ## Back-end
 
+- [ ] Create microservices for each route
 - [ ] Add unit tests
 - [ ] Add integration tests
 - [ ] Add functional tests (probably for main.go but verify first)

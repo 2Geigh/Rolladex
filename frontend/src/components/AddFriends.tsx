@@ -76,7 +76,7 @@ export default function AddFriends({ friends, setFriends }: AddFriendsProps) {
             <div className="inputAndLabel">
                 <label htmlFor="last_interaction">Last interaction</label>
                 <input
-                    type="text"
+                    type="date"
                     name="last_interaction"
                     value={formInputs.last_interaction}
                     >
@@ -86,7 +86,7 @@ export default function AddFriends({ friends, setFriends }: AddFriendsProps) {
             <div className="inputAndLabel">
                 <label htmlFor="last_meetup">Last meetup</label>
                 <input
-                    type="text"
+                    type="date"
                     name="last_meetup"
                     value={formInputs.last_meetup}
                     >
