@@ -1,47 +1,32 @@
-import AddFriends from './components/AddFriends'
-import FriendList from './components/FriendList'
-import type { Friend } from './types/friend'
-import { useState } from 'react'
+import { Route, Routes } from "react-router"
+import Login from "./components/Login/Login"
+import SignUp from "./components/Signup/Signup"
+import Home from "./components/Home/Home"
+import Friends from "./components/Friends/Friends"
+import FriendStandalonePage from "./components/Friends/FriendStandalonePage"
+import Meetups from "./components/Meetups/Meetups"
+import MeetupStandalonePage from "./components/Meetups/FriendStandalonePage"
+import Profile from "./components/Profile/Profile"
+import Settings from "./components/Settings/Settings"
+
 
 function App() {
 
-  const [friends, setFriends] = useState<Array<Friend>>([])
-
-  async function fetchFriends() {
-    const api_url = "http://localhost:3001/friends"
-    try {
-        const response = await fetch(api_url, {
-            method: "GET"
-        })
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        // Unmarshall data
-        const friends = await response.json()
-        setFriends(friends)
-
-    } catch (error) {
-        console.error(`Error: ${error}`)
-    }
-
-  }
-
   return (
     <>
-      <h1>MyFriends</h1>
-
-      <AddFriends
-        friends={friends}
-        setFriends={setFriends}
-        fetchFriends={fetchFriends}
-      />
-
-      <FriendList
-        friends={friends}
-        fetchFriends={fetchFriends}
-      />
+      <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/friends/:friendId" element={<FriendStandalonePage />} />
+          <Route path="/meetups" element={<Meetups />} />
+          <Route path="/meetups/:meetupId" element={<MeetupStandalonePage />} />
+          {/* <Route path="/user" element={<Login />} /> */}
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/settings" element={<Settings />} />
+      </Routes>
     </>
   )
 }
