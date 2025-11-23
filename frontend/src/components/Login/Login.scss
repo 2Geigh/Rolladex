@@ -1,0 +1,39 @@
+#loginForm {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction:column;
+
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: auto;
+
+    padding: 2em;
+    padding-bottom: 1em;
+
+    border: 1px solid grey;
+    border-radius: 0.75em;
+    background-color: black;
+    color: white;
+
+    max-width: 30em;
+    // height: 50vh;
+
+    input {
+
+        margin-bottom: 1.25em;
+        width: 100%;
+
+    }
+    
+    #loginButton {
+
+        margin-top: 1.25em;
+
+        padding: 0.2em;
+
+        max-width: 11em;
+
+        font-size: 95%;
+    }
+
+}
