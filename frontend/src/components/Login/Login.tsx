@@ -1,4 +1,4 @@
-// import type { FormEventHandler } from "react"
+import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
 
 const Login = () => {
@@ -9,6 +9,7 @@ const Login = () => {
 
     return (
         <>
+            <NavbarWithoutLinks/>
             <form id="loginForm" method="POST" action="/login">
                 <label htmlFor="username">
                     Username <input required name="username" type="text"></input>

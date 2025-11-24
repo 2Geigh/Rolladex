@@ -9,7 +9,7 @@ import MeetupStandalonePage from "./components/Meetups/FriendStandalonePage"
 import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
 
-import "../public/static/styles/dist/app.min.css"
+import "../static/styles/dist/app.min.css"
 
 
 function App() {
