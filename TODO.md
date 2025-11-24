@@ -2,12 +2,12 @@
 
 ## Front-end
 
-- [ ] Add React-Router routes to Main() or App()
-- [ ] Create login page component
+- [x] Add React-Router routes to Main() or App()
+- [x] Create login page component
 - [ ] Create registration page component
 - [ ] Create homepage
   - [ ] Create header/nav component
-  - [ ] Create friends list component
+  - [x] Create friends list component
     - [ ] Create individual friend component
   - [ ] Create meetups list component
     - [ ] Create individual meetup component

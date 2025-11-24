@@ -1,4 +1,4 @@
-import type { FormEventHandler } from "react"
+// import type { FormEventHandler } from "react"
 import "./dist/Login.min.css"
 
 const Login = () => {

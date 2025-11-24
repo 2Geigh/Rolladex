@@ -1,7 +1,14 @@
+import "./styles/dist/Home.min.css"
+import Friends from "./Friends"
+import Navbar from "./Navbar"
+import Meetups from "./Meetups"
+
 const Home = () => {
     return (
         <>
-            This is the Home Component.
+            <Navbar/>
+            <Friends/>
+            <Meetups />
         </>
     )
 }
