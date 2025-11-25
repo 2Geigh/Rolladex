@@ -1,3 +1,15 @@
+.container {
+    // background-color: blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: calc(100vh - 4em);
+
+    background: #2A7B9B;
+    background: linear-gradient(0deg, rgb(255, 212, 230) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
 #loginForm {
     display: flex;
     justify-content: space-evenly;
@@ -11,9 +23,14 @@
     padding-bottom: 1em;
 
     border: 1px solid grey;
+    background-color: white;
+    color: darkslategrey;
+
+    $shadow_color: rgba(0, 0, 0, 0.283);
     border-radius: 0.75em;
-    background-color: black;
-    color: white;
+    box-shadow: 1px 1px 20px 1px $shadow_color;
+    -webkit-box-shadow: 1px 1px 20px 1px $shadow_color;
+    -moz-box-shadow: 1px 1px 20px 1px $shadow_color;
 
     max-width: 30em;
     // height: 50vh;
@@ -22,6 +39,11 @@
 
         margin-bottom: 1.25em;
         width: 100%;
+
+        border-style: solid;
+        border-radius: 0.1em;
+        border-width: 1px;
+        // border-color: gray;
 
     }
     

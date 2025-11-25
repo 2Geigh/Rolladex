@@ -58,8 +58,8 @@ $shadow_color: rgba(0, 0, 0, 0.159);
             
             border-radius: 10px;
             box-shadow: 1px 1px 10px 1px $shadow_color;
-            // -webkit-box-shadow: 1px 1px 26px 1px $shadow_color;
-            // -moz-box-shadow: 1px 1px 26px 1px $shadow_color;
+            -webkit-box-shadow: 1px 1px 10px 1px $shadow_color;
+            -moz-box-shadow: 1px 1px 10px 1px $shadow_color;
 
             .nameAndPhoto {
                 display: flex;
