@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# Track .css files in dist directories
+!dist/**/*.css
+!dist-ssr/**/*.css
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
