@@ -1,4 +1,4 @@
-import type { Friend } from "../types/Friend"
+import type { Friend } from "../types/friend"
 
 const friends: Array<Friend> = [
         {

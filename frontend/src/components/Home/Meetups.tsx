@@ -1,7 +1,7 @@
 import "./styles/dist/Meetups.min.css"
 import friends from "../../util/friends_sample_data"
 import { daysSinceDate } from "../../util/dates"
-import type { Friend } from "../../types/Friend"
+import type { Friend } from "../../types/friend"
 
 export default function Meetups() {
 

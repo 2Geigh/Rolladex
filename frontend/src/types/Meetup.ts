@@ -1,4 +1,4 @@
-import type { Friend } from "./Friend";
+import type { Friend } from "./friend";
 
 export type Meetup = {
     time: string | null;
