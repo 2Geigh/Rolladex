@@ -8,4 +8,5 @@ export type Friend = {
         meetup_plans?: Array<Meetup> | null;
         birthday?: string | null;
         profile_image?: string | null;
+        alerts?: Array<string> | null;
     }

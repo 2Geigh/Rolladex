@@ -1,0 +1,55 @@
+.footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-left: 1em;
+    padding-right: 1em;
+
+    height: 4em;
+
+    background-color: #e91d6f;
+
+    .logo {
+        color: white;
+        // background-color: purple;
+
+        font-size: 2.25em;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .links {
+        display: flex;
+        flex-direction: row;
+        justify-content: stretch;
+        align-items: stretch;
+
+
+
+        // background-color: yellow;
+
+        list-style-type: none;
+
+        li {
+
+            box-sizing: border-box;
+            padding: 1em;
+
+            font-size: 1em;
+
+            margin: 0.5em;
+
+            // background-color: green;
+            border-radius: 7.5px;
+
+            a {
+                color: white;
+                font-size: 1.3em;
+                font-weight: 500;
+                text-decoration: none;
+            }
+        }
+    }
+}

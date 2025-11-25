@@ -1,56 +1,9 @@
 import "./styles/dist/Friends.min.css"
 import { daysSinceDate } from "../../util/dates"
 import type { Friend } from "../../types/Friend"
+import friends from "../../util/friends_sample_data"
 
 export default function Friends() {
-
-    const friends: Array<Friend> = [
-        {
-            id: 1,
-            name: "Natalia Tabja",
-            last_interaction: "2025-11-22",
-            last_meetup: "2025-09-28",
-            meetup_plans: null,
-            birthday: null,
-            profile_image: null,
-        },
-        {
-            id: 2,
-            name: "马健炯",
-            last_interaction: "2025-11-23",
-            last_meetup: null,
-            meetup_plans: null,
-            birthday: null,
-            profile_image: null,
-        },
-        {
-            id: 3,
-            name: "Simon",
-            last_interaction: null,
-            last_meetup: "2025-10-26",
-            meetup_plans: null,
-            birthday: null,
-            profile_image: null,
-        },
-        {
-            id: 4,
-            name: "Mohamad Al-Sheikh",
-            last_interaction: null,
-            last_meetup: null,
-            meetup_plans: null,
-            birthday: null,
-            profile_image: null,
-        },
-        {
-            id: 5,
-            name: "Denis Torjai of Transylvania",
-            last_interaction: "2025-11-18",
-            last_meetup: "2025-10-15",
-            meetup_plans: null,
-            birthday: null,
-            profile_image: null,
-        }
-    ]
 
     // Render friends list into UI elements 
     const friendElements = friends.map((item: Friend, index: number) => {
