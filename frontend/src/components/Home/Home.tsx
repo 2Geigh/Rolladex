@@ -2,6 +2,7 @@ import "./styles/dist/Home.min.css"
 import Friends from "./Friends"
 import Navbar from "../Navbar/Navbar"
 import Meetups from "./Meetups"
+import Footer from "../Footer/Footer"
 
 const Home = () => {
     return (
@@ -12,6 +13,8 @@ const Home = () => {
                 <Friends/>
                 <Meetups />
             </div>
+
+            <Footer/>
         </>
     )
 }
