@@ -65,7 +65,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
                 display: flex;
                 flex-direction: column-reverse;
                 justify-content: center;
-                align-items: center;
+                align-items: baseline;
 
                 // background-color: red;
 
@@ -97,7 +97,10 @@ $shadow_color: rgba(0, 0, 0, 0.159);
                 }
 
                 .name {
+                    display: inline-block;
                     font-weight: bold;
+                    text-wrap: wrap;
+                    max-width: 100%;
                     // margin-bottom: 1em;
                 }
             } 
