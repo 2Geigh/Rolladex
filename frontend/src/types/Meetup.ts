@@ -1,8 +1,9 @@
 import type { Friend } from "./friend";
 
 export type Meetup = {
-    time: string | null;
+    id: number;
     date: string;
-    location: string | null;
-    attendees: Friend[] | null;
+    time?: string | null;
+    location?: string | null;
+    attendees?: Array<Friend["id"]> | null;
 }
