@@ -8,7 +8,7 @@ const friends: Array<Friend> = [
             last_meetup: "2025-09-28",
             meetup_plans: null,
             birthday: null,
-            profile_image: null,
+            profile_image_path: null,
             alerts: [],
         },
         {
@@ -18,7 +18,7 @@ const friends: Array<Friend> = [
             last_meetup: null,
             meetup_plans: null,
             birthday: null,
-            profile_image: null,
+            profile_image_path: null,
         },
         {
             id: 3,
@@ -27,7 +27,7 @@ const friends: Array<Friend> = [
             last_meetup: "2025-10-26",
             meetup_plans: null,
             birthday: null,
-            profile_image: null,
+            profile_image_path: null,
         },
         {
             id: 4,
@@ -36,7 +36,7 @@ const friends: Array<Friend> = [
             last_meetup: null,
             meetup_plans: null,
             birthday: null,
-            profile_image: null,
+            profile_image_path: null,
         },
         {
             id: 5,
@@ -45,7 +45,7 @@ const friends: Array<Friend> = [
             last_meetup: "2025-10-15",
             meetup_plans: null,
             birthday: null,
-            profile_image: null,
+            profile_image_path: null,
         }
     ]
 

@@ -7,6 +7,6 @@ export type Friend = {
         last_meetup?: string | FormDataEntryValue | null;
         meetup_plans?: Array<Meetup["id"]> | null;
         birthday?: string | null;
-        profile_image?: string | null;
-        alerts?: Array<string> | null;
+        profile_image_path?: string | null;
+        alerts?: Array<string>;
     }

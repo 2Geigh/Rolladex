@@ -10,6 +10,13 @@ const meetups: Array<Meetup> = [
         {
             id: 9002,
             date: "1993-02-26",
+            attendees: [4],
+        },
+        {
+            id: 9002,
+            date: "1995-04-19",
+            location: "Oklahoma City",
+            attendees: [],
         },
     ]
 

@@ -1,48 +1,50 @@
 import "./styles/dist/Meetups.min.css"
 import friends from "../../util/friends_sample_data"
-import { daysSinceDate } from "../../util/dates"
-import type { Friend } from "../../types/friend"
+import meetups from "../../util/meetups_sample_data"
+import type { Meetup } from "../../types/Meetup"
 
 export default function Meetups() {
 
-    // Render friends list into UI elements 
-    const friendElements = friends.map((item: Friend, index: number) => {
+    // Render meetups list into UI elements 
+    const meetupElements = meetups.map((item: Meetup, index: number) => {
+
+        // Get attendee names from friends data
+        const attendeeNames = item.attendees.map(attendeeId => {
+            const friend = friends.find(friend => friend.id === attendeeId);
+            return friend ? friend.name : null; // Return null if not found
+        }).filter(name => name !== null); // Filter out any null values
+        
+        const date = new Date(item.date)
+        const dateString = date.toDateString()
+
         return(
 
-            <li className="friendListItem" id={String(index)} key={index}>
-                <div className="nameAndPhoto">
-                    <a href={`/friends/${String(item.id)}`} className="name">{String(item.name)}</a>
-                    <a href={`/friends/${String(item.id)}`}><img src={String(item.profile_image)} alt={String(item.name)} className="profile_photo" /></a>
-                </div>
+            <li className="MeetupListItem" id={String(index)} key={index}>
+                
+                <span className="date">
+                    {dateString}
+                </span>
 
-                <div className="previousTimes">
-                    <span className="lastTime" id="friendLastInteraction">
-                        <span className="label">Last interaction:</span>
-                        <span className="daysAgo">
-                            <span className="numberOfDays">
-                                {daysSinceDate(String(item.last_interaction))}
-                            </span>
-                            <br></br>
-                            days ago
-                        </span>
+                {(item.location != null) && (
+                    <span className="location">
+                        {item.location}
                     </span>
+                )}
 
-                    <span className="lastTime" id="friendLastMeetup">
-                        <span className="label">Last meetup:</span>
-                        <span className="daysAgo">
-                            <span className="numberOfDays">
-                                {daysSinceDate(String(item.last_meetup))}
-                            </span>
-                            <br></br>
-                            days ago
-                        </span>
-                    </span>
+                <div className="bottomRow">
+                    <div className="attendees">
+                        {attendeeNames.length > 0 && (
+                            attendeeNames.slice(0, 4).map((name, idx) => (
+                                <span className="attendee" key={idx}>{String(name)}</span> // Separate span for each name
+                            ))
+                        )}
+                        {attendeeNames.length < 1 && (
+                            <span className="attendee">No attendees.</span> // Separate span for each name
+                        )}
+                    </div>
+                    <button className="view">View</button>
                 </div>
-
-                <div className="deleteAndOptionalAlert">
-                    <div className="alert">No alerts yet.</div>
-                    <button className="deleteFriend">Delete friend</button>
-                </div>
+                    
 
             </li>
 
@@ -50,11 +52,11 @@ export default function Meetups() {
 
     return (
         <>
-            <div id="friends" className="homepage_segment">
+            <div id="meetups" className="homepage_segment">
                 <h2>Meetups:</h2>
 
-                <ul className="friendList">
-                    {friendElements}
+                <ul className="meetupList">
+                    {meetupElements}
                 </ul>
             </div>
         </>
