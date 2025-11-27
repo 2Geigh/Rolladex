@@ -5,12 +5,12 @@ const meetups: Array<Meetup> = [
             date: "2001-09-11",
             time: "08:46",
             location: "Manhattan",
-            attendees: [1,2]
+            attendees: [1,2,3,4]
         },
         {
             id: 9002,
             date: "1993-02-26",
-            attendees: [4],
+            attendees: [4,2],
         },
         {
             id: 9002,

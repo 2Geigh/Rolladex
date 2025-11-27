@@ -15,7 +15,7 @@ export default function Friends() {
                 <div className="nameAndPhoto">
                     <a href={`/friends/${String(item.id)}`} className="name">{String(item.name)}</a>
                     <a href={`/friends/${String(item.id)}`}>
-                        <img src={String(item.profile_image)} alt={String(item.name)} className="profile_photo" />
+                        <img src={String(item.profile_image_path)} alt={String(item.name)} className="profile_photo" />
                     </a>
                 </div>
 

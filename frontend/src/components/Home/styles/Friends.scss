@@ -1,27 +1,6 @@
 $shadow_color: rgba(0, 0, 0, 0.159);
 
 #friends {
-    
-    // background-color: rgb(242, 242, 242);
-    // box-shadow: 1px 1px 26px 1px $shadow_color;
-    // -webkit-box-shadow: 1px 1px 26px 1px $shadow_color;
-    // -moz-box-shadow: 1px 1px 26px 1px $shadow_color;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: baseline;
-
-    padding: 1em;
-
-    width: calc(1/3*0.8 * 100vw);
-    min-width: 40em;
-    max-width: 45em;
-
-    h2 {
-        font-size: 1.5em;
-        margin-bottom: 0.5em;
-    }
 
     .friendList {
 
