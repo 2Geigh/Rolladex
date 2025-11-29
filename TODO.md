@@ -6,13 +6,15 @@
 - [x] Create login page component
 - [ ] Create registration page component
 - [ ] Create homepage
-  - [ ] Create header/nav component
+  - [x] Create header/nav component
   - [x] Create friends list component
-    - [ ] Create individual friend component
-  - [ ] Create meetups list component
-    - [ ] Create individual meetup component
+    - [x] Create individual friend component
+  - [x] Create meetups list component
+    - [x] Create individual meetup component
 - [ ] Create Friends page component
+  - [x] Create standalone Friend component
 - [ ] Create Meetups page component
+  - [ ] Create standalone Meetup component
 - [ ] Go through the following: [HowToTestFrontEnd.com](https://howtotestfrontend.com/courses/jest-vitest-fundamentals "A Vitest tutorial") to add tests to the front-end
 - [ ] Add Node(/Express?) routing middleware
 
