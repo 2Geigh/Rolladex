@@ -74,15 +74,15 @@ export default function Friends() {
                 
                 <NameAndPhoto ID={item.id} name={item.name} profile_image_path={item.profile_image_path}/>
 
-                { (!isNaN(lastInteractionDays) || !isNaN(lastMeetupDays)) && (
+                {/* { (!isNaN(lastInteractionDays) || !isNaN(lastMeetupDays)) && ( */}
                     <div className="previousTimes">
 
-                        <DaysSinceLastInteraction lastInteractionDays={lastMeetupDays} />
+                        <DaysSinceLastInteraction lastInteractionDays={lastInteractionDays} />
 
                         <DaysSinceLastMeetup lastMeetupDays={lastMeetupDays}/>
 
                     </div>
-                )}
+                {/* )} */}
                 
 
                 <div className="deleteAndOptionalAlert">
