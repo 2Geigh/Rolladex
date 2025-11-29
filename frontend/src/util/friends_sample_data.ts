@@ -31,7 +31,7 @@ const friends: Array<Friend> = [
         },
         {
             id: 4,
-            name: "Mohamad Al-Sheikh",
+            name: "محمد الشيخ",
             last_interaction: null,
             last_meetup: null,
             meetup_plans: null,
@@ -40,7 +40,7 @@ const friends: Array<Friend> = [
         },
         {
             id: 5,
-            name: "Denis Torjai of Transylvania",
+            name: "Denis I of House Torjai from Transylvania",
             last_interaction: "2025-11-18",
             last_meetup: "2025-10-15",
             meetup_plans: null,

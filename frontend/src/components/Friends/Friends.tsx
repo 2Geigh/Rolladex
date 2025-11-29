@@ -4,7 +4,9 @@ const Friends = () => {
     return (
         <>
             <Navbar/>
-            This is the Friends Component.
+            <div className="content">
+                This is the Friends Component.
+            </div>
         </>
     )
 }

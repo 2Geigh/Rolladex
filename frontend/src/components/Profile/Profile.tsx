@@ -4,7 +4,9 @@ const Profile = () => {
     return (
         <>
             <Navbar/>
-            This is the Profile Component.
+            <div className="content">
+                This is the Profile Component.
+            </div>
         </>
     )
 }

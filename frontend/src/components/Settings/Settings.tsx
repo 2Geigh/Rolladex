@@ -1,7 +1,12 @@
+import Navbar from "../Navbar/Navbar"
+
 const Settings = () => {
     return (
         <>
-            This is the Settings Component.
+            <Navbar/>
+            <div className="content">
+                This is the Settings Component.
+            </div>
         </>
     )
 }

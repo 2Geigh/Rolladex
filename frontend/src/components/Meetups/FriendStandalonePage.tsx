@@ -1,7 +1,12 @@
+import Navbar from "../Navbar/Navbar"
+
 const MeetupStandalonePage = () => {
     return (
         <>
-            This is the MeetupStandalonePage Component.
+            <Navbar/>
+            <div className="content">
+                This is the MeetupStandalonePage Component.
+            </div>
         </>
     )
 }

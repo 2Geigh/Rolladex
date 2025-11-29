@@ -4,7 +4,9 @@ const Meetups = () => {
     return (
         <>
             <Navbar/>
-            This is the Meetups Component.
+            <div className="content">
+                This is the Meetups Component.
+            </div>
         </>
     )
 }
