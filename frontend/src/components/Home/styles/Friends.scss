@@ -28,7 +28,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
             box-sizing: border-box;
             width: auto;
-            padding: 1em;
+            padding: 1.25em;
 
             margin-bottom: 1em;
 
@@ -42,7 +42,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
             .nameAndPhoto {
                 display: flex;
-                flex-direction: column-reverse;
+                flex-direction: column;
                 justify-content: center;
                 align-items: baseline;
 
@@ -68,7 +68,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
                     margin-bottom: 0.75em;
 
-                    border-radius: 100%;
+                    border-radius: 7.5%;
 
                     font-family: cursive;
                     
@@ -80,7 +80,9 @@ $shadow_color: rgba(0, 0, 0, 0.159);
                     font-weight: bold;
                     text-wrap: wrap;
                     max-width: 100%;
-                    // margin-bottom: 1em;
+                    font-size: 1.35em;
+                    text-wrap: nowrap;
+                    margin-bottom: 0.75em;
                 }
             } 
 
