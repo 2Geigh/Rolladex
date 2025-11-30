@@ -5,7 +5,7 @@ const meetups: Array<Meetup> = [
             date: "2001-09-11",
             time: "08:46",
             location: "Manhattan",
-            attendees: [1,2,3,4]
+            attendees: [5,4,3,2,1,5,4,3,2,1]
         },
         {
             id: 9002,

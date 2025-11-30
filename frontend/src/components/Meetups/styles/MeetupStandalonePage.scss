@@ -1,0 +1,152 @@
+$shadow_color: rgba(0, 0, 0, 0.159);
+
+.MeetupListItem {
+    // background-color: red;
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+
+    box-sizing: border-box;
+    width: auto;
+
+    margin-bottom: 1em;
+    padding: 1.25em;
+
+    background-color: white;  
+    
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px 1px $shadow_color;
+    -webkit-box-shadow: 1px 1px 10px 1px $shadow_color;
+    -moz-box-shadow: 1px 1px 10px 1px $shadow_color;
+
+    .timeAndPlace {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        height: 100%;
+        width: 100%;
+        min-width: 10em;
+
+        // background-color: yellow;
+
+        .date {
+            display: inline;
+            font-weight: bolder;
+            font-size: 1.35em;
+            text-wrap: nowrap;
+
+            margin-right: 2em;
+
+            // min-width: 15em;
+            // width: 100%;
+
+            // background-color: orange;
+
+            // margin-bottom: 0.25em;
+        }
+
+        .location {
+            width: 100%;
+            text-align: right;
+
+            // background-color: pink;
+
+            font-size: 1.2em;
+        }
+    }
+
+    .bottomRow {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        // background-color: violet;
+
+        margin-top: 0.75em;
+
+        width: 100%;
+
+        .attendees {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: baseline;
+            align-items: center;
+
+            height: 100%;
+            // width: 100%;
+
+            // background-color: red;
+
+            $dimension: 2.5em;
+            $scoot_over: calc($dimension / 3);
+
+            padding-left: $scoot_over;
+            // height: $dimension;
+
+            .attendeeMinimizedImg {
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+
+                width: $dimension;
+                height: $dimension;
+
+
+                border-radius: $dimension;
+                font-variant: small-caps;
+
+                $padding-top: calc($dimension * (0.215em/2em));
+                padding-top: $padding-top;
+
+                $font-size: calc($dimension / 3);
+                font-size: $font-size;
+
+                color: white;
+                font-weight: normal;
+                background-color: hsl(random(360), 100%, 50%);
+
+                border: 1px solid white;
+
+                margin-left: -$scoot_over;
+            }
+
+            .noAttendees {
+                font-size: 1.0em;
+
+                display: flex;
+
+                width: 100%;
+                padding-left: calc(-1 * $scoot_over);
+            }
+        }
+
+        .view {
+            // margin: 1em;
+                // margin-top: 0.5em;
+
+                // margin: 1em;
+                margin-top: 0.5em;
+
+                padding: 0.25em;
+                padding-left: 2em;
+                padding-right: 2em;
+
+                border-radius: 5px;
+                border: 1px solid lightgray;
+                text-decoration: none;
+                background-color: lightgray;
+                color: black;
+        }
+        .view:hover {
+            background-color: gray;
+        }
+    }
+
+}

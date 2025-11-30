@@ -4,6 +4,7 @@ import meetups from "../../util/meetups_sample_data"
 import type { Meetup } from "../../types/Meetup"
 import friends from "../../util/friends_sample_data"
 import "./styles/dist/Friends.min.css"
+import Footer from "../Footer/Footer"
 
 const formatAttendees = (attendeesIds: number[]): string => {
     const attendees = attendeesIds.map(id => friends.find(friend => friend.id === id)?.name).filter(Boolean);
@@ -117,6 +118,7 @@ const Friends = () => {
                 <AddFriend/>
                 <FriendsSection/>
             </div>
+            <Footer/>
         </>
     )
 }

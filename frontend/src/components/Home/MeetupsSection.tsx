@@ -34,21 +34,21 @@ const Attendee: React.FC<AttendeeProps> = ({ friend }) => {
 };
 
 type MeetupItemProps = {
-    item: Meetup;
+    meetup: Meetup;
     friends: Friend[];
 }
-const MeetupItem: React.FC<MeetupItemProps> = ({ item, friends }) => {
-    const attendeeNames = item.attendees
+const MeetupItem: React.FC<MeetupItemProps> = ({ meetup, friends }) => {
+    const attendeeNames = meetup.attendees
         .map(attendeeId => friends.find(friend => friend.id === attendeeId))
         .filter((friend) => friend !== undefined);
 
     return (
-        <li className="MeetupListItem" key={item.id}>
+        <li className="MeetupListItem" key={meetup.id}>
             <div className="timeAndPlace">
-                <span className="date">{new Date(item.date).toDateString()}</span>
-                {item.location && (
+                <span className="date">{new Date(meetup.date).toDateString()}</span>
+                {meetup.location && (
                     <span className="location">
-                        &#x1F4CD; {item.location}
+                        &#x1F4CD; {meetup.location}
                     </span>
                 )}
             </div>
@@ -62,7 +62,7 @@ const MeetupItem: React.FC<MeetupItemProps> = ({ item, friends }) => {
                         <span className="noAttendees">No attendees.</span>
                     )}
                 </div>
-                <a className="view" href={`/meetups/${item.id}`}>
+                <a className="view" href={`/meetups/${meetup.id}`}>
                     View
                 </a>
             </div>
@@ -70,17 +70,19 @@ const MeetupItem: React.FC<MeetupItemProps> = ({ item, friends }) => {
     );
 };
 
-export default function MeetupsSection() {
+function MeetupsSection() {
     return (
         <>
             <div id="meetups" className="homepage_segment">
                 <h2>Meetups:</h2>
                 <ul className="meetupList">
-                    {meetups.map((item: Meetup) => (
-                        <MeetupItem item={item} friends={friends} key={item.id} />
+                    {meetups.map((meetup: Meetup) => (
+                        <MeetupItem meetup={meetup} friends={friends} key={meetup.id} />
                     ))}
                 </ul>
             </div>
         </>
     );
 }
+
+export { MeetupsSection, MeetupItem }

@@ -5,7 +5,7 @@ import Home from "./components/Home/Home"
 import Friends from "./components/Friends/Friends"
 import FriendStandalonePage from "./components/Friends/FriendStandalonePage"
 import Meetups from "./components/Meetups/Meetups"
-import MeetupStandalonePage from "./components/Meetups/FriendStandalonePage"
+import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
 

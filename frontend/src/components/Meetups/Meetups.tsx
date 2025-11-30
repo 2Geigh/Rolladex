@@ -1,3 +1,4 @@
+import { MeetupsSection } from "../Home/MeetupsSection"
 import Navbar from "../Navbar/Navbar"
 
 const Meetups = () => {
@@ -5,7 +6,7 @@ const Meetups = () => {
         <>
             <Navbar/>
             <div className="content">
-                This is the Meetups Component.
+                <MeetupsSection/>
             </div>
         </>
     )
