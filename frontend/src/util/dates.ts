@@ -1,11 +1,12 @@
 import { parseISO, isValid, differenceInDays } from 'date-fns';
+import type { JsonDate } from '../types/jsonDate';
 
 function validateDate(dateString: string): boolean {
     const date = parseISO(dateString);
     return isValid(date);
 }
 
-function daysSinceDate(date: string): number {
+function daysSinceDate(date: JsonDate): number {
     
     const previous_date = new Date(date)
     const today = new Date();
