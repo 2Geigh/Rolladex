@@ -10,6 +10,7 @@ import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
 
 import "../static/styles/dist/app.min.css"
+import PageNotFound from "./components/PageNotFound/PageNotFound"
 
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           {/* <Route path="/user" element={<Login />} /> */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/settings" element={<Settings />} />
+          
+          <Route path="*" element={<PageNotFound />}></Route>
       </Routes>
     </>
   )
