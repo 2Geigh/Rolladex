@@ -1,3 +1,4 @@
+import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
 
 export default function PageNotFound() {
@@ -7,6 +8,7 @@ export default function PageNotFound() {
             <div className="content">
                 404
             </div>
+            <Footer/>
         </>
     )
 }

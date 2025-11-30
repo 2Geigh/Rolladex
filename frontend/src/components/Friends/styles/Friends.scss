@@ -1,0 +1,77 @@
+$shadow_color: rgba(0, 0, 0, 0.159);
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+h3 {
+    font-size: 1.225em;
+    margin-top: 1em;
+    margin-bottom: 1.5em;
+}
+
+#addFriend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 1em;
+
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px 1px $shadow_color;
+    -webkit-box-shadow: 1px 1px 10px 1px $shadow_color;
+    -moz-box-shadow: 1px 1px 10px 1px $shadow_color;
+
+    background-color: white;
+
+    label {
+        display: flex;
+        flex-direction: column;
+
+        box-sizing: border-box;
+
+        margin-bottom: 1.5em;
+        width: 100%;
+
+        input, select {
+
+            box-sizing: border-box;
+
+            $padding: 0.5em;
+            padding-top: calc(0.5 * $padding);
+            padding-bottom: calc(0.5 * $padding);
+            padding-left: $padding;
+            padding-right: $padding;
+
+            // background-color: red;
+            width: 100%;
+        }
+    }
+}
+
+.requiredLabel {
+    color: rgb(199, 0, 0);
+}
+
+#birthdayLabel {
+    .inputs {
+        display: flex;
+    }
+}
+
+#addFriendButton {
+
+    border-radius: 0.25em;
+
+    $padding: calc(2 / 3 * 1em);
+    padding-top: calc(1 * $padding);
+    padding-bottom: calc(1 * $padding);
+    padding-left: calc(3 * $padding);
+    padding-right: calc(3 * $padding);
+
+    margin-top: 1.5em;
+
+    border-color: lightgray;
+}

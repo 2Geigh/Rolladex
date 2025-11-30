@@ -70,7 +70,7 @@ const MeetupItem: React.FC<MeetupItemProps> = ({ item, friends }) => {
     );
 };
 
-export default function Meetups() {
+export default function MeetupsSection() {
     return (
         <>
             <div id="meetups" className="homepage_segment">

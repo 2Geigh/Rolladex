@@ -62,7 +62,7 @@ const DaysSinceLastMeetup: React.FC<{lastMeetupDays: number}> = ({ lastMeetupDay
     )
 }
 
-export default function Friends() {
+export default function FriendsSection() {
 
     // Render friends list into UI elements 
     const friendElements = friends.map((item: Friend, index: number) => {

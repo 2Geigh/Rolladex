@@ -18,6 +18,12 @@ const meetups: Array<Meetup> = [
             location: "Oklahoma City",
             attendees: [],
         },
+        {
+            id: 9002,
+            date: "1302-09-20",
+            location: "Bethlehem",
+            attendees: [3],
+        },
     ]
 
 export default meetups

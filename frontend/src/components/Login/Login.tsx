@@ -1,3 +1,4 @@
+import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
 
@@ -23,6 +24,7 @@ const Login = () => {
                     <input id="loginButton" type="submit" value="Login"></input>
                 </form>
             </div>
+            <Footer/>
         </>
     )
 }

@@ -1,9 +1,9 @@
 import { useParams } from "react-router"
 import Navbar from "../Navbar/Navbar"
 import friends from "../../util/friends_sample_data"
-import type { Friend } from "../../types/friend"
 import "./styles/dist/FriendStandalonePage.min.css"
 import PageNotFound from "../PageNotFound/PageNotFound"
+import Footer from "../Footer/Footer"
 
 type FriendCardProps = {
     id: number | string;
@@ -48,6 +48,8 @@ const FriendStandalonePage = () => {
             <div className="content">
                 <FriendCard id={friendId} name={name} profile_image_path={profile_image_path}/>
             </div>
+
+            <Footer/>
         </>
     )
 }

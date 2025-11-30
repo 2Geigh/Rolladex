@@ -1,7 +1,7 @@
 import "./styles/dist/Home.min.css"
-import Friends from "./Friends"
 import Navbar from "../Navbar/Navbar"
-import Meetups from "./Meetups"
+import FriendsSection from "./FriendsSection"
+import MeetupsSection from "./MeetupsSection"
 import Footer from "../Footer/Footer"
 
 const Home = () => {
@@ -10,8 +10,8 @@ const Home = () => {
             <Navbar/>
 
             <div className="content">
-                <Friends/>
-                <Meetups />
+                <FriendsSection/>
+                <MeetupsSection />
             </div>
 
             <Footer/>
