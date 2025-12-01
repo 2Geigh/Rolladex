@@ -58,8 +58,7 @@ const MeetupPlansLabel = () => {
 
 const AddFriend: React.FC = () => {
 
-    const date = new Date()
-    const currentYear = date.getFullYear()
+    const currentYear = new Date().getFullYear()
 
     return (
         <>

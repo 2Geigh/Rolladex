@@ -9,7 +9,6 @@ const users: Array<User> = [
             meetups: [1,2],
 
             email: "poopoo@gmail.com",
-            profile_image_path: null,
             birthday: "1957-03-10",
             last_interaction: "2025-11-30",
             last_meetup: "2025-11-29",   

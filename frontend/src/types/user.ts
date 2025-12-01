@@ -24,7 +24,7 @@ export type User = {
         settings: Settings
 
         email?: Email | null;
-        profile_image_path?: image_path | null;
+        profile_image_path?: image_path;
         birthday?: JsonDate;
         last_interaction?: JsonDate;
         last_meetup?: JsonDate;        

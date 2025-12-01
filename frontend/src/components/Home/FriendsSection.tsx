@@ -66,8 +66,11 @@ export default function FriendsSection() {
 
     // Render friends list into UI elements 
     const friendElements = friends.map((item: Friend, index: number) => {
-        const lastInteractionDays = daysSinceDate(String(item.last_interaction));
-        const lastMeetupDays = daysSinceDate(String(item.last_meetup));
+
+        const lastInteractionDate = new Date(String(item.last_interaction));
+        const lastInteractionDays = daysSinceDate(lastInteractionDate);
+        const lastMeetupDate = new Date(String(item.last_meetup));
+        const lastMeetupDays = daysSinceDate(lastMeetupDate);
 
         return (
             <li className="friendListItem" id={String(index)} key={index}>
