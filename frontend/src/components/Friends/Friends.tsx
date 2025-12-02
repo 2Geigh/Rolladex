@@ -45,6 +45,7 @@ const MeetupPlansLabel = () => {
     return (
                 <label htmlFor="meetupPlans">
                     Meetup plans: <select name="meetupPlans" id="meetupPlans">
+                        <option className="meetupPlansOption" key={-1} value={"None"}>None</option>
                         {meetups.map((meetup, index) => {
 
                             return (
