@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"fmt"
+	"myfriends-backend/util"
 	"net/http"
 	"time"
 )
 
 func Root(w http.ResponseWriter, req *http.Request) {
 
-	// Log request type
-	fmt.Printf("%v: %v %v\n", time.Now().Format(time.DateTime), req.Method, req.RequestURI)
+	util.LogHttpRequest(req)
 
 	if req.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")

@@ -11,12 +11,14 @@
   },
   "dependencies": {
     "date-fns": "^4.1.0",
+    "express": "^5.2.1",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router": "^7.9.6"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",

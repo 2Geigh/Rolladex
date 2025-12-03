@@ -17,7 +17,7 @@ const users: Array<User> = [
                     "email": false,
                     "push_notifications": false
                 },
-                "dark_or_light_mode": "light"
+                "ui_theme": "light"
             },
         },
 
@@ -33,7 +33,7 @@ const users: Array<User> = [
                     "email": false,
                     "push_notifications": false
                 },
-                "dark_or_light_mode": "light"
+                "ui_theme": "light"
             },
         }
     ]
