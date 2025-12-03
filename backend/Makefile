@@ -1,6 +1,10 @@
-BINARY_NAME=./bin/main.out
+BINARY_PATH=./bin
+BINARY_NAME=${BINARY_PATH}/main.out
 
-all: build test
+all: clear clean build test clear
+
+clear:
+	clear
 
 build:
 	go mod tidy
@@ -20,4 +24,4 @@ run:
 
 clean:
 	go clean
-	rm ${BINARY_NAME}
+	rm -rf ${BINARY_PATH}
