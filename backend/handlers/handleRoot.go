@@ -18,11 +18,6 @@ func Root(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func Meetups(w http.ResponseWriter, req *http.Request) {
-	// Log request type
-	fmt.Printf("\n%v: %v\n%v\n\n", time.Now(), req.Method, req.Body)
-}
-
 func Profile(w http.ResponseWriter, req *http.Request) {
 	// Log request type
 	fmt.Printf("\n%v: %v\n%v\n\n", time.Now(), req.Method, req.Body)
