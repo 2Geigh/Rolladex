@@ -10,7 +10,7 @@ type recievesNotificationsValue = {
 
 type Settings = {
     "receivesNotifications": recievesNotificationsValue,
-    "dark_or_light_mode": ("dark" | "light" | "auto")
+    "ui_theme": ("dark" | "light" | "auto")
 }
 
 type Email = string;

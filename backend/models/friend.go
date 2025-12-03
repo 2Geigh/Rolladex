@@ -6,6 +6,7 @@ import (
 	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/util"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -18,10 +19,13 @@ type LastTime struct {
 
 type Friend struct {
 	gorm.Model
-	Name                string `json:"name"`
-	LastInteractionDate string `json:"last_interaction"`
-	LastMeetupDate      string `json:"last_meetup"`
-	// Meetup_plans             []Meetup  `json:"meetup_plans"`
+	Name             string     `json:"name"`
+	LastInteraction  *time.Time `json:"last_interaction"`
+	LastMeetup       *time.Time `json:"last_meetup"`
+	MeetupPlans      *[]Meetup  `json:"meetup_plans"`
+	Birthday         *time.Time `json:"birthday"`
+	ProfileImagePath *string    `json:"profile_image_path"`
+	Alerts           *[]string  `json:"alerts"`
 }
 
 func AddFriend(friend Friend) error {

@@ -1,20 +1,16 @@
 package models
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
 type Meetup struct {
 	gorm.Model
-	// Time      time.Time `json:"time"`
-	// Location  *string   `json:"location"`
-	// Attendees []Friend  `json:"attendees"`
+	Date      time.Time  `json:"date"`
+	Attendees []int      `json:"attendees"`
+	Name      *string    `json:"name"`
+	Time      *time.Time `json:"time"`
+	Location  *string    `json:"location"`
 }
-
-// func CreateTable_Meetups(db *gorm.DB) (sql.Result, error) {
-// 	sql := `CREATE TABLE IF NOT EXISTS meetups (
-// 		id INTEGER PRIMARY KEY
-// 	);`
-
-// 	return db.Exec(sql)
-// }
