@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -29,14 +27,14 @@ type Email string
 type User struct {
 	gorm.Model
 
-	Username         string     `json:"username"`
-	Password         string     `json:"password"`
-	Friends          []int      `json:"friends"`
-	Meetups          []int      `json:"meetups"`
-	Settings         Settings   `json:"settings"`
-	Email            *Email     `json:"email"`
-	ProfileImagePath *string    `json:"profile_image_path"`
-	Birthday         *time.Time `json:"birthday"`
-	LastInteraction  *time.Time `json:"last_interaction"`
-	LastMeetup       *time.Time `json:"last_meetup"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Friends  *[]int `json:"friends"`
+	// Meetups          *[]int     `json:"meetups"`
+	// Settings         *Settings  `json:"settings"`
+	// Email            *Email     `json:"email"`
+	// ProfileImagePath *string    `json:"profile_image_path"`
+	// Birthday         *time.Time `json:"birthday"`
+	// LastInteraction  *time.Time `json:"last_interaction"`
+	// LastMeetup       *time.Time `json:"last_meetup"`
 }

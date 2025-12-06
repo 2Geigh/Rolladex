@@ -2,8 +2,8 @@ import type { FormEvent, FormEventHandler } from "react"
 import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Signup.min.css"
-import type { SignupData } from "../../util/signup_data"
-import { redirect, useNavigate } from "react-router"
+import type { SignupData } from "../../util/login_signup_data"
+import { useNavigate } from "react-router"
 
 const SignUp = () => {
 
@@ -33,9 +33,12 @@ const SignUp = () => {
             body: JSON.stringify(signupData)
         })
 
-        if (response.status == 200) {
+        if (response.ok) {
             alert("Successfully created user")
             navigate("/login")
+        } else {
+            const errorText = await response.text();
+            alert(errorText)
         }
 
     }
