@@ -5,6 +5,8 @@ CREATE TABLE IF NOT EXISTS "Friends" (
 	"last_interaction_date" TEXT,
 	"birthday" TEXT,
 	"profile_image_id" INTEGER,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("profile_image_id") REFERENCES "Images"("id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -14,9 +16,12 @@ CREATE TABLE IF NOT EXISTS "UsersFriends" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"user_id" INTEGER NOT NULL,
 	"friend_id" INTEGER NOT NULL,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"relationship_status" TEXT,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("friend_id") REFERENCES "Friends"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	ON UPDATE NO ACTION ON DELETE CASCADE,
 	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -29,16 +34,18 @@ CREATE TABLE IF NOT EXISTS "Users" (
 	"profile_image_id" INTEGER,
 	"birthday" TEXT,
 	"usersettings_id" INTEGER,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("profile_image_id") REFERENCES "Images"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
-	FOREIGN KEY ("usersettings_id") REFERENCES "UserSettings"("user_id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE IF NOT EXISTS "Images" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"filepath" TEXT,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id")
 );
 
@@ -47,9 +54,12 @@ CREATE TABLE IF NOT EXISTS "Interactions" (
 	"date" TEXT NOT NULL,
 	"user_id" INTEGER NOT NULL,
 	"friend_id" INTEGER NOT NULL,
+	"interaction_type" VARCHAR,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	ON UPDATE NO ACTION ON DELETE CASCADE,
 	FOREIGN KEY ("friend_id") REFERENCES "Friends"("id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
@@ -58,44 +68,58 @@ CREATE TABLE IF NOT EXISTS "Meetups" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"date" TEXT,
 	"organizer_id" INTEGER,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("organizer_id") REFERENCES "Users"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION
+	ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS "MeetupsAttendees" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"meetup_id" INTEGER,
 	"friend_id" INTEGER,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("meetup_id") REFERENCES "Meetups"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	ON UPDATE NO ACTION ON DELETE CASCADE,
 	FOREIGN KEY ("friend_id") REFERENCES "Friends"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION
+	ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS "Settings" (
 	"id" INTEGER NOT NULL UNIQUE,
-	"recievesNotifications_id" INTEGER,
-	"ui_theme" INTEGER,
+	"user_id" INTEGER,
+	"NotificationPreferences_id" INTEGER,
+	"ui_theme" VARCHAR,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
-	FOREIGN KEY ("recievesNotifications_id") REFERENCES "recievesNotifications"("id")
+	FOREIGN KEY ("NotificationPreferences_id") REFERENCES "NotificationPreferences"("id")
+	ON UPDATE NO ACTION ON DELETE NO ACTION,
+	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE IF NOT EXISTS "UserSettings" (
+CREATE TABLE IF NOT EXISTS "Sessions" (
+	"id" INTEGER NOT NULL UNIQUE,
+	"user_id" INTEGER NOT NULL,
+	"session_token" TEXT NOT NULL,
+	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
+	"expires_at" DATETIME,
+	PRIMARY KEY("id"),
+	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
+	ON UPDATE NO ACTION ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS "NotificationPreferences" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"user_id" INTEGER,
-	"settings_id" INTEGER,
+	"email" BOOLEAN,
+	"sms" BOOLEAN,
+	"pushNotification" BOOLEAN,
 	PRIMARY KEY("id"),
-	FOREIGN KEY ("settings_id") REFERENCES "Settings"("id")
+	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
 	ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE IF NOT EXISTS "recievesNotifications" (
-	"id" INTEGER NOT NULL UNIQUE,
-	"email" INTEGER,
-	"push_notifications" INTEGER,
-	"sms" INTEGER,
-	PRIMARY KEY("id")
 );
