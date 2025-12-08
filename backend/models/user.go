@@ -1,12 +1,15 @@
 package models
 
 import (
-	"gorm.io/gorm"
+	"time"
 )
 
-type RecievesNotificationsValue struct {
-	Email             bool `json:"email"`
-	PushNotifications bool `json:"push_notifications"`
+type NotificationPreference struct {
+	ID               uint `gorm:"primaryKey;autoIncrement:true"`
+	UserID           uint `gorm:"constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
+	Email            bool `gorm:"default:false"`
+	SMS              bool `gorm:"default:false"`
+	PushNotification bool `gorm:"default:false"`
 }
 
 type UiThemeMode string
@@ -17,24 +20,42 @@ const (
 	Auto  UiThemeMode = "auto"
 )
 
-type Settings struct {
-	ReceivesNotifications RecievesNotificationsValue `json:"receivesNotifications"`
-	UiTheme               UiThemeMode                `json:"ui_theme"`
+type Setting struct {
+	ID                        uint      `gorm:"primaryKey;autoIncrement:true"`
+	UserID                    uint      `gorm:"constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
+	NotificationPreferencesID *uint     `gorm:"foreignKey:ID;constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
+	UiTheme                   string    `gorm:"type:varchar"`
+	CreatedAt                 time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt                 time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 }
 
 type Email string
 
 type User struct {
-	gorm.Model
+	ID             uint      `gorm:"primaryKey;autoIncrement:true"`
+	Username       string    `gorm:"type:text;not null"`
+	Password       string    `gorm:"type:text;not null"`
+	Email          Email     `gorm:"type:text"`
+	ProfileImageID *uint     `gorm:"foreignKey:ID;constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
+	Birthday       time.Time `gorm:"type:text"`
+	UserSettingsID *uint     `gorm:"foreignKey:ID;constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
+	CreatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt      time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+}
 
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Friends  *[]int `json:"friends"`
-	// Meetups          *[]int     `json:"meetups"`
-	// Settings         *Settings  `json:"settings"`
-	// Email            *Email     `json:"email"`
-	// ProfileImagePath *string    `json:"profile_image_path"`
-	// Birthday         *time.Time `json:"birthday"`
-	// LastInteraction  *time.Time `json:"last_interaction"`
-	// LastMeetup       *time.Time `json:"last_meetup"`
+type UsersFriend struct {
+	ID                 uint      `gorm:"primaryKey;autoIncrement:true"`
+	UserID             uint      `gorm:"not null"`
+	FriendID           uint      `gorm:"not null;constraint:OnUpdate:NO ACTION,OnDelete:CASCADE"`
+	CreatedAt          time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	UpdatedAt          time.Time `gorm:"default:CURRENT_TIMESTAMP"`
+	RelationshipStatus string    `gorm:"type:text"`
+}
+
+type Session struct {
+	ID           uint       `gorm:"primaryKey;autoIncrement:true"`
+	UserID       uint       `gorm:"constraint:OnUpdate:NO ACTION,OnDelete:CASCADE"`
+	SessionToken string     `gorm:"not null;type:text"`
+	CreatedAt    time.Time  `gorm:"default:CURRENT_TIMESTAMP"`
+	ExpiresAt    *time.Time `gorm:"type:datetime"`
 }
