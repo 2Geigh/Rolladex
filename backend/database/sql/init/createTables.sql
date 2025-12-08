@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS "Interactions" (
 
 CREATE TABLE IF NOT EXISTS "Meetups" (
 	"id" INTEGER NOT NULL UNIQUE,
-	"date" TEXT,
+	"date" TEXT NOT NULL,
 	"location" TEXT,
 	"name" TEXT,
 	"organizer_id" INTEGER,
