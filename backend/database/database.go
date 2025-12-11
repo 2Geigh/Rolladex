@@ -39,49 +39,8 @@ func CloseDB(DB *gorm.DB) error {
 
 }
 
-func Add_Factory[T any](model T) func(model T) error {
+func CloseDB(DB *sql.DB) error {
+	var err error
 
-	return func(model T) error {
-		ctx := context.Background()
-
-		// Open database
-		DB, err := InitializeDB()
-		if err != nil {
-			log.Fatalf("Failed to initialize database: %v", err)
-		}
-		fmt.Println("Database initialized successfully.")
-
-		// Close database as the main function's last operation
-		defer func() {
-			sqlDB, err := DB.DB()
-			if err != nil {
-				log.Fatalf("Failed to get generic database object: %v", err)
-			}
-
-			err = sqlDB.Close()
-			if err != nil {
-				log.Fatalf("Failed to close database connection: %v", err)
-			}
-
-		}()
-
-		// Automatically create `friends` table if it doesn't already exist
-		err = DB.AutoMigrate(model)
-		if err != nil {
-			log.Fatal(fmt.Errorf("Could not account for a 'friends' table: %v", err))
-		}
-		fmt.Println("Database migrated successfully. Friends table created.")
-
-		// Create a single record with result
-		result := gorm.WithResult()
-		err = gorm.G[T](DB, result).Create(ctx, &model) // pass pointer of data to Create
-
-		// Output
-		fmt.Printf("Created %v.\nAffected %v rows.\nResult(s): %v\n",
-			fmt.Sprint(reflect.TypeOf(model)),
-			result.RowsAffected,
-			result.Result)
-		return err
-	}
 
 }
