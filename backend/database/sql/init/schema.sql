@@ -17,9 +17,9 @@ CREATE TABLE IF NOT EXISTS "NotificationPreferences" (
 
 CREATE TABLE IF NOT EXISTS "Users" (
 	"id" INTEGER NOT NULL UNIQUE,
-	"username" TEXT NOT NULL,
+	"username" TEXT NOT NULL UNIQUE,
 	"password" TEXT NOT NULL,
-	"email" TEXT,
+	"email" TEXT UNIQUE,
 	"profile_image_id" INTEGER,
 	"birthday" TEXT,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
