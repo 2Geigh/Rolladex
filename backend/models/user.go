@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/big"
 	"myfriends-backend/database"
+	"myfriends-backend/util"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -120,7 +121,7 @@ func RegisterUser(user User) error {
 		return err
 	}
 
-	fmt.Printf("Registered \033[3m%v\033[0m as a user (Affected %d rows)\n", user.Username, rowsAffected)
+	util.LogWithTimestamp(fmt.Sprintf("Registered \033[3m%v\033[0m as a user (Affected %d rows)", user.Username, rowsAffected))
 	return err
 }
 
@@ -155,15 +156,15 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 func HashPassword(password string) (string, error) {
 	var (
 		err        error
-		costFactor int = 14
+		costFactor int = bcrypt.DefaultCost
 	)
 
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), costFactor)
+	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(password), costFactor)
 	if err != nil {
 		err = fmt.Errorf("could not hash password: %w", err)
 	}
 
-	return string(bytes), err
+	return string(hashedBytes), err
 }
 
 func PepperPassword(password string) (string, error) {
@@ -184,4 +185,3 @@ func PepperPassword(password string) (string, error) {
 	return pepperedPassword, err
 
 }
-

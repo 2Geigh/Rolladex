@@ -1,10 +1,10 @@
 package util
 
 import (
-	"fmt"
+	"log"
 	"time"
 )
 
 func LogWithTimestamp(object any) {
-	fmt.Printf("%v: %v\n", time.Now().Format(time.DateTime), object)
+	log.Printf("%v: %v\n", time.Now().Format(time.DateTime), object)
 }

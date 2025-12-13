@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -10,7 +9,7 @@ import (
 	"myfriends-backend/util"
 	"net/http"
 
-	"gorm.io/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(w http.ResponseWriter, req *http.Request) {
@@ -38,35 +37,17 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		}
 
 		// Parse request
-		var signupFormData LoginFormData
-		err = json.Unmarshal(reqBody, &signupFormData)
+		var loginFormData LoginFormData
+		err = json.Unmarshal(reqBody, &loginFormData)
 		if err != nil {
 			util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
 			return
 		}
-		user := models.User{
-			Username: signupFormData.Username,
-			Password: signupFormData.Password,
-		}
 
-		// Establish database connection
-		DB, err := database.InitializeDB()
-		if err != nil {
-			util.ReportHttpError(err, w, "database connection initialization failed", http.StatusInternalServerError)
-			return
-		}
-		defer func() {
-			err = database.CloseDB(DB)
-			if err != nil {
-				util.ReportHttpError(err, w, "database connection closure failed", http.StatusInternalServerError)
-				return
-			}
-		}()
-
-		// Query result
-		err, code := AuthenticateUser(DB, user.Username, user.Password)
-		if err != nil {
-			util.ReportHttpError(err, w, "user authentication failed", code)
+		// Authenticate user from form data
+		loginStatus, err := AuthenticateUser(loginFormData.Username, loginFormData.Password)
+		if err != nil || loginStatus >= http.StatusBadRequest {
+			util.ReportHttpError(err, w, "login failed", loginStatus)
 			return
 		}
 
@@ -74,26 +55,47 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func AuthenticateUser(DB *gorm.DB, username string, password string) (error, int) {
-	var err error
+func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 
-	// Environmental setup
-	ctx := context.Background()
-	DB.AutoMigrate(&models.User{})
+	var (
+		dbFilePath             string = "database/myFriends.db"
+		hashedDatabasePassword string
+		err                    error
+	)
 
-	// Check if user already exists
-	user, err := gorm.G[models.User](DB).Where("username = ?", username).First(ctx)
+	// Connect to database
+	DB, err := database.InitializeDB(dbFilePath)
 	if err != nil {
-		return fmt.Errorf(`user not found`), http.StatusBadRequest
+		return http.StatusInternalServerError, fmt.Errorf("could not connect to database: %w", err)
+	}
+	defer database.CloseDB(DB)
+
+	// Verify user is in database
+	userExists, err := models.UserExists(DB, username)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("could not search for user in database: %w", err)
+	}
+	if !userExists {
+		return http.StatusBadRequest, fmt.Errorf("user not found in database")
 	}
 
-	// Check if inputted password matches that of the found user
-	inputtedPassword := password
-	userPassword := user.Password
-	if inputtedPassword != userPassword {
-		return fmt.Errorf("incorrect password"), http.StatusBadRequest
+	// Get user's password hash from database
+	stmt, err := DB.Prepare("SELECT password FROM Users WHERE Username = ?")
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("failed to query user password from database: %v", err)
+	}
+	err = stmt.QueryRow(username).Scan(&hashedDatabasePassword)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("could not grab user password from database: %w", err)
+	}
+	stmt.Close()
+
+	//	Check every possible combination of password hashes
+	err = bcrypt.CompareHashAndPassword([]byte(hashedDatabasePassword), []byte(passwordFromClient))
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't find password match: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf(`%s logged in`, username))
-	return err, http.StatusOK
+	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[0m logged in", username))
+	return http.StatusOK, err
 }

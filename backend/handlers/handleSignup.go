@@ -45,6 +45,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 			Password: signupFormData.Password,
 		}
 
+		// Create new user
 		err = models.RegisterUser(user)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't insert user into database", http.StatusInternalServerError)
