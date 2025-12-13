@@ -1,12 +1,22 @@
 package models
 
 import (
+	"crypto/rand"
 	"database/sql"
 	"fmt"
+	"math/big"
 	"myfriends-backend/database"
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
 	_ "modernc.org/sqlite"
+)
+
+var (
+	// Define pepper ASCII range
+	PepperAsciiMax   = 126 // ~
+	PepperAsciiMin   = 34  // "
+	PepperAsciiRange = new(big.Int).SetInt64(int64(PepperAsciiMax - PepperAsciiMin))
 )
 
 type NotificationPreference struct {
@@ -74,25 +84,31 @@ func RegisterUser(user User) error {
 	// Connect to database
 	DB, err := database.InitializeDB(dbFilePath)
 	if err != nil {
-		return fmt.Errorf("couldn't initialize database: %v", err)
+		return fmt.Errorf("couldn't initialize database: %w", err)
 	}
 	defer DB.Close()
 
 	// Check if user already exists in database
 	userExists, err := UserExists(DB, user.Username)
 	if err != nil {
-		return fmt.Errorf("failed to check if user already exists in database: %v", err)
+		return fmt.Errorf("failed to check if user already exists in database: %w", err)
 	}
 	if userExists {
 		return fmt.Errorf("user already exists in database")
 	}
 
+	// Prepare password for database storage
+	hashedPassword, err := HashPassword(user.Password)
+	if err != nil {
+		return fmt.Errorf("failed to prepare password for database storage: %w", err)
+	}
+
 	// Add user to database
 	stmt, err := DB.Prepare("INSERT INTO Users (username, password) VALUES (?, ?)")
 	if err != nil {
-		return fmt.Errorf("failed to add user to database: %v", err)
+		return fmt.Errorf("failed to add user to database: %w", err)
 	}
-	result, err := stmt.Exec(user.Username, user.Password)
+	result, err := stmt.Exec(user.Username, hashedPassword)
 	if err != nil {
 		return fmt.Errorf("failed to add user to database: %v", err)
 	}
@@ -135,3 +151,37 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 	// Check if count is greater than 0
 	return count > 0, nil
 }
+
+func HashPassword(password string) (string, error) {
+	var (
+		err        error
+		costFactor int = 14
+	)
+
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), costFactor)
+	if err != nil {
+		err = fmt.Errorf("could not hash password: %w", err)
+	}
+
+	return string(bytes), err
+}
+
+func PepperPassword(password string) (string, error) {
+
+	// Generate random pepper
+	pepperBigInt, err := rand.Int(rand.Reader, PepperAsciiRange)
+	if err != nil {
+		return "", err
+	}
+
+	// Convert random pepper *big.Int into a rune
+	pepperInt32 := int32(pepperBigInt.Int64())
+	pepperRune := rune(pepperInt32)
+
+	// Pepper the password
+	pepperedPassword := password + string(pepperRune)
+
+	return pepperedPassword, err
+
+}
+
