@@ -1,0 +1,39 @@
+meta {
+  name: empty
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:3001/signup
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "id": null,
+    "username": null,
+    "password": null,
+    "email": null,
+    "pfp_id": null,
+    "birthday": null,
+    "user_settings_id": null,
+    "created_at": null,
+    "updated_at": null
+  }
+  
+}
+
+assert {
+  res.status: eq 400
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

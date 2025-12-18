@@ -1,0 +1,21 @@
+meta {
+  name: hello_world
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3001/api_sanity_check
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body: eq "Hello, API client!"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -13,7 +13,8 @@ func Root(w http.ResponseWriter, req *http.Request) {
 
 	if req.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.Write([]byte(`Welcome to the headless backend. If you'd like to use a GUI, check out the frontend at <a href="http://localhost:5173/">http://localhost:5173/</a>.`))
+		w.WriteHeader(http.StatusSeeOther)
+		// w.Write([]byte(`Welcome to the headless backend. If you'd like to use a GUI, check out the frontend at <a href="http://localhost:5173/">http://localhost:5173/</a>.`))
 	}
 
 }
