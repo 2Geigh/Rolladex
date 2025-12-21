@@ -20,13 +20,22 @@
 
 ## Back-end
 
+- [ ] Create V2 of login system
+  - [ ] Migrate database and models to remove username and password fields
+  - [ ] Update frontend input forms
+  - [ ] Registration mechanism
+    - [ ] Captcha
+    - [ ] When captcha passes, direct to login mechanism
+  - [ ] Login mechanism
+    - [ ] When registered email is inputted, create a 60-minute JWT
+    - [ ] Email a link to login with the JWT
 - [ ] Create microservices for each route
 - [ ] Add unit tests
 - [ ] Add integration tests
 - [ ] Add functional tests (probably for main.go but verify first)
 - [ ] Design acceptance tests
 - [ ] Add performance tests
-- [ ] Make util.ReportHttpError modular, so that you can specify the errorMessage and errorCode as arguments
+- [x] Make util.ReportHttpError modular, so that you can specify the errorMessage and errorCode as arguments
 - [ ] (OPTIONAL) Add smoke tests
 
 ## Other
