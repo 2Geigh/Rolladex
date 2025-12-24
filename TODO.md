@@ -4,7 +4,7 @@
 
 - [x] Add React-Router routes to Main() or App()
 - [x] Create login page component
-- [ ] Create registration page component
+- [x] Create registration page component
 - [ ] Create homepage
   - [x] Create header/nav component
   - [x] Create friends list component
@@ -17,9 +17,12 @@
   - [ ] Create standalone Meetup component
 - [ ] Go through the following: [HowToTestFrontEnd.com](https://howtotestfrontend.com/courses/jest-vitest-fundamentals "A Vitest tutorial") to add tests to the front-end
 - [ ] Add Node(/Express?) routing middleware
+- [ ] Create terms of service page and route
+- [ ] Move user, friend, and meetup sample data to the backend such that it instantiates every time the database is created
 
 ## Back-end
 
+- [ ] Create terms of service text
 - [ ] Create V2 of login system
   - [ ] Migrate database and models to remove username and password fields
   - [ ] Update frontend input forms
