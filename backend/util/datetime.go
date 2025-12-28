@@ -31,8 +31,4 @@ func IsValidDate(date string) (bool, error) {
 
 }
 
-type Date struct {
-	Year  int `json:"year"`
-	Month int `json:"month"`
-	Day   int `json:"day"`
-}
+var DatetimeFormat string = "2006-01-02 15:04:05"

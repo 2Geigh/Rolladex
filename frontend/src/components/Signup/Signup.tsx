@@ -57,6 +57,10 @@ const SignUp = () => {
                         <label htmlFor="password">
                             Password <input required name="password" type="password"></input>
                         </label> 
+
+                        <div className="agreements">
+                            <input required type="checkbox" id="tos-agree" name="tos-agree"></input>
+                            <label htmlFor="tos-agree">I have read and agree to the <a href="terms_of_service">terms of service</a></label>
                         
                         <input id="loginButton" type="submit" value="Sign Up"></input>
                     </form>

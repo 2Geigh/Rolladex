@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router"
+import { Routes, Route } from "react-router-dom"
 import Login from "./components/Login/Login"
 import SignUp from "./components/Signup/Signup"
 import Home from "./components/Home/Home"
@@ -8,34 +8,111 @@ import Meetups from "./components/Meetups/Meetups"
 import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
-
 import "../static/styles/dist/app.min.css"
 import PageNotFound from "./components/PageNotFound/PageNotFound"
-
+import { useState } from "react"
 
 function App() {
+	const [isSessionValid, setIsSessionValid] = useState(false)
 
+	return (
+		<>
+			<Routes>
+				<Route
+					path="/"
+					element={
+						<Home
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/login"
+					element={
+						<Login
+							// isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/signup"
+					element={
+						<SignUp
+						// isSessionValid={isSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/home"
+					element={
+						<Home
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/friends"
+					element={
+						<Friends
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/friends/:friendId"
+					element={
+						<FriendStandalonePage
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/meetups"
+					element={
+						<Meetups
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/meetups/:meetupId"
+					element={
+						<MeetupStandalonePage
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				{/* <Route path="/user" element={<Login />} /> */}
+				<Route
+					path="/profile"
+					element={
+						<Profile
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
+				<Route
+					path="/settings"
+					element={
+						<Settings
+							isSessionValid={isSessionValid}
+							setIsSessionValid={setIsSessionValid}
+						/>
+					}
+				/>
 
-
-  return (
-    <>
-      <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/friends/:friendId" element={<FriendStandalonePage />} />
-          <Route path="/meetups" element={<Meetups />} />
-          <Route path="/meetups/:meetupId" element={<MeetupStandalonePage />} />
-          {/* <Route path="/user" element={<Login />} /> */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
-          
-          <Route path="*" element={<PageNotFound />}></Route>
-      </Routes>
-    </>
-  )
+				<Route path="*" element={<PageNotFound />}></Route>
+			</Routes>
+		</>
+	)
 }
 
 export default App

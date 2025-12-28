@@ -27,7 +27,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 
 	// CORS
-	util.SetCORS(w)
+	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 
 	type SignupFormData struct {
 		Username string `json:"username"`
@@ -54,15 +54,15 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
 			return
 		}
+
+		// Register new user
 		user := models.User{
 			Username: signupFormData.Username,
 			Password: signupFormData.Password,
 		}
-
-		// Create new user
-		err = RegisterUser(user)
+		err = CreateUser(user)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't insert user into database", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "couldn't create user", http.StatusInternalServerError)
 			return
 		}
 
@@ -70,7 +70,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func RegisterUser(user models.User) error {
+func CreateUser(user models.User) error {
 	var (
 		err        error
 		dbFilePath string = "database/myFriends.db"
@@ -115,7 +115,7 @@ func RegisterUser(user models.User) error {
 		return err
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("Registered \033[3m%v\033[0m as a user (Affected %d rows)", user.Username, rowsAffected))
+	util.LogWithTimestamp(fmt.Sprintf("Registered \033[3m%s\033[0m as a user (Affected %d rows)", user.Username, rowsAffected))
 	return err
 }
 
@@ -127,7 +127,7 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 	)
 
 	// Prepare SQL statement
-	stmt, err := DB.Prepare("SELECT COUNT(*) FROM Users WHERE Username = ?")
+	stmt, err := DB.Prepare("SELECT COUNT(*) FROM Users WHERE username = ?")
 	if err != nil {
 		return false, fmt.Errorf("failed to prepare SQL statement: %v", err)
 	}

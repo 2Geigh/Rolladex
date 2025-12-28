@@ -8,26 +8,35 @@ import (
 	"myfriends-backend/models"
 	"myfriends-backend/util"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	loginSessionLifetime_hours   = 24
+	loginSessionLifetime_seconds = loginSessionLifetime_hours * 60 * 60
 )
 
 func Login(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 
 	// CORS
-	util.SetCORS(w)
+	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	w.Header().Add("Access-Control-Allow-Credentials", "true") // To allow cookies to be set
 
 	type LoginFormData struct {
 		Username string `json:"username"`
 		Password string `json:"password"`
 	}
 
-	if req.Method == http.MethodOptions {
-		w.WriteHeader(http.StatusNoContent)
-	}
+	switch req.Method {
 
-	if req.Method == http.MethodPost {
+	case http.MethodOptions:
+		w.WriteHeader(http.StatusNoContent)
+
+	case http.MethodPost:
+		var dbFilePath = "database/myFriends.db"
 
 		// Read request
 		reqBody, err := io.ReadAll(req.Body)
@@ -45,20 +54,38 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		}
 
 		// Authenticate user from form data
-		loginStatus, err := AuthenticateUser(loginFormData.Username, loginFormData.Password)
+		loginStatus, err := AuthenticateUser(loginFormData.Username, loginFormData.Password, dbFilePath)
 		if err != nil || loginStatus >= http.StatusBadRequest {
-			util.ReportHttpError(err, w, "login failed", loginStatus)
+			util.ReportHttpError(err, w, fmt.Sprintf("\033[3m%s\033[0m couldn't log in", loginFormData.Username), loginStatus)
 			return
 		}
 
+		sessionToken, err := CreateSession(loginFormData.Username, dbFilePath)
+		if err != nil {
+			util.ReportHttpError(err, w, "could not create login session", http.StatusInternalServerError)
+			return
+		}
+		http.SetCookie(w, &http.Cookie{
+			Name:     LoginSessionCookieName,
+			Value:    sessionToken,
+			Path:     "/",
+			MaxAge:   loginSessionLifetime_seconds,
+			HttpOnly: true,
+			Secure:   false, // "true" ensures HTTPS only
+			SameSite: http.SameSiteLaxMode,
+		})
+
 		w.WriteHeader(http.StatusOK)
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+
 }
 
-func AuthenticateUser(username string, passwordFromClient string) (int, error) {
+func AuthenticateUser(username string, passwordFromClient string, dbFilePath string) (int, error) {
 
 	var (
-		dbFilePath             string = "database/myFriends.db"
 		hashedDatabasePassword string
 		err                    error
 	)
@@ -71,7 +98,7 @@ func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 	defer database.CloseDB(DB)
 
 	// Verify user is in database
-	userExists, err := models.UserExists(DB, username)
+	userExists, err := UserExists(DB, username)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not search for user in database: %w", err)
 	}
@@ -96,6 +123,59 @@ func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't find password match: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[0m logged in", username))
+	util.LogWithTimestamp(fmt.Sprintf("Authenticated user \033[3m%s\033[0m", username))
 	return http.StatusOK, err
+}
+
+func CreateSession(username string, dbFilePath string) (string, error) {
+	var (
+		user_id int
+		token   string
+		err     error
+	)
+
+	// Connect to database
+	DB, err := database.InitializeDB(dbFilePath)
+	if err != nil {
+		return token, fmt.Errorf("couldn't initialize database: %w", err)
+	}
+	defer DB.Close()
+
+	// Get user_id from username
+	stmt, err := DB.Prepare("SELECT id FROM Users WHERE username = ?")
+	if err != nil {
+		return token, fmt.Errorf("sql statement preparation for user_id selection via username failed: %v", err)
+	}
+	err = stmt.QueryRow(username).Scan(&user_id)
+	if err != nil {
+		return token, fmt.Errorf("could not scan user_id from database to local variable user_id: %v", err)
+	}
+	stmt.Close()
+
+	// Create sesssion token
+	tokenLength := 255 // Because we wanna store this as VARCHAR(255) in database
+	token, err = models.GenerateSessionToken(int64(tokenLength))
+	if err != nil {
+		return token, fmt.Errorf("couldn't create session token: %w", err)
+	}
+
+	// Create session row
+	stmt, err = DB.Prepare("INSERT INTO Sessions (user_id, session_token, expires_at, is_revoked) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		return token, fmt.Errorf("sql statement preparation for creating session failed: %w", err)
+	}
+	var (
+		isRevoked = false
+		now       = time.Now().UTC()
+		expiresAt = now.Add(24 * time.Hour).Format(util.DatetimeFormat)
+	)
+	result, err := stmt.Exec(user_id, token, expiresAt, isRevoked)
+	if err != nil {
+		return token, fmt.Errorf("could not create session: %w", err)
+	}
+	rowsAffected, _ := result.RowsAffected()
+	stmt.Close()
+
+	util.LogWithTimestamp(fmt.Sprintf("Stored %s's login session in the database, affecting %d row(s)", username, rowsAffected))
+	return token, err
 }

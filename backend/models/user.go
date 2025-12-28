@@ -53,11 +53,3 @@ type UsersFriend struct {
 	UpdatedAt          time.Time `gorm:"default:CURRENT_TIMESTAMP"`
 	RelationshipStatus string    `gorm:"type:text"`
 }
-
-type Session struct {
-	ID           uint       `gorm:"primaryKey;autoIncrement:true"`
-	UserID       uint       `gorm:"constraint:OnUpdate:NO ACTION,OnDelete:CASCADE"`
-	SessionToken string     `gorm:"not null;type:text"`
-	CreatedAt    time.Time  `gorm:"default:CURRENT_TIMESTAMP"`
-	ExpiresAt    *time.Time `gorm:"type:datetime"`
-}

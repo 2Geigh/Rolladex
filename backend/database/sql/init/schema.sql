@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS "Sessions" (
 	"session_token" TEXT NOT NULL,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"expires_at" DATETIME,
+	"is_revoked" BOOLEAN,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
 	ON UPDATE NO ACTION ON DELETE CASCADE

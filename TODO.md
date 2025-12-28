@@ -19,6 +19,7 @@
 - [ ] Add Node(/Express?) routing middleware
 - [ ] Create terms of service page and route
 - [ ] Move user, friend, and meetup sample data to the backend such that it instantiates every time the database is created
+- [x] 404 page
 
 ## Back-end
 
