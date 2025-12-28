@@ -1,4 +1,10 @@
-import { backend_base_url } from "./url"
+import { createContext, useContext } from "react"
+import { backend_base_url } from "../util/url"
+
+type AuthContext = {
+	isSessionValid: boolean
+	setIsSessionValid: React.Dispatch<React.SetStateAction<boolean>>
+}
 
 function isCookieExpired(cookieName: string): boolean {
 	const cookies = document.cookie.split("; ")
@@ -96,7 +102,14 @@ export function RedirectIfSessionInvalid( // Runs within a useLayoutEffect hook 
 	}
 }
 
-export type SessionProps = {
-	isSessionValid: boolean
-	setIsSessionValid: React.Dispatch<React.SetStateAction<boolean>>
+export const AuthContext = createContext<AuthContext | undefined>(undefined)
+
+export function UseAuthContext(): AuthContext {
+	const authContext = useContext(AuthContext)
+
+	if (authContext === undefined) {
+		throw new Error("authContext is undefined")
+	}
+
+	return authContext
 }

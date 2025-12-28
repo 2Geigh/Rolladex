@@ -10,6 +10,7 @@ import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/dist/app.min.css"
 import PageNotFound from "./components/PageNotFound/PageNotFound"
+import { AuthContext } from "./contexts/auth"
 import { useState } from "react"
 
 function App() {
@@ -17,100 +18,33 @@ function App() {
 
 	return (
 		<>
-			<Routes>
-				<Route
-					path="/"
-					element={
-						<Home
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/login"
-					element={
-						<Login
-							// isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/signup"
-					element={
-						<SignUp
-						// isSessionValid={isSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/home"
-					element={
-						<Home
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/friends"
-					element={
-						<Friends
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/friends/:friendId"
-					element={
-						<FriendStandalonePage
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/meetups"
-					element={
-						<Meetups
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/meetups/:meetupId"
-					element={
-						<MeetupStandalonePage
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				{/* <Route path="/user" element={<Login />} /> */}
-				<Route
-					path="/profile"
-					element={
-						<Profile
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
-				<Route
-					path="/settings"
-					element={
-						<Settings
-							isSessionValid={isSessionValid}
-							setIsSessionValid={setIsSessionValid}
-						/>
-					}
-				/>
+			<AuthContext.Provider value={{ isSessionValid, setIsSessionValid }}>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route
+						path="/login"
+						element={
+							<Login setIsSessionValid={setIsSessionValid} />
+						}
+					/>
+					<Route path="/signup" element={<SignUp />} />
+					<Route path="/home" element={<Home />} />
+					<Route path="/friends" element={<Friends />} />
+					<Route
+						path="/friends/:friendId"
+						element={<FriendStandalonePage />}
+					/>
+					<Route path="/meetups" element={<Meetups />} />
+					<Route
+						path="/meetups/:meetupId"
+						element={<MeetupStandalonePage />}
+					/>
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/settings" element={<Settings />} />
 
-				<Route path="*" element={<PageNotFound />}></Route>
-			</Routes>
+					<Route path="*" element={<PageNotFound />}></Route>
+				</Routes>
+			</AuthContext.Provider>
 		</>
 	)
 }

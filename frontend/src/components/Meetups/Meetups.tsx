@@ -2,23 +2,20 @@ import { MeetupsSection } from "../Home/MeetupsSection"
 import Navbar from "../Navbar/Navbar"
 import { useState, useLayoutEffect } from "react"
 import { Navigate } from "react-router"
-import { RedirectIfSessionInvalid, type SessionProps } from "../../util/auth"
+import { RedirectIfSessionInvalid } from "../../contexts/auth"
+import { UseAuthContext } from "../../contexts/auth"
 
-type MeetupsProps = SessionProps
-
-const Meetups: React.FC<MeetupsProps> = ({
-	isSessionValid,
-	setIsSessionValid,
-}) => {
+const Meetups: React.FC = () => {
 	// Validate login session before component renders
+	const authContext = UseAuthContext()
 	const [redirectToLogin, setRedirectToLogin] = useState(false)
 	useLayoutEffect(() => {
 		RedirectIfSessionInvalid(
-			isSessionValid,
-			setIsSessionValid,
+			authContext.isSessionValid,
+			authContext.setIsSessionValid,
 			setRedirectToLogin,
 		)
-	}, [isSessionValid, setIsSessionValid])
+	}, [authContext.isSessionValid, authContext.setIsSessionValid])
 	if (redirectToLogin) {
 		return <Navigate to="/login" />
 	}
