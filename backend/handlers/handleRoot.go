@@ -7,21 +7,9 @@ import (
 	"time"
 )
 
-var (
-	dbFilePath = "../database/myFriends.db"
-)
-
 func Root(w http.ResponseWriter, req *http.Request) {
 
 	util.LogHttpRequest(req)
-
-	// isLoggedIn, err := IsLoggedIn(w, req, dbFilePath)
-	// if err != nil {
-	// 	util.ReportHttpError(err, w, "couldn't determine if user's logged in: %w", http.StatusInternalServerError)
-	// }
-	// if !isLoggedIn {
-	// 	http.Redirect(w, req, "/login", http.StatusUnauthorized)
-	// }
 
 	if req.Method == http.MethodGet {
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")

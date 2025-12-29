@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 )
@@ -13,8 +12,7 @@ var (
 
 func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
 	http.Error(w, fmt.Sprintf(`%s: %v`, errorMessage, err), errorCode)
-	log.Printf(`%s: %v`, errorMessage, err)
-	// w.WriteHeader(errorCode)
+	LogWithTimestamp(fmt.Sprintf(`%s: %v`, errorMessage, err))
 }
 
 func LogHttpRequest(req *http.Request) {

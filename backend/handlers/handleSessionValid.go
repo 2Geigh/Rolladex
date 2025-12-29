@@ -46,25 +46,19 @@ func ValidateSession(w http.ResponseWriter, req *http.Request) error {
 		return fmt.Errorf("couldn't find session token: %w", err)
 	}
 
-	validateSessionCookie(sessionCookie, dbFilePath)
+	validateSessionCookie(sessionCookie)
 
 	return err
 }
 
-func validateSessionCookie(loginCookie *http.Cookie, dbFilePath string) error {
+func validateSessionCookie(loginCookie *http.Cookie) error {
 
 	if loginCookie.Expires.Before(time.Now()) {
 		return fmt.Errorf("login session expired") // according to front-end
 	}
 
-	DB, err := database.InitializeDB(dbFilePath)
-	if err != nil {
-		return fmt.Errorf("couldn't initialize database: %w", err)
-	}
-	defer DB.Close()
-
 	// Check if cookie is in database
-	stmt, err := DB.Prepare("SELECT * FROM Sessions WHERE session_token = ?")
+	stmt, err := database.DB.Prepare("SELECT * FROM Sessions WHERE session_token = ?")
 	if err != nil {
 		return fmt.Errorf("failed to prepare SQL statement: %w", err)
 	}

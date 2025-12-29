@@ -72,19 +72,11 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 
 func CreateUser(user models.User) error {
 	var (
-		err        error
-		dbFilePath string = "database/myFriends.db"
+		err error
 	)
 
-	// Connect to database
-	DB, err := database.InitializeDB(dbFilePath)
-	if err != nil {
-		return fmt.Errorf("couldn't initialize database: %w", err)
-	}
-	defer DB.Close()
-
 	// Check if user already exists in database
-	userExists, err := UserExists(DB, user.Username)
+	userExists, err := UserExists(database.DB, user.Username)
 	if err != nil {
 		return fmt.Errorf("failed to check if user already exists in database: %w", err)
 	}
@@ -99,7 +91,7 @@ func CreateUser(user models.User) error {
 	}
 
 	// Add user to database
-	stmt, err := DB.Prepare("INSERT INTO Users (username, password) VALUES (?, ?)")
+	stmt, err := database.DB.Prepare("INSERT INTO Users (username, password) VALUES (?, ?)")
 	if err != nil {
 		return fmt.Errorf("failed to add user to database: %w", err)
 	}

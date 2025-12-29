@@ -10,14 +10,17 @@ import Profile from "./components/Profile/Profile"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/dist/app.min.css"
 import PageNotFound from "./components/PageNotFound/PageNotFound"
+import Logout from "./components/Logout/Logout"
 
 function App() {
 	return (
 		<>
 			<Routes>
-				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/signup" element={<SignUp />} />
+				<Route path="/logout" element={<Logout />} />
+
+				<Route path="/" element={<Home />} />
 				<Route path="/home" element={<Home />} />
 				<Route path="/friends" element={<Friends />} />
 				<Route
