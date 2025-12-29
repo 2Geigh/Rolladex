@@ -1,19 +1,27 @@
 import Navbar from "../Navbar/Navbar"
-import { Navigate } from "react-router"
+import { Navigate } from "react-router-dom"
 import { useLayoutEffect } from "react"
-import { RedirectIfSessionInvalid } from "../../contexts/auth"
-import { UseAuthContext } from "../../contexts/auth"
+import { useState } from "react"
+import { IsLoginSessionValid } from "../../contexts/auth"
+import Loading from "../Loading/Loading"
 
 const Profile: React.FC = () => {
-	// Validate login session before component renders
-	const authContext = UseAuthContext()
+	// Auth guard
+	const [isLoginSessionValid, setIsLoginSessionValid] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 	useLayoutEffect(() => {
-		RedirectIfSessionInvalid(
-			authContext.isSessionValid,
-			authContext.setIsSessionValid,
-		)
-	}, [authContext.isSessionValid, authContext.setIsSessionValid])
-	if (!authContext.isSessionValid) {
+		IsLoginSessionValid()
+			.then((isValid) => {
+				setIsLoginSessionValid(isValid)
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
+	}, [])
+	if (isLoading) {
+		return <Loading />
+	}
+	if (!isLoginSessionValid) {
 		return <Navigate to="/login" />
 	}
 

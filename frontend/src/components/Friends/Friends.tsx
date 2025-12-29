@@ -3,10 +3,11 @@ import Navbar from "../Navbar/Navbar"
 import meetups from "../../util/meetups_sample_data"
 import "./styles/dist/Friends.min.css"
 import Footer from "../Footer/Footer"
-import { RedirectIfSessionInvalid } from "../../contexts/auth"
 import { useLayoutEffect } from "react"
-import { Navigate } from "react-router"
-import { UseAuthContext } from "../../contexts/auth"
+import { Navigate } from "react-router-dom"
+import { IsLoginSessionValid } from "../../contexts/auth"
+import Loading from "../Loading/Loading"
+import { useState } from "react"
 
 const MeetupPlansLabel = () => {
 	return (
@@ -99,15 +100,22 @@ const AddFriend: React.FC = () => {
 }
 
 const Friends: React.FC = () => {
-	// Validate login session before component renders
-	const authContext = UseAuthContext()
+	// Auth guard
+	const [isLoginSessionValid, setIsLoginSessionValid] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 	useLayoutEffect(() => {
-		RedirectIfSessionInvalid(
-			authContext.isSessionValid,
-			authContext.setIsSessionValid,
-		)
-	}, [authContext.isSessionValid, authContext.setIsSessionValid])
-	if (!authContext.isSessionValid) {
+		IsLoginSessionValid()
+			.then((isValid) => {
+				setIsLoginSessionValid(isValid)
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
+	}, [])
+	if (isLoading) {
+		return <Loading />
+	}
+	if (!isLoginSessionValid) {
 		return <Navigate to="/login" />
 	}
 

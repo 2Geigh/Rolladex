@@ -1,21 +1,36 @@
 import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import type { LoginData } from "../../util/login_signup_data"
-import type { FormEventHandler } from "react"
 import type { FormEvent } from "react"
+import { useLayoutEffect, useState } from "react"
+import { IsLoginSessionValid } from "../../contexts/auth"
+import Loading from "../Loading/Loading"
 
-type LoginProps = {
-	setIsSessionValid: (isValid: boolean) => void
-}
-
-const Login: React.FC<LoginProps> = ({ setIsSessionValid }) => {
+const Login: React.FC = () => {
 	const navigate = useNavigate()
 
-	const handleSubmit: FormEventHandler<HTMLFormElement> = async (
-		event: FormEvent<HTMLFormElement>,
-	) => {
+	// Auth guard
+	const [isLoginSessionValid, setIsLoginSessionValid] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
+	useLayoutEffect(() => {
+		IsLoginSessionValid()
+			.then((isValid) => {
+				setIsLoginSessionValid(isValid)
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
+	}, [])
+	if (isLoading) {
+		return <Loading />
+	}
+	if (isLoginSessionValid) {
+		return <Navigate to="/home" />
+	}
+
+	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 
 		const formData = new FormData(event.currentTarget as HTMLFormElement)
@@ -31,12 +46,12 @@ const Login: React.FC<LoginProps> = ({ setIsSessionValid }) => {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			credentials: "include",
+			credentials: "include", // sends cookies
 			body: JSON.stringify(loginData),
 		})
 
 		if (response.ok) {
-			setIsSessionValid(true)
+			console.log("Credentials validated by server")
 			navigate("/home")
 		} else {
 			const errorText = await response.text()
@@ -48,7 +63,6 @@ const Login: React.FC<LoginProps> = ({ setIsSessionValid }) => {
 		<>
 			<NavbarWithoutLinks />
 
-			{/* <div className="content"> */}
 			<div className="container">
 				<form id="loginForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
@@ -64,7 +78,6 @@ const Login: React.FC<LoginProps> = ({ setIsSessionValid }) => {
 					<input id="loginButton" type="submit" value="Login"></input>
 				</form>
 			</div>
-			{/* </div> */}
 
 			<Footer />
 		</>
