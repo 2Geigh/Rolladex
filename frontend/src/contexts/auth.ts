@@ -82,20 +82,17 @@ async function validateSession(): Promise<boolean> {
 export function RedirectIfSessionInvalid( // Runs within a useLayoutEffect hook before component renders
 	isSessionValid: boolean,
 	setIsSessionValid: React.Dispatch<React.SetStateAction<boolean>>, // must be false by default
-	setRedirectToLogin: React.Dispatch<React.SetStateAction<boolean>>,
 ) {
-	const redirectMessage = `Not logged in. Redirecting to login page...`
+	const redirectMessage = `Not logged in.`
 
 	if (!isSessionValid) {
 		// according to clientside state
 		console.log(redirectMessage)
-		setRedirectToLogin(true)
 	} else {
 		validateSession().then((isValid) => {
 			if (!isValid) {
 				// according to database
 				console.log(redirectMessage)
-				setRedirectToLogin(true)
 				setIsSessionValid(false)
 			}
 		})

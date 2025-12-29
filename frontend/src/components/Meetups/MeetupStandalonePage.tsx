@@ -1,33 +1,34 @@
-import { MeetupItem } from "../Home/MeetupsSection"
 import Navbar from "../Navbar/Navbar"
-import meetups from "../../util/meetups_sample_data"
-import friends from "../../util/friends_sample_data"
-import { useParams } from "react-router"
-import PageNotFound from "../PageNotFound/PageNotFound"
 import "./styles/dist/MeetupStandalonePage.min.css"
 import Footer from "../Footer/Footer"
+import { useLayoutEffect } from "react"
+import { RedirectIfSessionInvalid } from "../../contexts/auth"
+import { Navigate } from "react-router"
+import { UseAuthContext } from "../../contexts/auth"
+import type React from "react"
 
-const MeetupStandalonePage = () => {
+const MeetupStandalonePage: React.FC = () => {
+	// Validate login session before component renders
+	const authContext = UseAuthContext()
+	useLayoutEffect(() => {
+		RedirectIfSessionInvalid(
+			authContext.isSessionValid,
+			authContext.setIsSessionValid,
+		)
+	}, [authContext.isSessionValid, authContext.setIsSessionValid])
+	if (!authContext.isSessionValid) {
+		return <Navigate to="/login" />
+	}
 
-    const params = useParams()
-    const meetupId = Number(params.meetupId)
-    const meetup = meetups.find((meetup) => (meetup.id === meetupId))
-
-    if (!meetup) {
-        return(
-            <PageNotFound/>
-        )
-    }
-
-    return (
-        <>
-            <Navbar/>
-            <div className="content">
-                <MeetupItem meetup={meetup} friends={friends} />
-            </div>
-            <Footer/>
-        </>
-    )
+	return (
+		<>
+			<Navbar />
+			<div className="content">
+				{/* <MeetupItem meetup={meetup} friends={friends} /> */}
+			</div>
+			<Footer />
+		</>
+	)
 }
 
 export default MeetupStandalonePage
