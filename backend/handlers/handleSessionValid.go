@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
@@ -16,7 +15,6 @@ var (
 )
 
 func SessionValid(w http.ResponseWriter, req *http.Request) {
-	util.LogHttpRequest(req)
 
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
@@ -25,14 +23,12 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 
 	case http.MethodGet:
-		err := ValidateSession(w, req)
+		err := validateSession(req)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			log.Println("Someone tried to use an expired session")
 			return
 		}
 
-		log.Println("Session validated")
 		w.WriteHeader(http.StatusOK)
 
 	default:
@@ -40,7 +36,7 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func ValidateSession(w http.ResponseWriter, req *http.Request) error {
+func validateSession(req *http.Request) error {
 	sessionCookie, err := req.Cookie(LoginSessionCookieName)
 	if err != nil {
 		return fmt.Errorf("couldn't find session token: %w", err)

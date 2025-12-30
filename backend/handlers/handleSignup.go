@@ -15,7 +15,6 @@ import (
 )
 
 var (
-	// Define pepper ASCII range
 	saltLength = 32
 )
 
@@ -25,8 +24,6 @@ type signupFormData struct {
 }
 
 func Signup(w http.ResponseWriter, req *http.Request) {
-
-	util.LogHttpRequest(req)
 
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)

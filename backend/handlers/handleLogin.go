@@ -19,16 +19,16 @@ var (
 	loginSessionLifetime_seconds = loginSessionLifetime_hours * 60 * 60
 )
 
+type loginFormData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
 func Login(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 	w.Header().Add("Access-Control-Allow-Credentials", "true") // To allow cookies to be set
-
-	type LoginFormData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
 
 	switch req.Method {
 
@@ -36,42 +36,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 
 	case http.MethodPost:
-
-		reqBody, err := io.ReadAll(req.Body)
-		if err != nil {
-			util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
-			return
-		}
-
-		var loginFormData LoginFormData
-		err = json.Unmarshal(reqBody, &loginFormData)
-		if err != nil {
-			util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
-			return
-		}
-
-		loginStatus, err := AuthenticateUser(loginFormData.Username, loginFormData.Password)
-		if err != nil || loginStatus >= http.StatusBadRequest {
-			util.ReportHttpError(err, w, fmt.Sprintf("%s couldn't log in", loginFormData.Username), loginStatus)
-			return
-		}
-
-		sessionToken, err := CreateSession(loginFormData.Username)
-		if err != nil {
-			util.ReportHttpError(err, w, "could not create login session", http.StatusInternalServerError)
-			return
-		}
-		http.SetCookie(w, &http.Cookie{
-			Name:     LoginSessionCookieName,
-			Value:    sessionToken,
-			Path:     "/",
-			MaxAge:   loginSessionLifetime_seconds,
-			HttpOnly: true,
-			Secure:   AreCookiesSecure, // "true" ensures HTTPS only
-			SameSite: http.SameSiteLaxMode,
-		})
-
-		w.WriteHeader(http.StatusOK)
+		attemptLogin(w, req)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -79,11 +44,50 @@ func Login(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func AuthenticateUser(username string, passwordFromClient string) (int, error) {
+func attemptLogin(w http.ResponseWriter, req *http.Request) {
+	reqBody, err := io.ReadAll(req.Body)
+	if err != nil {
+		util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
+		return
+	}
+
+	var loginFormData loginFormData
+	err = json.Unmarshal(reqBody, &loginFormData)
+	if err != nil {
+		util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
+		return
+	}
+
+	loginStatusCode, err := authenticateUser(loginFormData.Username, loginFormData.Password)
+	if err != nil || loginStatusCode >= 400 {
+		util.ReportHttpError(err, w, fmt.Sprintf("%s couldn't log in", loginFormData.Username), loginStatusCode)
+		return
+	}
+
+	sessionToken, err := createSession(loginFormData.Username)
+	if err != nil {
+		util.ReportHttpError(err, w, "could not create login session", http.StatusInternalServerError)
+		return
+	}
+	http.SetCookie(w, &http.Cookie{
+		Name:     LoginSessionCookieName,
+		Value:    sessionToken,
+		Path:     "/",
+		MaxAge:   loginSessionLifetime_seconds,
+		HttpOnly: true,
+		Secure:   AreCookiesSecure, // "true" ensures HTTPS only
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func authenticateUser(username string, passwordFromClient string) (int, error) {
 
 	var (
-		hashedPepperedPassword string
-		err                    error
+		salt                 string
+		hashedSaltedPassword string
+		err                  error
 	)
 
 	userExists, err := UserExists(database.DB, username)
@@ -91,13 +95,15 @@ func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("could not search for user in database: %w", err)
 	}
 	if !userExists {
-		return http.StatusBadRequest, fmt.Errorf("user not found in database: %w", err)
+		return http.StatusConflict, fmt.Errorf("user doesn't exist")
 	}
 
-	hashedPepperedPassword, err = getPasswordHash(username)
+	hashedSaltedPassword, salt, err = getPasswordHashAndSalt(username)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't get %s's password hash or salt: %w", username, err)
+	}
 
-	//	Check every possible combination of password hashes
-	err = bcrypt.CompareHashAndPassword([]byte(hashedPepperedPassword), []byte(passwordFromClient))
+	err = bcrypt.CompareHashAndPassword([]byte(hashedSaltedPassword), []byte(passwordFromClient+salt))
 	if err != nil {
 		return http.StatusBadRequest, fmt.Errorf("incorrect password: %w", err)
 	}
@@ -106,38 +112,40 @@ func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 	return http.StatusOK, err
 }
 
-func getPasswordHash(username string) (string, error) {
+func getPasswordHashAndSalt(username string) (string, string, error) {
 	var (
-		passwordHashFromDatabase string
-		err                      error
+		passwordHash string
+		passwordSalt string
+		err          error
 	)
 
 	tx, err := database.DB.Begin()
 	if err != nil {
-		return passwordHashFromDatabase, fmt.Errorf("transaction error: %w")
+		return passwordHash, passwordSalt, fmt.Errorf("transaction error: %w", err)
 	}
 	defer tx.Rollback() // The rollback will be ignored if the tx has been committed later in the function.
 
-	stmt, err := tx.Prepare("SELECT password FROM Users WHERE Username = ?")
+	// Use a single statement to fetch both passwordHash and passwordSalt
+	stmt, err := tx.Prepare("SELECT passwordHash, passwordSalt FROM Users WHERE Username = ?")
 	if err != nil {
-		return passwordHashFromDatabase, fmt.Errorf("failed to prepare statement: %w", err)
+		return "", "", fmt.Errorf("failed to prepare statement: %w", err)
 	}
 	defer stmt.Close()
 
-	err = stmt.QueryRow(username).Scan(&passwordHashFromDatabase)
+	err = stmt.QueryRow(username).Scan(&passwordHash, &passwordSalt)
 	if err != nil {
-		return passwordHashFromDatabase, fmt.Errorf("could not grab %s's password hash: %w", username, err)
+		return "", "", fmt.Errorf("could not grab credentials for %s: %w", username, err)
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		return passwordHashFromDatabase, fmt.Errorf("failed to commit transaction: %w", err)
+		return passwordHash, passwordSalt, fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
-	return passwordHashFromDatabase, err
+	return passwordHash, passwordSalt, err
 }
 
-func CreateSession(username string) (string, error) {
+func createSession(username string) (string, error) {
 	var (
 		user_id int
 		token   string
