@@ -1,0 +1,11 @@
+{
+	"sqltools.useNodeRuntime": true,
+	"sqltools.connections": [
+		{
+			"previewLimit": 50,
+			"driver": "SQLite",
+			"name": "myFriends",
+			"database": "${workspaceFolder:myFriends}/../../Github/myFriends/backend/database/myFriends.db"
+		}
+	]
+}

@@ -44,7 +44,7 @@ func InitializeDB(dbFilePath string) error {
 	DB.SetConnMaxLifetime(maxConnectionLifetime)
 
 	// Import database schema file
-	databaseSchemaPath := filepath.Join("database", "sql", "init", "schema.sql")
+	databaseSchemaPath := filepath.Join("database", "schema", "schema.sql")
 	databaseSchema, err := os.ReadFile(databaseSchemaPath)
 	if err != nil {
 		return fmt.Errorf("couldn't read database schema file: %v\n", err)

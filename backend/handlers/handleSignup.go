@@ -3,12 +3,11 @@ package handlers
 import (
 	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
-	"math/big"
 	"myfriends-backend/database"
-	"myfriends-backend/models"
 	"myfriends-backend/util"
 	"net/http"
 
@@ -17,10 +16,13 @@ import (
 
 var (
 	// Define pepper ASCII range
-	PepperAsciiMax   = 126 // ~
-	PepperAsciiMin   = 34  // "
-	PepperAsciiRange = new(big.Int).SetInt64(int64(PepperAsciiMax - PepperAsciiMin))
+	saltLength = 32
 )
+
+type signupFormData struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 func Signup(w http.ResponseWriter, req *http.Request) {
 
@@ -29,86 +31,103 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 
-	type SignupFormData struct {
-		Username string `json:"username"`
-		Password string `json:"password"`
-	}
+	switch req.Method {
 
-	if req.Method == http.MethodOptions {
+	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
+		return
+
+	case http.MethodPost:
+		createUser(w, req)
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 
-	if req.Method == http.MethodPost {
-
-		// Read request
-		reqBody, err := io.ReadAll(req.Body)
-		if err != nil {
-			util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
-			return
-		}
-
-		// Parse request
-		var signupFormData SignupFormData
-		err = json.Unmarshal(reqBody, &signupFormData)
-		if err != nil {
-			util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
-			return
-		}
-
-		// Register new user
-		user := models.User{
-			Username: signupFormData.Username,
-			Password: signupFormData.Password,
-		}
-		err = CreateUser(user)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't create user", http.StatusInternalServerError)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-	}
 }
 
-func CreateUser(user models.User) error {
+func createUser(w http.ResponseWriter, req *http.Request) {
+	reqBody, err := io.ReadAll(req.Body)
+	if err != nil {
+		util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
+		return
+	}
+
+	var signupData signupFormData
+	err = json.Unmarshal(reqBody, &signupData)
+	if err != nil {
+		util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
+		return
+	}
+
+	if len(signupData.Username) > 255 {
+		util.ReportHttpError(fmt.Errorf("inputted username too long"), w, "username can't be longer than 255 characters", http.StatusBadRequest)
+		return
+	}
+	if len(signupData.Password) > 255 {
+		util.ReportHttpError(fmt.Errorf("inputted password too long"), w, "password can't be longer than 255 characters", http.StatusBadRequest)
+		return
+	}
+
+	statusCode, err := insertUserIntoDB(signupData)
+	if err != nil {
+		util.ReportHttpError(err, w, "couldn't create user", statusCode)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func insertUserIntoDB(signupData signupFormData) (int, error) {
 	var (
-		err error
+		passwordSalt string
+		passwordHash string
+		err          error
 	)
 
-	// Check if user already exists in database
-	userExists, err := UserExists(database.DB, user.Username)
+	userExists, err := UserExists(database.DB, signupData.Username)
 	if err != nil {
-		return fmt.Errorf("failed to check if user already exists in database: %w", err)
+		return http.StatusInternalServerError, fmt.Errorf("failed to check if user already exists in database: %w", err)
 	}
 	if userExists {
-		return fmt.Errorf("user already exists in database")
+		return http.StatusConflict, fmt.Errorf("username already taken")
 	}
 
-	// Prepare password for database storage
-	hashedPassword, err := HashPassword(user.Password)
+	passwordSalt, err = generateSalt(saltLength)
 	if err != nil {
-		return fmt.Errorf("failed to prepare password for database storage: %w", err)
+		return http.StatusInternalServerError, fmt.Errorf("could not salt password: %w", err)
 	}
 
-	// Add user to database
-	stmt, err := database.DB.Prepare("INSERT INTO Users (username, password) VALUES (?, ?)")
+	passwordHash, err = hashPassword(signupData.Password + passwordSalt)
 	if err != nil {
-		return fmt.Errorf("failed to add user to database: %w", err)
+		return http.StatusInternalServerError, fmt.Errorf("could not hash salted password: %w", err)
 	}
-	result, err := stmt.Exec(user.Username, hashedPassword)
-	if err != nil {
-		return fmt.Errorf("failed to add user to database: %v", err)
-	}
-	stmt.Close()
 
-	// View SQL statement results
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare("INSERT INTO Users (username, passwordHash, passwordSalt) VALUES (?, ?, ?)")
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %w", err)
+	}
+	defer stmt.Close()
+	result, err := stmt.Exec(signupData.Username, passwordHash, passwordSalt)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %v", err)
+	}
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return http.StatusInternalServerError, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("Registered \033[3m%s\033[0m as a user (Affected %d rows)", user.Username, rowsAffected))
-	return err
+	util.LogWithTimestamp(fmt.Sprintf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected))
+	return http.StatusOK, err
 }
 
 func UserExists(DB *sql.DB, username string) (bool, error) {
@@ -139,7 +158,7 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 	return count > 0, nil
 }
 
-func HashPassword(password string) (string, error) {
+func hashPassword(password string) (string, error) {
 	var (
 		err        error
 		costFactor int = bcrypt.DefaultCost
@@ -153,21 +172,22 @@ func HashPassword(password string) (string, error) {
 	return string(hashedBytes), err
 }
 
-func PepperPassword(password string) (string, error) {
+func generateSalt(length int) (string, error) {
 
-	// Generate random pepper
-	pepperBigInt, err := rand.Int(rand.Reader, PepperAsciiRange)
+	var (
+		salt       []byte
+		saltString string
+		err        error
+	)
+
+	salt = make([]byte, length)
+
+	_, err = rand.Read(salt)
 	if err != nil {
-		return "", err
+		return saltString, fmt.Errorf("generate salt failed: %w", err)
 	}
 
-	// Convert random pepper *big.Int into a rune
-	pepperInt32 := int32(pepperBigInt.Int64())
-	pepperRune := rune(pepperInt32)
-
-	// Pepper the password
-	pepperedPassword := password + string(pepperRune)
-
-	return pepperedPassword, err
+	saltString = base64.StdEncoding.EncodeToString(salt)
+	return saltString, err
 
 }

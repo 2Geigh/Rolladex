@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	AreCookiesSecure             = false
+	AreCookiesSecure             = false // "true" ensures HTTPS only
 	loginSessionLifetime_hours   = 24
 	loginSessionLifetime_seconds = loginSessionLifetime_hours * 60 * 60
 )
@@ -37,14 +37,12 @@ func Login(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodPost:
 
-		// Read request
 		reqBody, err := io.ReadAll(req.Body)
 		if err != nil {
 			util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
 			return
 		}
 
-		// Parse request
 		var loginFormData LoginFormData
 		err = json.Unmarshal(reqBody, &loginFormData)
 		if err != nil {
@@ -52,7 +50,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		// Authenticate user from form data
 		loginStatus, err := AuthenticateUser(loginFormData.Username, loginFormData.Password)
 		if err != nil || loginStatus >= http.StatusBadRequest {
 			util.ReportHttpError(err, w, fmt.Sprintf("%s couldn't log in", loginFormData.Username), loginStatus)
@@ -85,38 +82,59 @@ func Login(w http.ResponseWriter, req *http.Request) {
 func AuthenticateUser(username string, passwordFromClient string) (int, error) {
 
 	var (
-		hashedDatabasePassword string
+		hashedPepperedPassword string
 		err                    error
 	)
 
-	// Verify user is in database
 	userExists, err := UserExists(database.DB, username)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not search for user in database: %w", err)
 	}
 	if !userExists {
-		return http.StatusBadRequest, fmt.Errorf("user not found in database")
+		return http.StatusBadRequest, fmt.Errorf("user not found in database: %w", err)
 	}
 
-	// Get user's password hash from database
-	stmt, err := database.DB.Prepare("SELECT password FROM Users WHERE Username = ?")
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("failed to query user password from database: %v", err)
-	}
-	err = stmt.QueryRow(username).Scan(&hashedDatabasePassword)
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("could not grab user password from database: %w", err)
-	}
-	stmt.Close()
+	hashedPepperedPassword, err = getPasswordHash(username)
 
 	//	Check every possible combination of password hashes
-	err = bcrypt.CompareHashAndPassword([]byte(hashedDatabasePassword), []byte(passwordFromClient))
+	err = bcrypt.CompareHashAndPassword([]byte(hashedPepperedPassword), []byte(passwordFromClient))
 	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("couldn't find password match: %w", err)
+		return http.StatusBadRequest, fmt.Errorf("incorrect password: %w", err)
 	}
 
 	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[0m was authenticated", username))
 	return http.StatusOK, err
+}
+
+func getPasswordHash(username string) (string, error) {
+	var (
+		passwordHashFromDatabase string
+		err                      error
+	)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return passwordHashFromDatabase, fmt.Errorf("transaction error: %w")
+	}
+	defer tx.Rollback() // The rollback will be ignored if the tx has been committed later in the function.
+
+	stmt, err := tx.Prepare("SELECT password FROM Users WHERE Username = ?")
+	if err != nil {
+		return passwordHashFromDatabase, fmt.Errorf("failed to prepare statement: %w", err)
+	}
+	defer stmt.Close()
+
+	err = stmt.QueryRow(username).Scan(&passwordHashFromDatabase)
+	if err != nil {
+		return passwordHashFromDatabase, fmt.Errorf("could not grab %s's password hash: %w", username, err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return passwordHashFromDatabase, fmt.Errorf("failed to commit transaction: %w", err)
+	}
+
+	return passwordHashFromDatabase, err
 }
 
 func CreateSession(username string) (string, error) {
