@@ -7,8 +7,13 @@ import type { FormEvent } from "react"
 import { useLayoutEffect, useState } from "react"
 import { IsLoginSessionValid } from "../../contexts/auth"
 import Loading from "../Loading/Loading"
+import type { User } from "../../types/models/User"
 
-const Login: React.FC = () => {
+type LoginProps = {
+	setUser: React.Dispatch<React.SetStateAction<User | undefined>>
+}
+
+const Login: React.FC<LoginProps> = ({ setUser }) => {
 	const navigate = useNavigate()
 
 	// Auth guard
@@ -52,6 +57,9 @@ const Login: React.FC = () => {
 
 		if (response.ok) {
 			console.log("Credentials validated by server")
+			setUser({
+				username: loginData.username,
+			})
 			navigate("/home")
 		} else {
 			const errorText = await response.text()

@@ -1,4 +1,18 @@
+import { createContext, useContext } from "react"
 import { backend_base_url } from "../util/url"
+import type { User } from "../types/models/User"
+
+export const UserContext = createContext<User | undefined>(undefined)
+
+export function useUserContext() {
+	const userContext = useContext(UserContext)
+
+	if (userContext === undefined) {
+		throw new Error("useUserContext must be used within a UserContext")
+	}
+
+	return userContext
+}
 
 export async function IsLoginSessionValid(): Promise<boolean> {
 	/*

@@ -1,13 +1,9 @@
-import { useParams, Navigate } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import Navbar from "../Navbar/Navbar"
 import friends from "../../util/friends_sample_data"
 import "./styles/dist/FriendStandalonePage.min.css"
 import PageNotFound from "../PageNotFound/PageNotFound"
 import Footer from "../Footer/Footer"
-import { useState } from "react"
-import Loading from "../Loading/Loading"
-import { useLayoutEffect } from "react"
-import { IsLoginSessionValid } from "../../contexts/auth"
 
 type FriendCardProps = {
 	id: number | string
@@ -33,25 +29,6 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 const FriendStandalonePage: React.FC = () => {
 	const params = useParams()
-
-	// Auth guard
-	const [isLoginSessionValid, setIsLoginSessionValid] = useState(false)
-	const [isLoading, setIsLoading] = useState(true)
-	useLayoutEffect(() => {
-		IsLoginSessionValid()
-			.then((isValid) => {
-				setIsLoginSessionValid(isValid)
-			})
-			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [])
-	if (isLoading) {
-		return <Loading />
-	}
-	if (!isLoginSessionValid) {
-		return <Navigate to="/login" />
-	}
 
 	const friendId: number = Number(params.friendId)
 	const friend = friends.find((friend) => friend.id === friendId)
