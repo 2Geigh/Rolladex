@@ -10,7 +10,12 @@ import (
 	"github.com/inancgumus/screen"
 )
 
+var (
+	port = 3001
+)
+
 func main() {
+	screen.Clear()
 
 	// Meta
 	http.HandleFunc("/", handlers.Root)
@@ -41,12 +46,10 @@ func main() {
 	// Database
 	err := database.InitializeDB(database.DbFilePath)
 	if err != nil {
-		log.Println(fmt.Errorf("couldn't initialize database: %w", err))
+		log.Fatal(fmt.Errorf("couldn't initialize database: %w", err))
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
 	// Server
-	port := 3001
-	screen.Clear()
-	fmt.Printf("Listening on http://localhost:%d\n", port)
+	log.Printf("Listening on http://localhost:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

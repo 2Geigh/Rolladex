@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
@@ -108,7 +109,7 @@ func authenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusBadRequest, fmt.Errorf("incorrect password: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[0m was authenticated", username))
+	log.Println(fmt.Sprintf("\033[3m%s\033[0m was authenticated", username))
 	return http.StatusOK, err
 }
 
@@ -187,6 +188,6 @@ func createSession(username string) (string, error) {
 	rowsAffected, _ := result.RowsAffected()
 	stmt.Close()
 
-	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected))
+	log.Println(fmt.Sprintf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected))
 	return token, err
 }

@@ -2,8 +2,8 @@ package util
 
 import (
 	"fmt"
+	"log"
 	"net/http"
-	"time"
 )
 
 var (
@@ -12,11 +12,11 @@ var (
 
 func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
 	http.Error(w, fmt.Sprintf(`%s: %v`, errorMessage, err), errorCode)
-	LogWithTimestamp(fmt.Sprintf(`%s: %v`, errorMessage, err))
+	log.Printf(`%s: %v`, errorMessage, err)
 }
 
 func LogHttpRequest(req *http.Request) {
-	fmt.Printf("%v: %v %v\n", time.Now().Format(time.DateTime), req.Method, req.RequestURI)
+	log.Printf("%v %v\n", req.Method, req.RequestURI)
 }
 
 func SetCrossOriginResourceSharing(w http.ResponseWriter, origin string) {

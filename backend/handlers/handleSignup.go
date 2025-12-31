@@ -1,21 +1,14 @@
 package handlers
 
 import (
-	"crypto/rand"
 	"database/sql"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/util"
 	"net/http"
-
-	"golang.org/x/crypto/bcrypt"
-)
-
-var (
-	saltLength = 32
 )
 
 type signupFormData struct {
@@ -89,12 +82,12 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusConflict, fmt.Errorf("username already taken")
 	}
 
-	passwordSalt, err = generateSalt(saltLength)
+	passwordSalt, err = util.GenerateSalt(util.SaltLength)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not salt password: %w", err)
 	}
 
-	passwordHash, err = hashPassword(signupData.Password + passwordSalt)
+	passwordHash, err = util.HashPassword(signupData.Password + passwordSalt)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not hash salted password: %w", err)
 	}
@@ -122,7 +115,7 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected))
+	log.Println(fmt.Sprintf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected))
 	return http.StatusOK, err
 }
 
@@ -152,38 +145,4 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 
 	// Check if count is greater than 0
 	return count > 0, nil
-}
-
-func hashPassword(password string) (string, error) {
-	var (
-		err        error
-		costFactor int = bcrypt.DefaultCost
-	)
-
-	hashedBytes, err := bcrypt.GenerateFromPassword([]byte(password), costFactor)
-	if err != nil {
-		err = fmt.Errorf("could not hash password: %w", err)
-	}
-
-	return string(hashedBytes), err
-}
-
-func generateSalt(length int) (string, error) {
-
-	var (
-		salt       []byte
-		saltString string
-		err        error
-	)
-
-	salt = make([]byte, length)
-
-	_, err = rand.Read(salt)
-	if err != nil {
-		return saltString, fmt.Errorf("generate salt failed: %w", err)
-	}
-
-	saltString = base64.StdEncoding.EncodeToString(salt)
-	return saltString, err
-
 }

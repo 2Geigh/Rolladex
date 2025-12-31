@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/util"
 	"net/http"
@@ -87,6 +88,6 @@ func deleteSession(sessionToken string) error {
 		return fmt.Errorf("commit tx: %w", err)
 	}
 
-	util.LogWithTimestamp(fmt.Sprintf("\033[3m%s\033[3m logged out, affecting %d row(s)", username, rowsAffected))
+	log.Println(fmt.Sprintf("\033[3m%s\033[3m logged out, affecting %d row(s)", username, rowsAffected))
 	return err
 }
