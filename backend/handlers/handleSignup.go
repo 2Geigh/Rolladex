@@ -32,7 +32,6 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
-		return
 
 	case http.MethodPost:
 		createUser(w, req)

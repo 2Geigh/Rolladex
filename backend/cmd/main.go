@@ -16,11 +16,13 @@ func main() {
 	http.HandleFunc("/", handlers.Root)
 	http.HandleFunc("/api_sanity_check", handlers.ApiSanityCheck)
 
-	// Auth
-	http.HandleFunc("/session/valid", handlers.SessionValid)
+	// Authentication
 	http.HandleFunc("/login", handlers.Login)
 	http.HandleFunc("/signup", handlers.Signup)
 	http.HandleFunc("/logout", handlers.Logout)
+
+	// Authorization
+	http.HandleFunc("/session/valid", handlers.SessionValid)
 
 	// Features
 	http.HandleFunc("/home", handlers.Home)

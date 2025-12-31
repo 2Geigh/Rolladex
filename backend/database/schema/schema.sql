@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS "NotificationPreferences" (
 CREATE TABLE IF NOT EXISTS "Users" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"username" TEXT NOT NULL UNIQUE,
-	"password" TEXT NOT NULL,
+	"passwordHash" TEXT NOT NULL,
+	"passwordSalt" TEXT NOT NULL,
 	"email" TEXT UNIQUE,
 	"profile_image_id" INTEGER,
 	"birthday" TEXT,

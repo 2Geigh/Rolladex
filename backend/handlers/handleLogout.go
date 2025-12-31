@@ -20,27 +20,29 @@ func Logout(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 
 	case http.MethodGet:
-
-		// Get cookie from request
-		cookie, err := req.Cookie(LoginSessionCookieName)
-		if err != nil {
-			util.ReportHttpError(err, w, "login session cookie not recognized", http.StatusBadRequest)
-			return
-		}
-
-		err = deleteSession(cookie.Value)
-		if err != nil {
-			util.ReportHttpError(err, w, "could not delete login session", http.StatusInternalServerError)
-			return
-		}
-		deleteCookie(cookie, w)
-
-		w.WriteHeader(http.StatusOK)
+		logoutUser(w, req)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 
+}
+
+func logoutUser(w http.ResponseWriter, req *http.Request) {
+	cookie, err := req.Cookie(LoginSessionCookieName)
+	if err != nil {
+		util.ReportHttpError(err, w, "login session cookie not recognized", http.StatusBadRequest)
+		return
+	}
+
+	err = deleteSession(cookie.Value)
+	if err != nil {
+		util.ReportHttpError(err, w, "could not delete login session", http.StatusInternalServerError)
+		return
+	}
+	deleteCookie(cookie, w)
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func deleteCookie(cookie *http.Cookie, w http.ResponseWriter) {
