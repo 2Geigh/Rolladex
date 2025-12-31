@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom"
 import Navbar from "../Navbar/Navbar"
-import friends from "../../util/friends_sample_data"
 import "./styles/dist/FriendStandalonePage.min.css"
 import PageNotFound from "../PageNotFound/PageNotFound"
 import Footer from "../Footer/Footer"
+import type { Friend } from "../../types/models/Friend"
 
 type FriendCardProps = {
 	id: number | string
@@ -26,6 +26,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		</div>
 	)
 }
+
+const friends: Array<Friend> = []
 
 const FriendStandalonePage: React.FC = () => {
 	const params = useParams()

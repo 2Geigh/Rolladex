@@ -1,8 +1,10 @@
 import FriendsSection from "../Home/FriendsSection"
 import Navbar from "../Navbar/Navbar"
-import meetups from "../../util/meetups_sample_data"
 import "./styles/dist/Friends.min.css"
 import Footer from "../Footer/Footer"
+import type { Meetup } from "../../types/models/Meetup"
+
+const meetups: Array<Meetup> = []
 
 const MeetupPlansLabel = () => {
 	return (

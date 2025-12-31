@@ -2,12 +2,16 @@ import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
 import { Navigate, useNavigate } from "react-router-dom"
-import type { LoginData } from "../../util/login_signup_data"
 import type { FormEvent } from "react"
 import { useLayoutEffect, useState } from "react"
 import { IsLoginSessionValid } from "../../contexts/auth"
 import Loading from "../Loading/Loading"
 import type { User } from "../../types/models/User"
+
+type loginData = {
+	username: string
+	password: string
+}
 
 type LoginProps = {
 	setUser: React.Dispatch<React.SetStateAction<User | undefined>>
@@ -41,7 +45,7 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
 		const formData = new FormData(event.currentTarget as HTMLFormElement)
 		const data = Object.fromEntries(formData.entries())
 
-		const loginData: LoginData = {
+		const loginData: loginData = {
 			username: String(data.username),
 			password: String(data.password),
 		}
