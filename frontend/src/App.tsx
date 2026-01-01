@@ -8,31 +8,43 @@ import Profile from "./components/Profile/Profile"
 import PageNotFound from "./components/PageNotFound/PageNotFound"
 import Logout from "./components/Logout/Logout"
 import { useState } from "react"
-import type { User } from "./types/models/User"
 import { UserContext } from "./contexts/auth"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
 import Meetups from "./components/Meetups/Meetups"
 import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/dist/app.min.css"
+import type { LoginSessionData } from "./contexts/auth"
 
 function App() {
-	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-	const [user, setUser] = useState<User | undefined>(undefined)
+	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
+		isLoggedIn: false,
+		user: undefined,
+	})
 	const [isLoading, setIsLoading] = useState(true)
 
 	return (
-		<UserContext.Provider value={user}>
+		<UserContext.Provider value={loginSessionData}>
 			<Routes>
-				<Route path="/login" element={<Login setUser={setUser} />} />
+				<Route
+					path="/login"
+					element={
+						<Login
+							isLoading={isLoading}
+							setIsLoading={setIsLoading}
+							loginSessionData={loginSessionData}
+							setLoginSessionData={setLoginSessionData}
+						/>
+					}
+				/>
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/signup" element={<SignUp />} />
 
 				<Route
 					element={
 						<ProtectedRoutes
-							isLoggedIn={isLoggedIn}
-							setIsLoggedIn={setIsLoggedIn}
+							loginSessionData={loginSessionData}
+							setLoginSessionData={setLoginSessionData}
 							isLoading={isLoading}
 							setIsLoading={setIsLoading}
 						/>

@@ -2,7 +2,15 @@ import { createContext, useContext } from "react"
 import { backend_base_url } from "../util/url"
 import type { User } from "../types/models/User"
 
-export const UserContext = createContext<User | undefined>(undefined)
+export const UserContext = createContext<LoginSessionData>({
+	isLoggedIn: false,
+	user: undefined,
+})
+
+export type LoginSessionData = {
+	isLoggedIn: boolean
+	user: User | undefined
+}
 
 export function useUserContext() {
 	const userContext = useContext(UserContext)
@@ -14,7 +22,10 @@ export function useUserContext() {
 	return userContext
 }
 
-export async function IsLoginSessionValid(): Promise<boolean> {
+export async function GetSessionData(
+	loginSessionData: LoginSessionData,
+	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>,
+): Promise<void> {
 	/*
 		Returns true if session is valid according
 		to the server, false otherwise.
@@ -23,25 +34,40 @@ export async function IsLoginSessionValid(): Promise<boolean> {
 	const redirectMessage_serverside = `Session could not be validated on the server`
 	const permittedMessage_serverside = `Login session validated on the server.`
 
-	try {
-		console.log("Sending cookie data to server...")
-		const response = await fetch(`${backend_base_url}/session/valid`, {
-			method: "GET",
-			credentials: "include", // sends cookies
-		})
+	const response = await fetch(`${backend_base_url}/session/valid`, {
+		method: "GET",
+		credentials: "include", // sends cookies
+	})
 
-		if (response.ok) {
-			console.log(permittedMessage_serverside)
-			return true
-		}
-
-		if (response.status === 401) {
-			console.log(redirectMessage_serverside)
-			return false
-		}
-	} catch (err) {
-		throw new Error(`user isn't logged in: ${err}`)
+	if (response.status === 401) {
+		console.log(redirectMessage_serverside)
+		setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
+		return
 	}
+	if (!response.ok) {
+		setLoginSessionData({
+			...loginSessionData,
+			isLoggedIn: false,
+			user: undefined,
+		})
+		throw new Error(`Error fetching session data: ${response.statusText}`)
+	}
+	console.log(permittedMessage_serverside)
 
-	return false
+	try {
+		const parsed = await JSON.parse(await response.text())
+		if (parsed && parsed.id && typeof parsed.username === "string") {
+			const user: User = parsed as User
+			console.log(`user:`, user)
+			setLoginSessionData({
+				...loginSessionData,
+				user: user,
+				isLoggedIn: true,
+			})
+			return
+		}
+		throw new Error("Invalid user data from /session/user")
+	} catch (err) {
+		throw new Error(String(err))
+	}
 }

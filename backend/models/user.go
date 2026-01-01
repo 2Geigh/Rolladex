@@ -34,15 +34,15 @@ type Setting struct {
 type Email string
 
 type User struct {
-	ID             uint
-	Username       string
-	Password       string
-	Email          Email
-	ProfileImageID *uint
-	Birthday       time.Time
-	UserSettingsID *uint
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	ID             uint      `json:"id"`
+	Username       string    `json:"username"`
+	PasswordHash   string    `json:"password_hash"`
+	PasswordSalt   string    `json:"password_salt"`
+	Email          Email     `json:"email"`
+	ProfileImageID uint      `json:"profile_image_id"`
+	Birthday       time.Time `json:"birthday"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
 }
 
 type UsersFriend struct {

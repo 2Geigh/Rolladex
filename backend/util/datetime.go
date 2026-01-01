@@ -5,6 +5,10 @@ import (
 	"unicode"
 )
 
+var (
+	dateFormatLayout = "2006-01-02 15:04:05"
+)
+
 func IsValidDate(date string) (bool, error) {
 
 	var err error

@@ -1,45 +1,45 @@
 import { Navigate, Outlet } from "react-router-dom"
-import { IsLoginSessionValid } from "../../contexts/auth"
+import { GetSessionData, type LoginSessionData } from "../../contexts/auth"
 import { useLayoutEffect } from "react"
 import Loading from "../Loading/Loading"
 
 type ProtectedRoutesProps = {
-	isLoggedIn: boolean
-	setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>
+	loginSessionData: LoginSessionData
+	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>
 	isLoading: boolean
 	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const ProtectedRoutes: React.FC<ProtectedRoutesProps> = ({
-	isLoggedIn,
-	setIsLoggedIn,
+	loginSessionData,
+	setLoginSessionData,
 	isLoading,
 	setIsLoading,
 }) => {
 	// Auth guard
 	useLayoutEffect(() => {
-		if (isLoading) {
+		if (!isLoading) {
 			setIsLoading(true)
 		}
 
-		IsLoginSessionValid()
-			.then((isValid) => {
-				setIsLoggedIn(isValid)
+		GetSessionData(loginSessionData, setLoginSessionData)
+			.catch((err) => {
+				throw new Error(err)
 			})
 			.finally(() => {
 				setIsLoading(false)
 			})
-	})
+	}, []) // This empty dependancy array makes it so that it only runs the useLayoutEffect once at mount, rather than on every render
 
 	if (isLoading) {
 		return <Loading />
 	}
 
-	if (isLoggedIn) {
-		return <Outlet />
+	if (!loginSessionData.isLoggedIn) {
+		return <Navigate to="/login" />
 	}
 
-	return <Navigate to="/login" />
+	return <Outlet />
 }
 
 export default ProtectedRoutes

@@ -3,10 +3,10 @@ import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
 import { Navigate, useNavigate } from "react-router-dom"
 import type { FormEvent } from "react"
-import { useLayoutEffect, useState } from "react"
-import { IsLoginSessionValid } from "../../contexts/auth"
+import { useLayoutEffect } from "react"
+import { GetSessionData } from "../../contexts/auth"
 import Loading from "../Loading/Loading"
-import type { User } from "../../types/models/User"
+import type { LoginSessionData } from "../../contexts/auth"
 
 type loginData = {
 	username: string
@@ -14,28 +14,39 @@ type loginData = {
 }
 
 type LoginProps = {
-	setUser: React.Dispatch<React.SetStateAction<User | undefined>>
+	isLoading: boolean
+	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+	loginSessionData: LoginSessionData
+	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>
 }
 
-const Login: React.FC<LoginProps> = ({ setUser }) => {
+const Login: React.FC<LoginProps> = ({
+	isLoading,
+	setIsLoading,
+	loginSessionData,
+	setLoginSessionData,
+}) => {
 	const navigate = useNavigate()
 
 	// Auth guard
-	const [isLoginSessionValid, setIsLoginSessionValid] = useState(false)
-	const [isLoading, setIsLoading] = useState(true)
 	useLayoutEffect(() => {
-		IsLoginSessionValid()
-			.then((isValid) => {
-				setIsLoginSessionValid(isValid)
+		if (!isLoading) {
+			setIsLoading(true)
+		}
+
+		GetSessionData(loginSessionData, setLoginSessionData)
+			.catch((err) => {
+				throw new Error(err)
 			})
 			.finally(() => {
 				setIsLoading(false)
 			})
 	}, [])
+
 	if (isLoading) {
 		return <Loading />
 	}
-	if (isLoginSessionValid) {
+	if (loginSessionData.isLoggedIn) {
 		return <Navigate to="/home" />
 	}
 
@@ -61,8 +72,9 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
 
 		if (response.ok) {
 			console.log("Credentials validated by server")
-			setUser({
-				username: loginData.username,
+			setLoginSessionData({
+				...loginSessionData,
+				user: { username: loginData.username },
 			})
 			navigate("/home")
 		} else {

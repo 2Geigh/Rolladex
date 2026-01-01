@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS "Users" (
 	"passwordSalt" TEXT NOT NULL,
 	"email" TEXT UNIQUE,
 	"profile_image_id" INTEGER,
-	"birthday" TEXT,
+	"birthday" DATETIME,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),

@@ -152,8 +152,8 @@ VALUES
 ------------------------------------------------------------
 -- Sessions
 ------------------------------------------------------------
-INSERT INTO "Sessions" ("id", "user_id", "session_token", "expires_at", "is_revoked")
-VALUES
-  (1, 1, 'SESSION_TOKEN_JESUS_1', '2099-12-31 23:59:59', 0),
-  (2, 2, 'SESSION_TOKEN_ALICE_1', '2099-12-31 23:59:59', 0),
-  (3, 3, 'SESSION_TOKEN_BOB_1', '2099-12-31 23:59:59', 1);
+-- INSERT INTO "Sessions" ("id", "user_id", "session_token", "expires_at", "is_revoked")
+-- VALUES
+--   (1, 1, 'SESSION_TOKEN_JESUS_1', '2099-12-31 23:59:59', 0),
+--   (2, 2, 'SESSION_TOKEN_ALICE_1', '2099-12-31 23:59:59', 0),
+--   (3, 3, 'SESSION_TOKEN_BOB_1', '2099-12-31 23:59:59', 1);

@@ -3,15 +3,16 @@
 ## Front-end
 
 - [x] 404 page
+- [x] Make it so the website ƒetches the user's data upon signing in
 - [ ] When logged in and /home, save the current user to sessionStorage to reduce database calls
 - [ ] Add captcha to signup form
 - [ ] Make it so that /friends returns the friends assigned to the particular user
 
 ## Back-end
 
-- [ ] Create two dummy users with dummy friend data (for testing purposes) that auto-populate the database when its created
-- [ ] Database pooling / whatever you need to do to get rid of the "SQLite Busy" error
-- [ ] Replace all database functions with ACID-compliant transactions
+- [x] Create two dummy users with dummy friend data (for testing purposes) that auto-populate the database when its created
+  <!-- - [ ] Database pooling / whatever you need to do to get rid of the "SQLite Busy" error -->
+- [x] Replace all database functions with ACID-compliant transactions
 - [ ] Create terms of service text
 - [x] Create logout system
 - [ ] Add unit tests

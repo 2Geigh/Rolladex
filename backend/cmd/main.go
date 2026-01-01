@@ -28,6 +28,7 @@ func main() {
 
 	// Authorization
 	http.HandleFunc("/session/valid", handlers.SessionValid)
+	http.HandleFunc("/session/user", handlers.SessionUser)
 
 	// Features
 	http.HandleFunc("/home", handlers.Home)
