@@ -28,14 +28,11 @@ func main() {
 
 	// Authorization
 	http.HandleFunc("/session/valid", handlers.SessionValid)
-	http.HandleFunc("/session/user", handlers.SessionUser)
 
 	// Features
 	http.HandleFunc("/home", handlers.Home)
-	http.HandleFunc("/friends", handlers.Friends)
-	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
-	http.HandleFunc("/meetups", handlers.Meetups)
-	http.HandleFunc("/meetups/", handlers.MeetupStandalonePage)
+	http.HandleFunc("/friends", handlers.FriendsUrgent)
+	// http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 
 	// UX
 	http.HandleFunc("/profile", handlers.Profile)

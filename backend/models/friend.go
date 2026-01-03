@@ -11,6 +11,7 @@ type Friend struct {
 	LastInteractionDate time.Time `gorm:"type:datetime"`
 	Birthday            time.Time `gorm:"type:date"`
 	ProfileImageID      uint      `gorm:"foreignKey:ID;constraint:OnDelete:SET NULL"`
+	RelationshipStatus  uint      `json:"relationship_status"`
 	CreatedAt           time.Time `gorm:"autoCreateTime"`
 	UpdatedAt           time.Time `gorm:"autoUpdateTime"`
 }

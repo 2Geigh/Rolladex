@@ -77,7 +77,7 @@ func attemptLogin(w http.ResponseWriter, req *http.Request) {
 		MaxAge:   loginSessionLifetime_seconds,
 		HttpOnly: true,
 		Secure:   AreCookiesSecure, // "true" ensures HTTPS only
-		SameSite: http.SameSiteLaxMode,
+		SameSite: http.SameSiteStrictMode,
 	})
 
 	w.WriteHeader(http.StatusOK)
@@ -109,7 +109,7 @@ func authenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusBadRequest, fmt.Errorf("incorrect password: %w", err)
 	}
 
-	log.Println(fmt.Sprintf("\033[3m%s\033[0m was authenticated", username))
+	log.Printf("\033[3m%s\033[0m was authenticated", username)
 	return http.StatusOK, err
 }
 
@@ -188,6 +188,6 @@ func createSession(username string) (string, error) {
 	rowsAffected, _ := result.RowsAffected()
 	stmt.Close()
 
-	log.Println(fmt.Sprintf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected))
+	log.Printf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected)
 	return token, err
 }

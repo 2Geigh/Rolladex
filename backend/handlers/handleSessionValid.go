@@ -4,11 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -25,13 +25,13 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 
 	case http.MethodGet:
-		err := validateSession(req)
+		user_id, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
 			return
 		}
 
-		user, err := getSessionUser(req)
+		user, err := getSessionUser(user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't find user data", http.StatusInternalServerError)
 			return
@@ -50,25 +50,52 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't write user JSON data", http.StatusInternalServerError)
 			return
 		}
-		log.Println(string(userJson))
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
 
-func validateSession(req *http.Request) error {
-	sessionCookie, err := req.Cookie(LoginSessionCookieName)
+func validateSession(req *http.Request) (string, error) {
+	var (
+		sessionCookie *http.Cookie
+		sessionToken  string
+		user_id       string
+		err           error
+	)
+	sessionCookie, err = req.Cookie(LoginSessionCookieName)
 	if err != nil {
-		return fmt.Errorf("couldn't find session token: %w", err)
+		return user_id, fmt.Errorf("couldn't find session cookie: %w", err)
 	}
 
 	err = validateSessionCookie(sessionCookie)
 	if err != nil {
-		return fmt.Errorf("couldn't validate session cookie: %w", err)
+		return user_id, fmt.Errorf("couldn't validate session cookie: %w", err)
 	}
+	sessionToken = sessionCookie.Value
 
-	return err
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return user_id, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`
+		SELECT u.id
+		FROM Sessions s
+		JOIN Users u ON s.user_id = u.id
+		WHERE s.session_token = ?;`,
+	)
+	if err != nil {
+		return user_id, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(sessionToken).Scan(user_id)
+	if err != nil {
+		return user_id, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
+	}
+	tx.Commit()
+
+	return user_id, err
 }
 
 func validateSessionCookie(loginCookie *http.Cookie) error {
@@ -121,37 +148,33 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	return err
 }
 
-func getSessionUser(req *http.Request) (models.User, error) {
+func getSessionUser(user_id string) (models.User, error) {
 	var (
-		sessionCookie *http.Cookie
-		sessionToken  string
-		user          models.User
-		err           error
+		user models.User
+		err  error
 	)
 
-	sessionCookie, err = req.Cookie(LoginSessionCookieName)
+	user_id_int, err := strconv.ParseInt(user_id, 10, 64)
 	if err != nil {
-		return user, fmt.Errorf("couldn't find session token: %w", err)
+		return user, err
 	}
-	sessionToken = sessionCookie.Value
+	user.ID = uint(user_id_int)
 
-	// Find user in database
 	tx, err := database.DB.Begin()
 	if err != nil {
 		return user, fmt.Errorf("couldn't begin transaction: %w", err)
 	}
 	defer tx.Rollback()
 	stmt, err := tx.Prepare(`
-		SELECT u.id, u.username, u.email, u.profile_image_id, u.birthday, u.created_at
-		FROM Sessions s
-		JOIN Users u ON s.user_id = u.id
-		WHERE s.session_token = ?;`,
+		SELECT username, email, profile_image_id, birthday, created_at
+		FROM Users
+		WHERE id = ?;`,
 	)
 	if err != nil {
 		return user, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(sessionToken).Scan(&user.ID, &user.Username, &user.Email, &user.ProfileImageID, &user.Birthday, &user.CreatedAt)
+	err = stmt.QueryRow(user_id).Scan(&user.Username, &user.Email, &user.ProfileImageID, &user.Birthday, &user.CreatedAt)
 	if err != nil {
 		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}

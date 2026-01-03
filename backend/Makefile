@@ -11,12 +11,7 @@ build:
 	go build -o ${BINARY_NAME} ./cmd/main.go
 
 test:
-# 	go test -v ./cmd
-# 	go test -v ./database
-# 	go test -v ./handlers
-	go test -v ./models
-# 	go test -v ./views
-	go test -v ./util
+	go test -v ./test
 
 run:
 	go build -o ${BINARY_NAME} ./cmd/main.go

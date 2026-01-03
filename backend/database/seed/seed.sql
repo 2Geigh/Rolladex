@@ -42,9 +42,9 @@ VALUES
 INSERT INTO "Users" ("username", "passwordHash", "passwordSalt", "email", "profile_image_id", "birthday")
 VALUES
     -- User 1: Jesus, full info
-    ('jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@example.com', 1, '0000-12-25'),
+    ('jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@nazareth.ps', 1, '0000-12-25'),
     -- User 2: some optional info
-    ('party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@example.com', NULL, NULL),
+    ('party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@wonderland.gb', NULL, NULL),
     -- User 3: bare minimum
     ('bob_minimal', 'HASH_BOB_123', 'SALT_BOB_123', NULL, NULL, NULL);
 
@@ -75,25 +75,25 @@ VALUES
 -- Jesus (user 1) with 12 friends
 INSERT INTO "UsersFriends" ("id", "user_id", "friend_id", "relationship_status")
 VALUES
-  (1, 1, 1, 'close'),
-  (2, 1, 2, 'close'),
-  (3, 1, 3, 'close'),
-  (4, 1, 4, 'close'),
-  (5, 1, 5, 'close'),
-  (6, 1, 6, 'close'),
-  (7, 1, 7, 'close'),
-  (8, 1, 8, 'close'),
-  (9, 1, 9, 'close'),
-  (10, 1, 10, 'close'),
-  (11, 1, 11, 'close'),
-  (12, 1, 12, 'close');
+  (1, 1, 1, 2),
+  (2, 1, 2, 1),
+  (3, 1, 3, 2),
+  (4, 1, 4, 2),
+  (5, 1, 5, 2),
+  (6, 1, 6, 2),
+  (7, 1, 7, 2),
+  (8, 1, 8, 2),
+  (9, 1, 9, 2),
+  (10, 1, 10, 2),
+  (11, 1, 11, 2),
+  (12, 1, 12, 2);
 
 -- Alice (user 2) with 3 friends (re-using some Friends rows)
-INSERT INTO "UsersFriends" ("id", "user_id", "friend_id", "relationship_status")
+INSERT INTO "Relationships" ("id", "user_id", "friend_id", "relationship_tier")
 VALUES
-  (13, 2, 1, 'acquaintance'),
-  (14, 2, 2, 'acquaintance'),
-  (15, 2, 13, 'bestie');
+  (13, 2, 1, 4),
+  (14, 2, 2, 4),
+  (15, 2, 13, 1);
 
 -- Bob (user 3) intentionally has no entries in UsersFriends
 

@@ -1,6 +1,7 @@
-package util
+package test
 
 import (
+	"myfriends-backend/util"
 	"testing"
 )
 
@@ -22,7 +23,7 @@ func TestIsValidDate(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		result, err := IsValidDate(testCase.date)
+		result, err := util.IsValidDate(testCase.date)
 
 		if result != testCase.expected {
 			t.Errorf("IsValidDate(%v) == %v, want %v", testCase.date, result, testCase.expected)

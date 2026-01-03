@@ -1,6 +1,7 @@
-package models
+package test
 
 import (
+	"myfriends-backend/models"
 	"testing"
 	"unicode/utf8"
 )
@@ -19,7 +20,7 @@ func TestGenerateSessionToken(t *testing.T) {
 	}
 
 	for _, testCase := range testCases {
-		result, err := GenerateSessionToken(testCase.length)
+		result, err := models.GenerateSessionToken(testCase.length)
 
 		if !testCase.validInput {
 			if err == nil {
