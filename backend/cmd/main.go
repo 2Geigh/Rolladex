@@ -31,7 +31,8 @@ func main() {
 
 	// Features
 	http.HandleFunc("/home", handlers.Home)
-	http.HandleFunc("/friends", handlers.FriendsUrgent)
+	http.HandleFunc("/friends", handlers.Friends)
+	http.HandleFunc("/friends/urgent", handlers.FriendsUrgent)
 	// http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 
 	// UX

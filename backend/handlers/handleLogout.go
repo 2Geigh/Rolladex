@@ -13,7 +13,6 @@ func Logout(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
-	w.Header().Add("Access-Control-Allow-Credentials", "true") // To allow cookies to be set
 
 	switch req.Method {
 

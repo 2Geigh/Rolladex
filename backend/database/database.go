@@ -66,6 +66,7 @@ func InitializeDB(dbFilePath string) error {
 	if !databaseExists {
 		err = seed()
 		if err != nil {
+			os.Remove(dbFilePath)
 			return fmt.Errorf("couldn't seed database: %w", err)
 		}
 	}

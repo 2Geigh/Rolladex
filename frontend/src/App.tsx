@@ -8,13 +8,17 @@ import Profile from "./components/Profile/Profile"
 import PageNotFound from "./components/PageNotFound/PageNotFound"
 import Logout from "./components/Logout/Logout"
 import { useState } from "react"
-import { UserContext } from "./contexts/auth"
+import { LoginSessionContext } from "./contexts/LoginSession"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
 import Meetups from "./components/Meetups/Meetups"
 import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/dist/app.min.css"
-import type { LoginSessionData } from "./contexts/auth"
+import type { LoginSessionData } from "./contexts/LoginSession"
+import { useEffect } from "react"
+import { GetSessionData } from "./contexts/LoginSession"
+import Loading from "./components/Loading/Loading"
+import Navbar from "./components/Navbar/Navbar"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -22,53 +26,57 @@ function App() {
 		user: undefined,
 	})
 	const [isLoading, setIsLoading] = useState(true)
+	const LoginSessionContextValue = {
+		...loginSessionData,
+		updateSession: setLoginSessionData,
+	}
+
+	useEffect(() => {
+		console.log("<App/> useEffect running")
+		setIsLoading(true)
+		GetSessionData(loginSessionData, setLoginSessionData)
+			.catch((err) => console.error(`session check failed: ${err}`))
+			.finally(() => setIsLoading(false))
+	}, []) // Runs only once on app mount
+
+	if (isLoading) {
+		return (
+			<>
+				<Navbar />
+				<Loading />
+			</>
+		)
+	}
 
 	return (
-		<UserContext.Provider value={loginSessionData}>
-			<Routes>
-				<Route
-					path="/login"
-					element={
-						<Login
-							isLoading={isLoading}
-							setIsLoading={setIsLoading}
-							loginSessionData={loginSessionData}
-							setLoginSessionData={setLoginSessionData}
-						/>
-					}
-				/>
-				<Route path="/logout" element={<Logout />} />
-				<Route path="/signup" element={<SignUp />} />
+		<>
+			<LoginSessionContext.Provider value={LoginSessionContextValue}>
+				<Routes>
+					<Route path="/login" element={<Login />} />
+					<Route path="/logout" element={<Logout />} />
+					<Route path="/signup" element={<SignUp />} />
 
-				<Route
-					element={
-						<ProtectedRoutes
-							loginSessionData={loginSessionData}
-							setLoginSessionData={setLoginSessionData}
-							isLoading={isLoading}
-							setIsLoading={setIsLoading}
+					<Route element={<ProtectedRoutes />}>
+						<Route path="/" element={<Home />} />
+						<Route path="/home" element={<Home />} />
+						<Route path="/friends" element={<Friends />} />
+						<Route
+							path="/friends/:friendId"
+							element={<FriendStandalonePage />}
 						/>
-					}
-				>
-					<Route path="/" element={<Home />} />
-					<Route path="/home" element={<Home />} />
-					<Route path="/friends" element={<Friends />} />
-					<Route
-						path="/friends/:friendId"
-						element={<FriendStandalonePage />}
-					/>
-					<Route path="/meetups" element={<Meetups />} />
-					<Route
-						path="/meetups/:meetupId"
-						element={<MeetupStandalonePage />}
-					/>
-					<Route path="/profile" element={<Profile />} />
-					<Route path="/settings" element={<Settings />} />
-				</Route>
+						<Route path="/meetups" element={<Meetups />} />
+						<Route
+							path="/meetups/:meetupId"
+							element={<MeetupStandalonePage />}
+						/>
+						<Route path="/profile" element={<Profile />} />
+						<Route path="/settings" element={<Settings />} />
+					</Route>
 
-				<Route path="*" element={<PageNotFound />}></Route>
-			</Routes>
-		</UserContext.Provider>
+					<Route path="*" element={<PageNotFound />}></Route>
+				</Routes>
+			</LoginSessionContext.Provider>
+		</>
 	)
 }
 

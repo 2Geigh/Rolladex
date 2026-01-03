@@ -1,13 +1,15 @@
 import Navbar from "../Navbar/Navbar"
-import { useUserContext } from "../../contexts/auth"
+import { useLoginSessionContext } from "../../contexts/LoginSession"
 
 const Profile: React.FC = () => {
-	const user = useUserContext()
+	const loginSessionContext = useLoginSessionContext()
 
 	return (
 		<>
 			<Navbar />
-			<div className="content">Hello, {user?.username}</div>
+			<div className="content">
+				Hello, {loginSessionContext.user?.username}
+			</div>
 		</>
 	)
 }

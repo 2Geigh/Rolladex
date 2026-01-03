@@ -70,10 +70,10 @@ VALUES
     ('Fun Alice Friend', NULL, 14);
 
 ------------------------------------------------------------
--- UsersFriends
+-- Relationships
 ------------------------------------------------------------
 -- Jesus (user 1) with 12 friends
-INSERT INTO "UsersFriends" ("id", "user_id", "friend_id", "relationship_status")
+INSERT INTO "Relationships" ("id", "user_id", "friend_id", "relationship_tier")
 VALUES
   (1, 1, 1, 2),
   (2, 1, 2, 1),
@@ -95,7 +95,7 @@ VALUES
   (14, 2, 2, 4),
   (15, 2, 13, 1);
 
--- Bob (user 3) intentionally has no entries in UsersFriends
+-- Bob (user 3) intentionally has no entries in Relationships
 
 ------------------------------------------------------------
 -- Interactions

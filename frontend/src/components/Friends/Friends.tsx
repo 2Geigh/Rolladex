@@ -1,4 +1,4 @@
-import FriendsSection from "../Home/FriendsSection"
+import FriendsSection from "../Home/ToContactSection"
 import Navbar from "../Navbar/Navbar"
 import "./styles/dist/Friends.min.css"
 import Footer from "../Footer/Footer"

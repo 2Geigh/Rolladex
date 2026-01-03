@@ -20,7 +20,6 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
-	w.Header().Add("Access-Control-Allow-Credentials", "true")
 
 	switch req.Method {
 
@@ -89,7 +88,7 @@ func validateSession(req *http.Request) (string, error) {
 		return user_id, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(sessionToken).Scan(user_id)
+	err = stmt.QueryRow(sessionToken).Scan(&user_id)
 	if err != nil {
 		return user_id, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}

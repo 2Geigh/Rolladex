@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS "Users" (
 CREATE TABLE IF NOT EXISTS "Friends" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"name" TEXT NOT NULL,
-	"birthday" TEXT,
+	"birthday" DATETIME,
 	"profile_image_id" INTEGER,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "Relationships" (
 
 CREATE TABLE IF NOT EXISTS "Interactions" (
 	"id" INTEGER NOT NULL UNIQUE,
-	"date" TEXT NOT NULL,
+	"date" DATETIME NOT NULL,
 	"user_id" INTEGER NOT NULL,
 	"friend_id" INTEGER NOT NULL,
 	"interaction_type" VARCHAR,

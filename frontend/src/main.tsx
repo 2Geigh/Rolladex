@@ -11,6 +11,3 @@ createRoot(document.getElementById("root")!).render(
 		</BrowserRouter>
 	</StrictMode>,
 )
-
-// const router = express()
-// const port = 3000

@@ -1,8 +1,9 @@
 import "./styles/dist/Home.min.css"
 import Navbar from "../Navbar/Navbar"
-import FriendsSection from "./FriendsSection"
+import { ToContactSection } from "./ToContactSection"
 import { MeetupsSection } from "./MeetupsSection"
 import Footer from "../Footer/Footer"
+import type React from "react"
 
 const Home: React.FC = () => {
 	return (
@@ -10,7 +11,7 @@ const Home: React.FC = () => {
 			<Navbar />
 
 			<div className="content">
-				<FriendsSection />
+				<ToContactSection />
 				<MeetupsSection />
 			</div>
 

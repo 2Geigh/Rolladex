@@ -3,91 +3,159 @@ package test
 import (
 	"myfriends-backend/handlers"
 	"myfriends-backend/models"
+	"slices"
 	"testing"
 	"time"
 )
 
-func TestGetUrgencyScore(t *testing.T) {
-	testCases := []struct {
-		friend   models.Friend
-		expected float64
-		errMsg   string
-	}{
+type testCase struct {
+	friend   models.Friend
+	expected float64
+	errMsg   string
+}
+
+var (
+	zeroDaysAgoCases = []testCase{
 		{
 			friend: models.Friend{
-				RelationshipStatus:  1,                            // "inner clique"
-				LastInteractionDate: time.Now().AddDate(0, -1, 0), // 1 month ago
+				RelationshipTier:    1,                           // "inner clique"
+				LastInteractionDate: time.Now().AddDate(0, 0, 0), // 0 days ago
 			},
-			expected: 1.0, // should trigger max urgency
+			expected: 0, // should trigger no urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  2,                            // "close friends"
-				LastInteractionDate: time.Now().AddDate(0, -3, 0), // 3 months ago
+				RelationshipTier:    2,                           // "close friends"
+				LastInteractionDate: time.Now().AddDate(0, 0, 0), // 0 days ago
 			},
-			expected: 0.9375, // (90/32)
+			expected: 0, // should trigger no urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  3,                            // "ordinary friends"
-				LastInteractionDate: time.Now().AddDate(0, -1, 0), // 1 year ago
+				RelationshipTier:    3,                           // "ordinary friends"
+				LastInteractionDate: time.Now().AddDate(0, 0, 0), // 0 days ago
 			},
-			expected: 1.0, // should trigger max urgency
+			expected: 0, // should trigger no urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  4,                            // "friends / acquaintances"
-				LastInteractionDate: time.Now().AddDate(-3, 0, 0), // 3 years ago
+				RelationshipTier:    4,                           // "acquaintances"
+				LastInteractionDate: time.Now().AddDate(0, 0, 0), // 0 days ago
 			},
-			expected: 1.0, // should trigger max urgency
+			expected: 0, // should trigger no urgency
+			errMsg:   "",
+		}}
+	futureCases = []testCase{
+		{
+			friend: models.Friend{
+				RelationshipTier:    1,                           // "inner clique"
+				LastInteractionDate: time.Now().AddDate(0, 0, 1), // 8 days ago
+			},
+			expected: 0.00, // should trigger no urgency
+			errMsg:   "last interaction/meetup date can't be in the future",
+		},
+		{
+			friend: models.Friend{
+				RelationshipTier:    2,                           // "close friends"
+				LastInteractionDate: time.Now().AddDate(0, 2, 0), // 8 days ago
+			},
+			expected: 0.00, // should trigger no urgency
+			errMsg:   "last interaction/meetup date can't be in the future",
+		},
+		{
+			friend: models.Friend{
+				RelationshipTier:    3,                           // "ordinary friends"
+				LastInteractionDate: time.Now().AddDate(3, 0, 0), // 8 days ago
+			},
+			expected: 0.00, // should trigger no urgency
+			errMsg:   "last interaction/meetup date can't be in the future",
+		},
+		{
+			friend: models.Friend{
+				RelationshipTier:    4,                           // "acquaintances"
+				LastInteractionDate: time.Now().AddDate(9, 9, 9), // 8 days ago
+			},
+			expected: 0.00, // should trigger no urgency
+			errMsg:   "last interaction/meetup date can't be in the future",
+		}}
+	boundaryCases = []testCase{
+		{
+			friend: models.Friend{
+				RelationshipTier:    1,                            // "inner clique"
+				LastInteractionDate: time.Now().AddDate(0, 0, -8), // 8 days ago
+			},
+			expected: 1, // should trigger max urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  1,                            // "inner clique"
-				LastInteractionDate: time.Now().AddDate(0, 0, -7), // 7 days ago
+				RelationshipTier:    2,                             // "close friends"
+				LastInteractionDate: time.Now().AddDate(0, 0, -32), // 32 days ago
 			},
-			expected: 0.875, // (7/8)
+			expected: 1, // should trigger max urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  2,                            // "close friends"
-				LastInteractionDate: time.Now().AddDate(0, -2, 0), // 2 months ago
+				RelationshipTier:    3,                              // "ordinary friends"
+				LastInteractionDate: time.Now().AddDate(0, 0, -366), // 366 days ago
 			},
-			expected: 0.625, // (60/32)
+			expected: 1, // should trigger max urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  3,                            // "ordinary friends"
-				LastInteractionDate: time.Now().AddDate(0, -6, 0), // 6 months ago
+				RelationshipTier:    4,                              // "acquaintances"
+				LastInteractionDate: time.Now().AddDate(0, 0, -731), // 731 days ago
 			},
-			expected: 0.5, // (180/366)
+			expected: 1, // should trigger max urgency
+			errMsg:   "",
+		},
+	}
+	longTimeAgoCases = []testCase{
+		{
+			friend: models.Friend{
+				RelationshipTier:    1,                                 // "inner clique"
+				LastInteractionDate: time.Now().AddDate(-9999, -9, -9), // A long time ago
+			},
+			expected: 1, // should trigger max urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  4,                            // "friends / acquaintances"
-				LastInteractionDate: time.Now().AddDate(-1, 0, 0), // 1 year ago
+				RelationshipTier:    2,                                 // "close friends"
+				LastInteractionDate: time.Now().AddDate(-9999, -9, -9), // A long time ago
 			},
-			expected: 0.5, // (365/731)
+			expected: 1, // should trigger max urgency
 			errMsg:   "",
 		},
 		{
 			friend: models.Friend{
-				RelationshipStatus:  1,                           // "inner clique"
-				LastInteractionDate: time.Now().AddDate(0, 0, 1), // 1 day in future (should give error)
+				RelationshipTier:    3,                                 // "ordinary friends"
+				LastInteractionDate: time.Now().AddDate(-9999, -9, -9), // A long time ago
 			},
-			expected: 0.0,
-			errMsg:   "incorrect calculation for days since last interaction (computed negative value)",
+			expected: 1, // should trigger max urgency
+			errMsg:   "",
+		},
+		{
+			friend: models.Friend{
+				RelationshipTier:    4,                                 // "acquaintances"
+				LastInteractionDate: time.Now().AddDate(-9999, -9, -9), // A long time ago
+			},
+			expected: 1, // should trigger max urgency
+			errMsg:   "",
 		},
 	}
 
-	for _, testCase := range testCases {
+	GetUrgencyScore_TestCases = slices.Concat(zeroDaysAgoCases, futureCases, boundaryCases, longTimeAgoCases)
+)
+
+func TestGetUrgencyScore(t *testing.T) {
+
+	for _, testCase := range GetUrgencyScore_TestCases {
 		result, err := handlers.GetUrgencyScore(testCase.friend)
 
 		if result != testCase.expected {
@@ -99,7 +167,7 @@ func TestGetUrgencyScore(t *testing.T) {
 			if err.Error() != testCase.errMsg {
 				t.Errorf("GetUrgencyScore(%q) error = %q; want %q", testCase.friend, err.Error(), testCase.errMsg)
 			}
-		} else if result == testCase.expected && err != nil {
+		} else if testCase.errMsg == "" && err != nil {
 			t.Errorf("GetUrgencyScore(%q) = %v; want no error", testCase.friend, err)
 		}
 	}

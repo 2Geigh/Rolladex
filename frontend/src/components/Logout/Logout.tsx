@@ -2,6 +2,7 @@ import { Navigate } from "react-router-dom"
 import { useLayoutEffect, useState } from "react"
 import Loading from "../Loading/Loading"
 import { backend_base_url } from "../../util/url"
+import { useLoginSessionContext } from "../../contexts/LoginSession"
 
 async function HasLoggedOut(): Promise<boolean> {
 	const response = await fetch(`${backend_base_url}/logout`, {
@@ -23,13 +24,16 @@ async function HasLoggedOut(): Promise<boolean> {
 }
 
 const Logout: React.FC = () => {
-	const [hasLoggedOut, setHasLoggedOut] = useState(false)
+	const loginSessionContext = useLoginSessionContext()
 	const [isLoading, setIsLoading] = useState(true)
 
 	useLayoutEffect(() => {
 		HasLoggedOut()
 			.then((hasLoggedOut) => {
-				setHasLoggedOut(hasLoggedOut)
+				loginSessionContext.updateSession({
+					...loginSessionContext,
+					isLoggedIn: !hasLoggedOut,
+				})
 			})
 			.catch((err) => {
 				throw new Error(err)
@@ -41,10 +45,6 @@ const Logout: React.FC = () => {
 
 	if (isLoading) {
 		return <Loading />
-	}
-
-	if (!hasLoggedOut) {
-		return <Navigate to="/login" />
 	}
 
 	return <Navigate to="/login" />

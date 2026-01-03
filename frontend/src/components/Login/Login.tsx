@@ -1,52 +1,34 @@
 import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./dist/Login.min.css"
-import { Navigate, useNavigate } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import type { FormEvent } from "react"
-import { useLayoutEffect } from "react"
-import { GetSessionData } from "../../contexts/auth"
+import { useLayoutEffect, useState } from "react"
+import {
+	GetSessionAndUserData,
+	useLoginSessionContext,
+} from "../../contexts/LoginSession"
 import Loading from "../Loading/Loading"
-import type { LoginSessionData } from "../../contexts/auth"
 
 type loginData = {
 	username: string
 	password: string
 }
 
-type LoginProps = {
-	isLoading: boolean
-	setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
-	loginSessionData: LoginSessionData
-	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>
-}
-
-const Login: React.FC<LoginProps> = ({
-	isLoading,
-	setIsLoading,
-	loginSessionData,
-	setLoginSessionData,
-}) => {
-	const navigate = useNavigate()
+const Login: React.FC = () => {
+	const loginSessionContext = useLoginSessionContext()
+	const [isLoading, setIsLoading] = useState(true)
 
 	// Auth guard
 	useLayoutEffect(() => {
-		if (!isLoading) {
-			setIsLoading(true)
-		}
-
-		GetSessionData(loginSessionData, setLoginSessionData)
-			.catch((err) => {
-				throw new Error(err)
-			})
-			.finally(() => {
-				setIsLoading(false)
-			})
+		setIsLoading(false)
 	}, [])
 
 	if (isLoading) {
 		return <Loading />
 	}
-	if (loginSessionData.isLoggedIn) {
+
+	if (loginSessionContext.isLoggedIn) {
 		return <Navigate to="/home" />
 	}
 
@@ -72,11 +54,14 @@ const Login: React.FC<LoginProps> = ({
 
 		if (response.ok) {
 			console.log("Credentials validated by server")
-			setLoginSessionData({
-				...loginSessionData,
-				user: { username: loginData.username },
+			loginSessionContext.updateSession({
+				...loginSessionContext,
+				isLoggedIn: true,
 			})
-			navigate("/home")
+			await GetSessionAndUserData(
+				loginSessionContext,
+				loginSessionContext.updateSession,
+			)
 		} else {
 			const errorText = await response.text()
 			alert(errorText)

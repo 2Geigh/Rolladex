@@ -2,27 +2,29 @@ import { createContext, useContext } from "react"
 import { backend_base_url } from "../util/url"
 import type { User } from "../types/models/User"
 
-export const UserContext = createContext<LoginSessionData>({
-	isLoggedIn: false,
-	user: undefined,
-})
-
 export type LoginSessionData = {
 	isLoggedIn: boolean
 	user: User | undefined
 }
 
-export function useUserContext() {
-	const userContext = useContext(UserContext)
-
-	if (userContext === undefined) {
-		throw new Error("useUserContext must be used within a UserContext")
-	}
-
-	return userContext
+export type LoginSessionContextType = LoginSessionData & {
+	updateSession: React.Dispatch<React.SetStateAction<LoginSessionData>>
 }
 
-export async function GetSessionData(
+export const LoginSessionContext = createContext<
+	LoginSessionContextType | undefined
+>(undefined)
+
+export function useLoginSessionContext() {
+	const loginSessionContext = useContext(LoginSessionContext)
+
+	if (loginSessionContext === undefined) {
+		throw new Error("useLoginSessionContext must be used within provider")
+	}
+	return loginSessionContext
+}
+
+export async function GetSessionAndUserData(
 	loginSessionData: LoginSessionData,
 	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>,
 ): Promise<void> {
@@ -69,5 +71,43 @@ export async function GetSessionData(
 		throw new Error("Invalid user data from /session/user")
 	} catch (err) {
 		throw new Error(String(err))
+	}
+}
+
+export async function GetSessionData(
+	loginSessionData: LoginSessionData,
+	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>,
+): Promise<void> {
+	/*
+		Returns true if session is valid according
+		to the server, false otherwise.
+	*/
+
+	const redirectMessage_serverside = `Session could not be validated on the server`
+	const permittedMessage_serverside = `Login session validated on the server.`
+
+	const response = await fetch(`${backend_base_url}/session/valid`, {
+		method: "GET",
+		credentials: "include", // sends cookies
+	})
+
+	if (response.status === 401) {
+		console.log(redirectMessage_serverside)
+		setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
+		return
+	}
+	if (!response.ok) {
+		setLoginSessionData({
+			...loginSessionData,
+			isLoggedIn: false,
+		})
+		throw new Error(`Error fetching session data: ${response.statusText}`)
+	} else {
+		console.log(permittedMessage_serverside)
+		setLoginSessionData({
+			...loginSessionData,
+			isLoggedIn: true,
+		})
+		return
 	}
 }
