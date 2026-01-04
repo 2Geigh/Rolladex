@@ -10,19 +10,7 @@ const Navbar = () => {
 
 				<ul className="links">
 					<li>
-						<a href="/home">Home</a>
-					</li>
-					<li>
 						<a href="/friends">Friends</a>
-					</li>
-					<li>
-						<a href="/meetups">Meetups</a>
-					</li>
-					<li>
-						<a href="/profile">Profile</a>
-					</li>
-					<li>
-						<a href="/settings">Settings</a>
 					</li>
 					<li>
 						<a href="/logout">Logout</a>

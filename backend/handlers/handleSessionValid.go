@@ -150,7 +150,14 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 func getSessionUser(user_id string) (models.User, error) {
 	var (
 		user models.User
-		err  error
+
+		username         sql.NullString
+		email            sql.NullString
+		profile_image_id sql.NullInt64
+		birthday         sql.NullTime
+		created_at       sql.NullTime
+
+		err error
 	)
 
 	user_id_int, err := strconv.ParseInt(user_id, 10, 64)
@@ -173,11 +180,27 @@ func getSessionUser(user_id string) (models.User, error) {
 		return user, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(user_id).Scan(&user.Username, &user.Email, &user.ProfileImageID, &user.Birthday, &user.CreatedAt)
+	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday, &created_at)
 	if err != nil {
 		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}
-	tx.Commit()
 
+	if username.Valid {
+		user.Username = username.String
+	}
+	if email.Valid {
+		user.Email = models.Email(email.String)
+	}
+	if profile_image_id.Valid {
+		user.ProfileImageID = uint(profile_image_id.Int64)
+	}
+	if birthday.Valid {
+		user.Birthday = birthday.Time
+	}
+	if created_at.Valid {
+		user.CreatedAt = created_at.Time
+	}
+
+	tx.Commit()
 	return user, err
 }

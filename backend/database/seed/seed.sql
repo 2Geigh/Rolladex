@@ -55,7 +55,7 @@ VALUES
 INSERT INTO "Friends" ("name", "birthday", "profile_image_id")
 VALUES
     ('Simon Peter', '0000-01-01', 2),
-    ('John', '0000-01-02', 3),
+    ('John Egbert', '0000-01-02', 3),
     ('James son of Zebedee', '0000-01-03', 4),
     ('Andrew', '0000-01-04', 5),
     ('Philip', '0000-01-05', 6),

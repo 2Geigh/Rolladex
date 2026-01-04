@@ -232,7 +232,7 @@ func GetUrgencyScore(friend models.Friend) (float64, error) {
 	case (2): // "close friends"
 		daysForMaxUrgency = 32 // monthly
 	case (3): // "ordinary friends"
-		daysForMaxUrgency = 366 // 6-monthly-to-yearlys
+		daysForMaxUrgency = 366 // 6-monthly-to-yearly
 	case (4): // "friends / acquaintances ('I know a guy' kinda friendships)"
 		daysForMaxUrgency = 731 // 2-yearly
 	default:
