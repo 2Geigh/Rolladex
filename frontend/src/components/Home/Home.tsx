@@ -106,7 +106,7 @@ const ToContactSection: React.FC = () => {
 			})
 	}, [])
 
-	if (urgentFriends.length < 1) {
+	if (urgentFriends == null) {
 		return (
 			<>
 				<div className="section" id="ToContactSection">

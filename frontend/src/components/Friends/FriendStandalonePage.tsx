@@ -44,7 +44,7 @@ const FriendStandalonePage: React.FC = () => {
 	}
 
 	const name = String(friend.name)
-	const profile_image_path = String(friend.profileImageId)
+	const profile_image_path = String(friend.profile_image_path)
 
 	return (
 		<>
