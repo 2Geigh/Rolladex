@@ -33,6 +33,7 @@ func main() {
 	http.HandleFunc("/home", handlers.Home)
 	http.HandleFunc("/friends", handlers.Friends)
 	http.HandleFunc("/friends/urgent", handlers.FriendsUrgent)
+	// http.HandleFunc("/interactions/pastmonth", handlers.InteractionsPastMonth)
 	// http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 
 	// UX

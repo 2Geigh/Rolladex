@@ -5,140 +5,111 @@ PRAGMA foreign_keys = ON;
 ------------------------------------------------------------
 -- Images
 ------------------------------------------------------------
-INSERT INTO "Images" ("filepath")
+INSERT INTO "Images" ("id", "filepath")
 VALUES
-  ('/images/jesus_profile.png'),
-  ('/images/peter_profile.png'),
-  ('/images/john_profile.png'),
-  ('/images/james_profile.png'),
-  ('/images/andrew_profile.png'),
-  ('/images/philip_profile.png'),
-  ('/images/bartholomew_profile.png'),
-  ('/images/matthew_profile.png'),
-  ('/images/thomas_profile.png'),
-  ('/images/james_son_of_alphaeus_profile.png'),
-  ('/images/thaddaeus_profile.png'),
-  ('/images/simon_the_zealot_profile.png'),
-  ('/images/judas_iscariot_profile.png'),
-  ('/images/alice_profile.png');
+  (1, '/images/jesus_profile.png'),
+  (2, '/images/peter_profile.png'),
+  (3, '/images/john_profile.png'),
+  (4, '/images/james_profile.png'),
+  (5, '/images/andrew_profile.png'),
+  (6, '/images/philip_profile.png'),
+  (7, '/images/bartholomew_profile.png'),
+  (8, '/images/matthew_profile.png'),
+  (9, '/images/thomas_profile.png'),
+  (10, '/images/james_son_of_alphaeus_profile.png'),
+  (11, '/images/thaddaeus_profile.png'),
+  (12, '/images/simon_the_zealot_profile.png'),
+  (13, '/images/judas_iscariot_profile.png'),
+  (14, '/images/alice_profile.png');
 
 
 ------------------------------------------------------------
 -- NotificationPreferences
 ------------------------------------------------------------
-INSERT INTO "NotificationPreferences" ("email", "sms", "pushNotification")
+INSERT INTO "NotificationPreferences" ("id", "email", "sms", "pushNotification")
 VALUES 
-    -- Jesus: email + sms + push
-    (1, 1, 1),
-    -- Alice: push
-    (0, 0, 1),
-    -- Bob: nothing
-    (0, 0, 0);    
+    (1, 1, 1, 1),
+    (2, 0, 0, 1),
+    (3, 0, 0, 0);    
 
 
 ------------------------------------------------------------
 -- Users
 ------------------------------------------------------------
-INSERT INTO "Users" ("username", "passwordHash", "passwordSalt", "email", "profile_image_id", "birthday")
+INSERT INTO "Users" ("id", "username", "passwordHash", "passwordSalt", "email", "profile_image_id", "birthday")
 VALUES
-    -- User 1: Jesus, full info
-    ('jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@nazareth.ps', 1, '0000-12-25'),
-    -- User 2: some optional info
-    ('party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@wonderland.gb', NULL, NULL),
-    -- User 3: bare minimum
-    ('bob_minimal', 'HASH_BOB_123', 'SALT_BOB_123', NULL, NULL, NULL);
+    (1, 'jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@nazareth.ps', 1, '0000-12-25'),
+    (2, 'party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@wonderland.gb', NULL, NULL),
+    (3, 'bob_minimal', 'HASH_BOB_123', 'SALT_BOB_123', NULL, NULL, NULL);
 
 
 ------------------------------------------------------------
--- Friends (12 for Jesus, 3 shared with Alice)
+-- Friends
 ------------------------------------------------------------
-INSERT INTO "Friends" ("name", "birthday", "profile_image_id")
+INSERT INTO "Friends" ("id", "name", "birthday", "profile_image_id")
 VALUES
-    ('Simon Peter', '0000-01-01', 2),
-    ('John Egbert', '0000-01-02', 3),
-    ('James son of Zebedee', '0000-01-03', 4),
-    ('Andrew', '0000-01-04', 5),
-    ('Philip', '0000-01-05', 6),
-    ('Bartholomew', '0000-01-06', 7),
-    ('Matthew', '0000-01-07', 8),
-    ('Thomas', '0000-01-08', 9),
-    ('James son of Alphaeus', '0000-01-09', 10),
-    ('Thaddaeus', '0000-01-10', 11),
-    ('Simon the Zealot', '0000-01-11', 12),
-    ('Judas Iscariot', '0000-01-12', 13),
-    -- Extra friend mainly for Alice tests
-    ('Fun Alice Friend', NULL, 14);
+    (1, 'Simon Peter', '0000-01-01', 2),
+    (2, 'John Egbert', '0000-01-02', 3),
+    (3, 'James son of Zebedee', '0000-01-03', 4),
+    (4, 'Andrew', '0000-01-04', 5),
+    (5, 'Philip', '0000-01-05', 6),
+    (6, 'Bartholomew', '0000-01-06', 7),
+    (7, 'Matthew', '0000-01-07', 8),
+    (8, 'Thomas', '0000-01-08', 9),
+    (9, 'James son of Alphaeus', '0000-01-09', 10),
+    (10, 'Thaddaeus', '0000-01-10', 11),
+    (11, 'Simon the Zealot', '0000-01-11', 12),
+    (12, 'Judas Iscariot', '0000-01-12', 13),
+    (13, 'Fun Alice Friend', NULL, 14);
+
 
 ------------------------------------------------------------
 -- Relationships
 ------------------------------------------------------------
--- Jesus (user 1) with 12 friends
 INSERT INTO "Relationships" ("id", "user_id", "friend_id", "relationship_tier")
 VALUES
-  (1, 1, 1, 2),
-  (2, 1, 2, 1),
-  (3, 1, 3, 2),
-  (4, 1, 4, 2),
-  (5, 1, 5, 2),
-  (6, 1, 6, 2),
-  (7, 1, 7, 2),
-  (8, 1, 8, 2),
-  (9, 1, 9, 2),
-  (10, 1, 10, 2),
-  (11, 1, 11, 2),
-  (12, 1, 12, 2);
+  (1, 1, 1, 2), (2, 1, 2, 1), (3, 1, 3, 2), (4, 1, 4, 2),
+  (5, 1, 5, 2), (6, 1, 6, 2), (7, 1, 7, 2), (8, 1, 8, 2),
+  (9, 1, 9, 2), (10, 1, 10, 2), (11, 1, 11, 2), (12, 1, 12, 2),
+  (13, 2, 1, 4), (14, 2, 2, 4), (15, 2, 13, 1);
 
--- Alice (user 2) with 3 friends (re-using some Friends rows)
-INSERT INTO "Relationships" ("id", "user_id", "friend_id", "relationship_tier")
-VALUES
-  (13, 2, 1, 4),
-  (14, 2, 2, 4),
-  (15, 2, 13, 1);
-
--- Bob (user 3) intentionally has no entries in Relationships
 
 ------------------------------------------------------------
 -- Interactions
 ------------------------------------------------------------
--- A few interactions between Jesus and his friends
-INSERT INTO "Interactions" ("id", "date", "user_id", "friend_id", "interaction_type")
+-- Each Interaction belongs to a user, but the attendees are linked via InteractionsAttendees
+INSERT INTO "Interactions" ("id", "date", "user_id", "interaction_type", "location", "name")
 VALUES
-  (1, '2024-01-01', 1, 1, 'message'),
-  (2, '2024-01-02', 1, 2, 'call'),
-  (3, '2024-01-03', 1, 3, 'meetup'),
-  (4, '2024-02-01', 2, 1, 'message');
+  (1, '2024-01-01', 1, 'message', NULL, 'Message with Peter'),
+  (2, '2024-01-02', 1, 'call', NULL, 'Call with John'),
+  (3, '2024-01-03', 1, 'meetup', NULL, 'Meetup with James'),
+  (4, '2024-02-01', 2, 'message', NULL, 'Message with Peter'),
+  (5, '2024-03-01', 1, 'meetup', 'Galilee', 'Lake Hangout'),
+  (6, '2024-04-01', 1, 'meetup', 'Jerusalem', 'Passover Dinner'),
+  (7, '2024-05-01', 2, 'meetup', 'Downtown', 'Alice Game Night');
+
 
 ------------------------------------------------------------
--- Meetups
+-- InteractionsAttendees
 ------------------------------------------------------------
-INSERT INTO "Meetups" ("id", "date", "location", "name", "organizer_id")
+INSERT INTO "InteractionsAttendees" ("id", "interaction_id", "friend_id")
 VALUES
-  (1, '2024-03-01', 'Galilee', 'Lake Hangout', 1),
-  (2, '2024-04-01', 'Jerusalem', 'Passover Dinner', 1),
-  (3, '2024-05-01', 'Downtown', 'Alice Game Night', 2);
+  -- 1:1 interactions (direct friend participants)
+  (1, 1, 1),  -- Message with Peter
+  (2, 2, 2),  -- Call with John
+  (3, 3, 3),  -- Meetup with James
+  (4, 4, 1),  -- Alice ↔ Peter message
 
-------------------------------------------------------------
--- MeetupsAttendees
-------------------------------------------------------------
-INSERT INTO "MeetupsAttendees" ("id", "meetup_id", "friend_id")
-VALUES
-  -- Lake Hangout
-  (1, 1, 1),
-  (2, 1, 2),
-  (3, 1, 3),
-  -- Passover Dinner
-  (4, 2, 4),
-  (5, 2, 5),
-  (6, 2, 6),
-  (7, 2, 7),
-  (8, 2, 8),
-  (9, 2, 9),
-  (10, 2, 10),
-  (11, 2, 11),
-  (12, 2, 12),
-  -- Alice Game Night
-  (13, 3, 1),
-  (14, 3, 13);
+  -- Lake Hangout (interaction_id=5)
+  (5, 5, 1), (6, 5, 2), (7, 5, 3),
+
+  -- Passover Dinner (interaction_id=6)
+  (8, 6, 4), (9, 6, 5), (10, 6, 6), (11, 6, 7),
+  (12, 6, 8), (13, 6, 9), (14, 6, 10), (15, 6, 11), (16, 6, 12),
+
+  -- Alice Game Night (interaction_id=7)
+  (17, 7, 1), (18, 7, 13);
+
 
 ------------------------------------------------------------
 -- UserSettings
@@ -149,11 +120,12 @@ VALUES
   (2, 2, 2, 'dark'),
   (3, 3, 3, NULL);
 
+
 ------------------------------------------------------------
 -- Sessions
 ------------------------------------------------------------
--- INSERT INTO "Sessions" ("id", "user_id", "session_token", "expires_at", "is_revoked")
--- VALUES
---   (1, 1, 'SESSION_TOKEN_JESUS_1', '2099-12-31 23:59:59', 0),
---   (2, 2, 'SESSION_TOKEN_ALICE_1', '2099-12-31 23:59:59', 0),
---   (3, 3, 'SESSION_TOKEN_BOB_1', '2099-12-31 23:59:59', 1);
+INSERT INTO "Sessions" ("id", "user_id", "session_token", "expires_at", "is_revoked")
+VALUES
+  (1, 1, 'SESSION_TOKEN_JESUS_ABC', '2026-01-01', 0),
+  (2, 2, 'SESSION_TOKEN_ALICE_DEF', '2026-06-01', 0),
+  (3, 3, 'SESSION_TOKEN_BOB_GHI', '2026-03-01', 1);

@@ -2,3 +2,8 @@ backend/database/myFriends.db
 backend/bin/main.out
 backend/database/myFriends.db
 backend/bin/main.out
+backend/bin/main.out
+*.out
+/.vscode
+.vscode/settings.json
+*.db

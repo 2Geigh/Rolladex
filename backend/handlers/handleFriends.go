@@ -64,11 +64,7 @@ func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
 }
 
 func getFriends(user_id string) ([]models.Friend, error) {
-	var (
-		friends []models.Friend
-
-		err error
-	)
+	var friends []models.Friend
 
 	tx, err := database.DB.Begin()
 	if err != nil {
@@ -77,28 +73,37 @@ func getFriends(user_id string) ([]models.Friend, error) {
 	defer tx.Rollback()
 
 	stmt, err := tx.Prepare(`
-	SELECT 
-		Relationships.friend_id, 
-		Relationships.relationship_tier, 
-		Friends.name, 
-		Friends.birthday, 
-		Images.filepath AS profile_image_path,
-		Interactions.date AS last_interaction_date
-	FROM Relationships
-	LEFT JOIN (
-		SELECT user_id, friend_id, date 
-		FROM Interactions 
-		GROUP BY user_id, friend_id 
-		HAVING date = MAX(date)
-	) Interactions ON Relationships.user_id = Interactions.user_id AND Relationships.friend_id = Interactions.friend_id
-	LEFT JOIN Friends ON Friends.id = Relationships.friend_id
-	LEFT JOIN Images ON Friends.profile_image_id = Images.id
-	WHERE Relationships.user_id = ?
-`)
+	SELECT
+		f.id AS friend_id,
+		f.name,
+		f.birthday,
+		i.filepath AS profile_image_path,
+		r.relationship_tier,
+		-- Last interaction (any type)
+		(
+			SELECT inter.date
+			FROM Interactions inter
+			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
+			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
+		) AS last_interaction_date,
+		-- Last meetup date (specifically type = 'meetup')
+		(
+			SELECT inter.date
+			FROM Interactions inter
+			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
+			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
+				AND inter.interaction_type = 'meetup'
+		) AS last_meetup_date
+	FROM Relationships r
+	JOIN Friends f ON f.id = r.friend_id
+	LEFT JOIN Images i ON i.id = f.profile_image_id
+	WHERE r.user_id = ?
+    `)
 	if err != nil {
 		return friends, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
+
 	rows, err := stmt.Query(user_id)
 	if err != nil {
 		return friends, fmt.Errorf("couldn't execute query: %w", err)
@@ -107,45 +112,62 @@ func getFriends(user_id string) ([]models.Friend, error) {
 
 	for rows.Next() {
 		var (
-			friend_id             int
-			name                  string
-			relationship_tier     sql.NullInt64
-			birthday              sql.NullTime
-			profile_image_path    sql.NullString
-			last_interaction_date sql.NullTime
+			friend_id        int
+			name             string
+			birthday         sql.NullTime
+			profileImagePath sql.NullString
+			relationshipTier sql.NullInt64
+			lastInteraction  sql.NullTime
+			lastMeetup       sql.NullTime
 		)
 
-		err = rows.Scan(&friend_id, &relationship_tier, &name, &birthday, &profile_image_path, &last_interaction_date)
+		err = rows.Scan(
+			&friend_id,
+			&name,
+			&birthday,
+			&profileImagePath,
+			&relationshipTier,
+			&lastInteraction,
+			&lastMeetup,
+		)
 		if err != nil {
-			return friends, fmt.Errorf("couldn't scan rows into local variables: %w", err)
+			return friends, fmt.Errorf("couldn't scan row: %w", err)
 		}
 
 		friend := models.Friend{
 			ID:   uint(friend_id),
 			Name: name,
 		}
+
 		if birthday.Valid {
 			friend.Birthday = birthday.Time
 		}
-		if profile_image_path.Valid {
-			friend.ProfileImagePath = profile_image_path.String
+		if profileImagePath.Valid {
+			friend.ProfileImagePath = profileImagePath.String
 		}
-		if last_interaction_date.Valid {
-			friend.LastInteractionDate = last_interaction_date.Time
+		if relationshipTier.Valid {
+			friend.RelationshipTier = uint(relationshipTier.Int64)
 		}
-		if relationship_tier.Valid {
-			friend.RelationshipTier = uint(relationship_tier.Int64)
+		if lastInteraction.Valid {
+			friend.LastInteractionDate = lastInteraction.Time
+		}
+
+		if lastMeetup.Valid {
+			friend.LastMeetupDate = lastMeetup.Time
 		}
 
 		friends = append(friends, friend)
 	}
-	err = rows.Err()
-	if err != nil {
+
+	if err = rows.Err(); err != nil {
 		return friends, fmt.Errorf("rows error: %w", err)
 	}
 
-	tx.Commit()
-	return friends, err
+	if err := tx.Commit(); err != nil {
+		return friends, fmt.Errorf("couldn't commit transaction: %w", err)
+	}
+
+	return friends, nil
 }
 
 func getUrgentFriends(user_id string) ([]models.Friend, error) {

@@ -60,38 +60,24 @@ CREATE TABLE IF NOT EXISTS "Interactions" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"date" DATETIME NOT NULL,
 	"user_id" INTEGER NOT NULL,
-	"friend_id" INTEGER NOT NULL,
 	"interaction_type" VARCHAR,
+	"location" TEXT,
+	"name" TEXT,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("user_id") REFERENCES "Users"("id")
-	ON UPDATE NO ACTION ON DELETE CASCADE,
-	FOREIGN KEY ("friend_id") REFERENCES "Friends"("id")
-	ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE IF NOT EXISTS "Meetups" (
-	"id" INTEGER NOT NULL UNIQUE,
-	"date" TEXT NOT NULL,
-	"location" TEXT,
-	"name" TEXT,
-	"organizer_id" INTEGER,
-	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
-	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY("id"),
-	FOREIGN KEY ("organizer_id") REFERENCES "Users"("id")
 	ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS "MeetupsAttendees" (
+CREATE TABLE IF NOT EXISTS "InteractionsAttendees" (
 	"id" INTEGER NOT NULL UNIQUE,
-	"meetup_id" INTEGER,
+	"interaction_id" INTEGER,
 	"friend_id" INTEGER,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),
-	FOREIGN KEY ("meetup_id") REFERENCES "Meetups"("id")
+	FOREIGN KEY ("interaction_id") REFERENCES "Interactions"("id")
 	ON UPDATE NO ACTION ON DELETE CASCADE,
 	FOREIGN KEY ("friend_id") REFERENCES "Friends"("id")
 	ON UPDATE NO ACTION ON DELETE CASCADE
