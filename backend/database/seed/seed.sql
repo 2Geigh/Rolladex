@@ -80,10 +80,10 @@ VALUES
 -- Each Interaction belongs to a user, but the attendees are linked via InteractionsAttendees
 INSERT INTO "Interactions" ("id", "date", "user_id", "interaction_type", "location", "name")
 VALUES
-  (1, '2024-01-01', 1, 'message', NULL, 'Message with Peter'),
-  (2, '2024-01-02', 1, 'call', NULL, 'Call with John'),
+  (1, '2025-12-31', 1, 'message', NULL, 'Message with Peter'),
+  (2, '2025-12-31', 1, 'call', NULL, 'Call with John'),
   (3, '2024-01-03', 1, 'meetup', NULL, 'Meetup with James'),
-  (4, '2024-02-01', 2, 'message', NULL, 'Message with Peter'),
+  (4, '2025-12-31', 2, 'message', NULL, 'Message with Peter'),
   (5, '2024-03-01', 1, 'meetup', 'Galilee', 'Lake Hangout'),
   (6, '2024-04-01', 1, 'meetup', 'Jerusalem', 'Passover Dinner'),
   (7, '2024-05-01', 2, 'meetup', 'Downtown', 'Alice Game Night');
@@ -129,3 +129,63 @@ VALUES
   (1, 1, 'SESSION_TOKEN_JESUS_ABC', '2026-01-01', 0),
   (2, 2, 'SESSION_TOKEN_ALICE_DEF', '2026-06-01', 0),
   (3, 3, 'SESSION_TOKEN_BOB_GHI', '2026-03-01', 1);
+
+
+
+
+-- WITH FriendsInteractions AS (
+--     SELECT 
+--         Friends.id AS friend_id,
+--         Friends.birthday AS friend_birthday,
+--         Friends.created_at,
+--         Friends.name AS friend_name,
+--         Relationships.relationship_tier,
+--         Images.filepath AS profile_image_path,
+--         Interactions.id AS interaction_id,
+--         Interactions.interaction_type,
+--         Interactions.date AS interaction_date
+--     FROM Friends
+--     LEFT JOIN Images ON Images.id = Friends.profile_image_id
+--     LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
+--     LEFT JOIN Interactions ON Relationships.user_id = Interactions.user_id
+--     WHERE Relationships.user_id = 2
+-- ),
+-- RecentInteractions AS (
+--     SELECT 
+--         friend_id,
+--         interaction_id,
+--         interaction_type,
+--         interaction_date,
+--         ROW_NUMBER() OVER(PARTITION BY friend_id ORDER BY interaction_date DESC) AS rn
+--     FROM FriendsInteractions
+-- ),
+-- RecentMeetups AS (
+--     SELECT 
+--         friend_id,
+--         interaction_id AS meetup_id,
+--         interaction_date AS meetup_date,
+--         ROW_NUMBER() OVER(PARTITION BY friend_id ORDER BY interaction_date DESC) AS rn
+--     FROM FriendsInteractions
+--     WHERE interaction_type = 'meetup'
+-- )
+
+-- SELECT 
+--     fi.friend_id,
+--     fi.friend_birthday,
+--     fi.created_at,
+--     fi.friend_name,
+--     fi.relationship_tier,
+--     fi.profile_image_path,
+--     ri.interaction_id,
+--     ri.interaction_type,
+--     ri.interaction_date,
+--     rm.meetup_id,
+--     rm.meetup_date
+-- FROM 
+--     FriendsInteractions fi
+-- LEFT JOIN RecentInteractions ri ON fi.friend_id = ri.friend_id AND ri.rn = 1
+-- LEFT JOIN RecentMeetups rm ON fi.friend_id = rm.friend_id AND rm.rn = 1
+-- GROUP BY 
+--     fi.friend_id, fi.friend_birthday, fi.created_at, fi.friend_name, fi.relationship_tier, fi.profile_image_path
+-- ORDER BY 
+--     fi.friend_name ASC;
