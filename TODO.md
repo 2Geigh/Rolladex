@@ -4,9 +4,9 @@
 
 - [x] 404 page
 - [x] Make it so the website ƒetches the user's data upon signing in
-- [ ] When logged in and /home, save the current user to sessionStorage to reduce database calls
 - [ ] Add captcha to signup form
 - [ ] Make it so that /friends returns the friends assigned to the particular user
+- [ ] Convert all front-end references to dates and times to local datetime
 
 ## Back-end
 
@@ -21,6 +21,7 @@
 - [ ] Design acceptance tests
 - [ ] Add performance tests
 - [ ] (OPTIONAL) Add smoke tests
+- [ ] Convert all API and database references to dates and times to UTC
 
 ## Other
 

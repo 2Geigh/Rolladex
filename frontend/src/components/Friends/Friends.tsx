@@ -1,110 +1,216 @@
-import FriendsSection from "../Home/ToContactSection"
-import Navbar from "../Navbar/Navbar"
 import "./styles/dist/Friends.min.css"
-import Footer from "../Footer/Footer"
-import type { Meetup } from "../../types/models/Meetup"
 
-const meetups: Array<Meetup> = []
+function goToNextPage() {}
 
-const MeetupPlansLabel = () => {
-	return (
-		<label htmlFor="meetupPlans">
-			Meetup plans:{" "}
-			<select name="meetupPlans" id="meetupPlans">
-				<option className="meetupPlansOption" key={-1} value={"None"}>
-					None
-				</option>
-				{meetups.map((/*meetup, index*/) => {
-					return <></>
-				})}
-			</select>
-		</label>
-	)
-}
-
-const AddFriend: React.FC = () => {
-	const currentYear = new Date().getFullYear()
-
-	return (
-		<>
-			<div id="addFriendSection">
-				<h2>Add friend:</h2>
-
-				<form id="addFriend" method="POST" action="/friends">
-					<h3>Friend creation form</h3>
-
-					<label htmlFor="name">
-						<span>
-							Name{" "}
-							<span className="requiredLabel">(required)</span>
-						</span>
-						<input required name="name" type="text"></input>
-					</label>
-
-					<label htmlFor="lastInteraction">
-						Last interaction:
-						<input name="lastInteraction" type="date"></input>
-					</label>
-
-					<label htmlFor="lastMeetup">
-						Last meetup:
-						<input name="lastMeetup" type="date"></input>
-					</label>
-
-					<MeetupPlansLabel />
-
-					<label id="birthdayLabel">
-						Birthday:
-						<div className="inputs">
-							<input
-								name="birthdayDay"
-								type="number"
-								placeholder="Day"
-								min={1}
-								max={31}
-							></input>
-							<input
-								name="birthdayMonth"
-								type="number"
-								placeholder="Month"
-								min={1}
-								max={12}
-							></input>
-							<input
-								name="birthdayYear"
-								type="number"
-								placeholder="Year"
-								min={1}
-								max={currentYear}
-							></input>
-						</div>
-					</label>
-
-					{/* <label htmlFor="profilePhoto">
-                        Last meetup:
-                        <input name="profilePhoto" type="file"></input>
-                    </label> */}
-
-					<input
-						id="addFriendButton"
-						type="submit"
-						value="Add friend"
-					></input>
-				</form>
-			</div>
-		</>
-	)
-}
+function goToPreviousPage() {}
 
 const Friends: React.FC = () => {
+	const hubert_date = new Date("2025-12-25")
+	const hubert_birthday = new Date("2002-01-08")
+	const ID = 1
+
+	// "name",
+	// 		"last_interaction_date",
+	// 		"last_meetup_date",
+	// 		"birthday",
+	// 		"relationship_tier",
+
 	return (
 		<>
-			<Navbar />
-			<div className="content">
-				<AddFriend />
-				<FriendsSection />
+			<div id="friendsContent">
+				<div id="friendsWrapper">
+					<header>
+						<h2>Friends</h2>
+						<div className="sortBy">
+							<select name="sortby" id="sortbyOptions">
+								<option className="option" value="name">
+									Name
+								</option>
+								<option value="relationship_tier">
+									Relationship
+								</option>
+								<option value="last_interaction_date">
+									Last interaction
+								</option>
+								{/* <option value="last_meetup_date">Last meetup</option> */}
+								<option value="birthday">Birthday</option>
+							</select>
+							<label htmlFor="sortby" id="sortby">
+								Sort by:
+							</label>
+						</div>
+					</header>
+
+					<table id="friendList">
+						<thead>
+							<tr className="labels">
+								<th id="name">Name</th>
+								<th id="relationship">Relationship</th>
+								<th id="last_interaction">Last interaction</th>
+								<th id="birthday">Birthday</th>
+								<th id="created_at">Date added</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td className="name">
+									<a href={`/friends/${ID}`}>Hubert Wilson</a>
+								</td>
+								<td className="relationship">
+									<div className="emoji">🫂</div>
+									<br></br>
+									<div className="relationship_title">
+										Inner Clique
+									</div>
+								</td>
+
+								<td className="last_interaction">
+									<a href={`/meetups/${ID}`}>
+										{hubert_date.toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "short",
+												day: "2-digit",
+												weekday: "long",
+											},
+										)}
+									</a>
+								</td>
+								<td className="birthday">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+								<td className="created_at">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+							</tr>
+							<tr>
+								<td className="name">
+									<a href={`/friends/${ID}`}>Hubert Wilson</a>
+								</td>
+								<td className="relationship">
+									<div className="emoji">🫂</div>
+									<br></br>
+									<div className="relationship_title">
+										Inner Clique
+									</div>
+								</td>
+
+								<td className="last_interaction">
+									<a href={`/meetups/${ID}`}>
+										{hubert_date.toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "short",
+												day: "2-digit",
+												weekday: "long",
+											},
+										)}
+									</a>
+								</td>
+								<td className="birthday">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+								<td className="created_at">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+							</tr>
+							<tr>
+								<td className="name">
+									<a href={`/friends/${ID}`}>Hubert Wilson</a>
+								</td>
+								<td className="relationship">
+									<div className="emoji">🫂</div>
+									<br></br>
+									<div className="relationship_title">
+										Inner Clique
+									</div>
+								</td>
+
+								<td className="last_interaction">
+									<a href={`/meetups/${ID}`}>
+										{hubert_date.toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "short",
+												day: "2-digit",
+												weekday: "long",
+											},
+										)}
+									</a>
+								</td>
+								<td className="birthday">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+								<td className="created_at">
+									{hubert_date.toLocaleDateString("en-US", {
+										year: "numeric",
+										month: "short",
+										day: "numeric",
+									})}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div id="pagenav">
+						<div
+							className="arrow"
+							id="left"
+							onClick={goToPreviousPage}
+						>
+							〈
+						</div>
+						<div className="buttons">
+							<a href="/friends" className="button selected">
+								1
+							</a>
+							<a href="/friends" className="button">
+								2
+							</a>
+							<a href="/friends" className="button">
+								3
+							</a>
+							<div className="button" id="ellipsis">
+								&#8943;
+							</div>
+							<a href="/friends" className="button">
+								7
+							</a>
+						</div>
+						<div
+							className="arrow"
+							id="right"
+							onClick={goToNextPage}
+						>
+							〉
+						</div>
+					</div>
+				</div>
 			</div>
-			<Footer />
 		</>
 	)
 }

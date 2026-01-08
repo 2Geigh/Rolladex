@@ -1,5 +1,5 @@
 import "./styles/dist/Meetups.min.css"
-import type { Meetup } from "../../types/models/Meetup"
+import type { Meetup } from "../../types/models/Interaction"
 import type { Friend } from "../../types/models/Friend"
 import type React from "react"
 
@@ -32,26 +32,28 @@ import type React from "react"
 // };
 
 type MeetupItemProps = {
-    meetup: Meetup;
-    friends: Friend[];
+	meetup: Meetup
+	friends: Friend[]
 }
 const MeetupItem: React.FC<MeetupItemProps> = ({ meetup }) => {
-    // const attendeeNames = meetup.attendees
-    //     .map(attendeeId => friends.find(friend => friend.id === attendeeId))
-    //     .filter((friend) => friend !== undefined);
+	// const attendeeNames = meetup.attendees
+	//     .map(attendeeId => friends.find(friend => friend.id === attendeeId))
+	//     .filter((friend) => friend !== undefined);
 
-    return (
-        <li className="MeetupListItem" key={meetup.id}>
-            <div className="timeAndPlace">
-                <span className="date">{new Date(meetup.date).toDateString()}</span>
-                {meetup.location && (
-                    <span className="location">
-                        &#x1F4CD; {meetup.location}
-                    </span>
-                )}
-            </div>
-            <div className="bottomRow">
-                {/* <div className={`attendees ${attendeeNames.length < 1 ? 'noPadding' : ''}`}>
+	return (
+		<li className="MeetupListItem" key={meetup.id}>
+			<div className="timeAndPlace">
+				<span className="date">
+					{new Date(meetup.date).toDateString()}
+				</span>
+				{meetup.location && (
+					<span className="location">
+						&#x1F4CD; {meetup.location}
+					</span>
+				)}
+			</div>
+			<div className="bottomRow">
+				{/* <div className={`attendees ${attendeeNames.length < 1 ? 'noPadding' : ''}`}>
                     {attendeeNames.length > 0 ? (
                         attendeeNames.slice(0, 4).map((friend: Friend, idx: number) => (
                             <Attendee friend={friend} key={idx} />
@@ -60,27 +62,27 @@ const MeetupItem: React.FC<MeetupItemProps> = ({ meetup }) => {
                         <span className="noAttendees">No attendees.</span>
                     )}
                 </div> */}
-                <a className="view" href={`/meetups/${meetup.id}`}>
-                    View
-                </a>
-            </div>
-        </li>
-    );
-};
+				<a className="view" href={`/meetups/${meetup.id}`}>
+					View
+				</a>
+			</div>
+		</li>
+	)
+}
 
 function MeetupsSection() {
-    return (
-        <>
-            <div id="meetups" className="homepage_segment">
-                <h2>Meetups:</h2>
-                {/* <ul className="meetupList">
+	return (
+		<>
+			<div id="meetups" className="homepage_segment">
+				<h2>Meetups:</h2>
+				{/* <ul className="meetupList">
                     {meetups.map((meetup: Meetup) => (
                         <MeetupItem meetup={meetup} friends={friends} key={meetup.id} />
                     ))}
                 </ul> */}
-            </div>
-        </>
-    );
+			</div>
+		</>
+	)
 }
 
 export { MeetupsSection, MeetupItem }
