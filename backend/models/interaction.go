@@ -7,7 +7,6 @@ import (
 type Interaction struct {
 	ID              uint      `json:"id"`
 	Date            time.Time `json:"date"`
-	UserID          uint      `json:"user_id"`
 	FriendID        uint      `json:"friend_id"`
 	InteractionType string    `json:"interaction_type"`
 	Attendees       []Friend  `json:"attendees"`

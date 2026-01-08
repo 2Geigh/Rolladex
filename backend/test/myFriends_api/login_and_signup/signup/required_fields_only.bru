@@ -17,9 +17,9 @@ headers {
 body:json {
   {
     "id": 1,
-    "username": "exampleUser",
+    "username": "user_with_only_required_fields",
     "password": "securePassword123",
-    "email": "example@example.com",
+    "email": null,
     "pfp_id": null,
     "birthday": null,
     "user_settings_id": null,
@@ -30,7 +30,7 @@ body:json {
 }
 
 assert {
-  res.status: eq 200
+  res.status: eq 201
 }
 
 settings {

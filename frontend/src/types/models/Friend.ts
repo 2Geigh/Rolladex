@@ -1,8 +1,10 @@
+import type { Interaction } from "./Interaction"
+
 export type Friend = {
 	id: number
 	name: string
 	last_meetup_date?: Date
-	last_interaction_date?: Date
+	last_interaction?: Interaction
 	birthday?: Date
 	profile_image_path?: string
 	relationship_tier: number
@@ -18,22 +20,22 @@ export function GetRelationshipTierInfo(
 
 	switch (relationship_tier_code) {
 		case 1:
-			name = "inner clique"
+			name = "Inner clique"
 			emoji = "🫂"
 			break
 
 		case 2:
-			name = "close friend"
+			name = "Close friend"
 			emoji = "🍷"
 			break
 
 		case 3:
-			name = "ordinary friend"
+			name = "Ordinary friend"
 			emoji = "☕"
 			break
 
 		case 4:
-			name = "acquaintance" // 'I know a guy' kinda friendships
+			name = "Acquaintance" // 'I know a guy' kinda friendships
 			emoji = "🤝"
 			break
 
@@ -45,7 +47,7 @@ export function GetRelationshipTierInfo(
 	return { code: relationship_tier_code, name: name, emoji: emoji }
 }
 
-type RelationshipTier = {
+export type RelationshipTier = {
 	code: number | undefined
 	name: string
 	emoji: string

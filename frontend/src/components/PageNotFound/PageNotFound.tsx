@@ -1,11 +1,8 @@
-import Footer from "../Footer/Footer"
-import Navbar from "../Navbar/Navbar"
 import "./dist/PageNotFound.min.css"
 
 export default function PageNotFound() {
 	return (
 		<>
-			<Navbar />
 			<div className="content">
 				<div className="top">
 					<h2 id="error-code">404</h2>
@@ -33,7 +30,6 @@ export default function PageNotFound() {
 					Go home
 				</a>
 			</div>
-			<Footer />
 		</>
 	)
 }

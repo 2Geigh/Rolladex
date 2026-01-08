@@ -4,21 +4,85 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"math"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
 	"net/http"
+	"slices"
 	"sort"
 	"time"
 )
 
+type GetFriendsSortedByColumnParams struct {
+	numberOfFriendsPerPage string
+	pageNumber             string
+	sortBy                 string
+}
+
+type ColumnNamesToSortFriendsBy struct {
+	name                  string
+	last_interaction_date string
+	last_meetup_date      string
+	birthday              string
+	relationship_tier     string
+}
+
 var (
-	maxNumberOfUrgentFriends = 5
+	maxNumberOfUrgentFriends   = 5
+	columnNamesToSortFriendsBy = ColumnNamesToSortFriendsBy{
+		"name",
+		"last_interaction_date",
+		"last_meetup_date",
+		"birthday",
+		"relationship_tier",
+	}
 )
 
 func Friends(w http.ResponseWriter, req *http.Request) {
 
+	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	util.LogHttpRequest(req)
+
+	switch req.Method {
+	case http.MethodOptions:
+		w.WriteHeader(http.StatusNoContent)
+		return
+
+	case http.MethodGet:
+
+		user_id, err := validateSession(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		getFriendsSortedByColumnParams := GetFriendsSortedByColumnParams{
+			sortBy: req.URL.Query().Get("sortby"),
+		}
+
+		friends, err := getFriendsSortedByColumn(user_id, getFriendsSortedByColumnParams.sortBy)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't get list of friends", http.StatusInternalServerError)
+			return
+		}
+
+		userJson, err := json.Marshal(friends)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't marshal friends data to JSON", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, err = w.Write(userJson)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't write friends JSON data", http.StatusInternalServerError)
+			return
+		}
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+	}
 }
 
 func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
@@ -61,6 +125,150 @@ func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+}
+
+func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, error) {
+	var (
+		validSortByParameters = []string{"name", "relationship_tier", "last_interaction_date", "birthday", "created_at"}
+
+		friends        []models.Friend
+		sqlQuery       string
+		columnToSortBy string = "name" // "name" will be used when query is "default"
+
+		err error
+	)
+
+	for _, value := range validSortByParameters {
+		if sortBy == "created_at" {
+			columnToSortBy = "friend_created_at"
+		} else if sortBy == value {
+			columnToSortBy = sortBy
+			break
+		}
+	}
+
+	sqlQuery = fmt.Sprintf(`
+							WITH LatestInteractions AS (
+														SELECT 
+															Interactions.id AS interaction_id,
+															Interactions.name AS interaction_name,
+															Interactions.date AS interaction_date,
+															Interactions.location AS interaction_location,
+															Interactions.interaction_type AS interaction_type,
+															InteractionsAttendees.friend_id AS friend_id,
+															ROW_NUMBER() OVER (PARTITION BY InteractionsAttendees.friend_id ORDER BY Interactions.date DESC) AS rn
+														FROM
+															Interactions
+														LEFT JOIN InteractionsAttendees ON Interactions.id = InteractionsAttendees.interaction_id
+														WHERE
+															Interactions.user_id = ?
+							)
+
+							SELECT
+								Friends.id AS friend_id,
+								Images.filepath AS pfp_path,
+								Friends.name AS name,
+								Relationships.relationship_tier AS relationship_tier,
+								Friends.birthday AS birthday,
+								Friends.created_at AS friend_created_at,
+								LatestInteractions.interaction_date as last_interaction_date,
+								LatestInteractions.interaction_name,
+								LatestInteractions.interaction_id
+							FROM Friends
+							LEFT JOIN Images ON Friends.profile_image_id = Images.id
+							LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
+							LEFT JOIN LatestInteractions ON LatestInteractions.friend_id = Friends.id AND LatestInteractions.rn = 1
+							WHERE Relationships.user_id = ?
+							ORDER BY %s DESC;`, columnToSortBy)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return friends, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(sqlQuery)
+	if err != nil {
+		return friends, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+
+	result, err := stmt.Query(user_id, user_id)
+	if err == sql.ErrNoRows {
+		return friends, nil
+	} else if err != nil {
+		return friends, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	for result.Next() {
+		var (
+			friend           models.Friend
+			last_interaction models.Interaction
+
+			friend_id         int
+			pfp_path          sql.NullString
+			friend_name       string
+			relationship_tier sql.NullInt64
+			birthday          sql.NullTime
+			friend_created_at time.Time
+			interaction_date  sql.NullTime
+			interaction_name  sql.NullString
+			interaction_id    sql.NullInt64
+
+			err error
+		)
+
+		err = result.Scan(
+			&friend_id,
+			&pfp_path,
+			&friend_name,
+			&relationship_tier,
+			&birthday,
+			&friend_created_at,
+			&interaction_date,
+			&interaction_name,
+			&interaction_id,
+		)
+		if err != nil {
+			return friends, fmt.Errorf("couldn't scan column value to local variable: %w", err)
+		}
+
+		friend = models.Friend{
+			ID:        uint(friend_id),
+			Name:      friend_name,
+			CreatedAt: friend_created_at,
+		}
+		if pfp_path.Valid {
+			friend.ProfileImagePath = pfp_path.String
+		}
+		if relationship_tier.Valid {
+			friend.RelationshipTier = uint(relationship_tier.Int64)
+		}
+		if birthday.Valid {
+			friend.Birthday = birthday.Time
+		}
+
+		if interaction_name.Valid {
+			last_interaction.Name = interaction_name.String
+		}
+		if interaction_date.Valid {
+			last_interaction.Date = interaction_date.Time
+		}
+		if interaction_id.Valid {
+			last_interaction.ID = uint(interaction_id.Int64)
+		}
+
+		friend.LastInteraction = last_interaction
+
+		friends = append(friends, friend)
+	}
+
+	// To sort friends by closest friends first
+	if sortBy == "relationship_tier" {
+		slices.Reverse(friends)
+	}
+
+	tx.Commit()
+	return friends, err
 }
 
 func getFriends(user_id string) ([]models.Friend, error) {
@@ -149,11 +357,11 @@ func getFriends(user_id string) ([]models.Friend, error) {
 			friend.RelationshipTier = uint(relationshipTier.Int64)
 		}
 		if lastInteraction.Valid {
-			friend.LastInteractionDate = lastInteraction.Time
+			friend.LastInteraction.Date = lastInteraction.Time
 		}
 
 		if lastMeetup.Valid {
-			friend.LastMeetupDate = lastMeetup.Time
+			friend.LastMeetup.Date = lastMeetup.Time
 		}
 
 		friends = append(friends, friend)
@@ -243,42 +451,42 @@ func sortByRelationshipUrgency(friends []models.Friend) ([]models.Friend, error)
 
 func GetUrgencyScore(friend models.Friend) (float64, error) {
 	var (
-		daysForMaxUrgency int
-		urgencyScore      float64
-		err               error
+		// daysForMaxUrgency int
+		urgencyScore float64
+		err          error
 	)
 
-	switch friend.RelationshipTier {
-	case (1): // "inner clique"
-		daysForMaxUrgency = 8 // weekly
-	case (2): // "close friends"
-		daysForMaxUrgency = 32 // monthly
-	case (3): // "ordinary friends"
-		daysForMaxUrgency = 366 // 6-monthly-to-yearly
-	case (4): // "friends / acquaintances ('I know a guy' kinda friendships)"
-		daysForMaxUrgency = 731 // 2-yearly
-	default:
-		daysForMaxUrgency = 365 // yearly
-	}
+	// switch friend.RelationshipTier {
+	// case (1): // "inner clique"
+	// 	daysForMaxUrgency = 8 // weekly
+	// case (2): // "close friends"
+	// 	daysForMaxUrgency = 32 // monthly
+	// case (3): // "ordinary friends"
+	// 	daysForMaxUrgency = 366 // 6-monthly-to-yearly
+	// case (4): // "friends / acquaintances ('I know a guy' kinda friendships)"
+	// 	daysForMaxUrgency = 731 // 2-yearly
+	// default:
+	// 	daysForMaxUrgency = 365 // yearly
+	// }
 
-	today := time.Now()
-	lastInteractionDate := friend.LastInteractionDate
+	// today := time.Now()
+	// lastInteractionDate := friend.LastInteractionDate
 
-	if lastInteractionDate.Truncate(24 * time.Hour).Equal(today.Truncate(24 * time.Hour)) {
-		// This is checking if the the last interaction data was today
-		// even if the times of day aren't exact
-		// Truncating the times just means rounding down to the nearest 24 hours
-		return 0, err
-	}
+	// if lastInteractionDate.Truncate(24 * time.Hour).Equal(today.Truncate(24 * time.Hour)) {
+	// 	// This is checking if the the last interaction data was today
+	// 	// even if the times of day aren't exact
+	// 	// Truncating the times just means rounding down to the nearest 24 hours
+	// 	return 0, err
+	// }
 
-	if lastInteractionDate.After(today) {
-		return urgencyScore, fmt.Errorf("last interaction/meetup date can't be in the future")
-	}
+	// if lastInteractionDate.After(today) {
+	// 	return urgencyScore, fmt.Errorf("last interaction/meetup date can't be in the future")
+	// }
 
-	hoursSinceLastInteraction := today.Sub(friend.LastInteractionDate).Hours()
-	daysSincLastInteraction := hoursSinceLastInteraction / 24
-	urgencyScore = daysSincLastInteraction / float64(daysForMaxUrgency)
-	urgencyScore = math.Min(urgencyScore, 1) // caps at 100% pretty much
+	// hoursSinceLastInteraction := today.Sub(friend.LastInteractionDate).Hours()
+	// daysSincLastInteraction := hoursSinceLastInteraction / 24
+	// urgencyScore = daysSincLastInteraction / float64(daysForMaxUrgency)
+	// urgencyScore = math.Min(urgencyScore, 1) // caps at 100% pretty much
 
 	return urgencyScore, err
 }

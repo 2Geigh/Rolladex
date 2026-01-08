@@ -75,7 +75,7 @@ const Home: React.FC = () => {
 		<>
 			<div id="home">
 				<ToContactSection />
-				{/* <ActivitySection /> */}
+				<ActivitySection />
 			</div>
 		</>
 	)

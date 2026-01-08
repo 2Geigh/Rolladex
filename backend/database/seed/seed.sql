@@ -48,18 +48,18 @@ VALUES
 ------------------------------------------------------------
 INSERT INTO "Friends" ("id", "name", "birthday", "profile_image_id")
 VALUES
-    (1, 'Simon Peter', '0000-01-01', 2),
-    (2, 'John Egbert', '0000-01-02', 3),
-    (3, 'James son of Zebedee', '0000-01-03', 4),
-    (4, 'Andrew', '0000-01-04', 5),
-    (5, 'Philip', '0000-01-05', 6),
-    (6, 'Bartholomew', '0000-01-06', 7),
-    (7, 'Matthew', '0000-01-07', 8),
-    (8, 'Thomas', '0000-01-08', 9),
-    (9, 'James son of Alphaeus', '0000-01-09', 10),
-    (10, 'Thaddaeus', '0000-01-10', 11),
-    (11, 'Simon the Zealot', '0000-01-11', 12),
-    (12, 'Judas Iscariot', '0000-01-12', 13),
+    (1, 'Simon Peter', '0010-01-01', 2),
+    (2, 'John Egbert', '0010-01-02', 3),
+    (3, 'James son of Zebedee', '0010-01-03', 4),
+    (4, 'Andrew', '0010-01-04', 5),
+    (5, 'Philip', '0010-01-05', 6),
+    (6, 'Bartholomew', '0010-01-06', 7),
+    (7, 'Matthew', '0010-01-07', 8),
+    (8, 'Thomas', '0010-01-08', 9),
+    (9, 'James son of Alphaeus', '0010-01-09', 10),
+    (10, 'Thaddaeus', '0010-01-10', 11),
+    (11, 'Simon the Zealot', '0010-01-11', 12),
+    (12, 'Judas Iscariot', '0010-01-12', 13),
     (13, 'Fun Alice Friend', NULL, 14);
 
 
@@ -129,63 +129,3 @@ VALUES
   (1, 1, 'SESSION_TOKEN_JESUS_ABC', '2026-01-01', 0),
   (2, 2, 'SESSION_TOKEN_ALICE_DEF', '2026-06-01', 0),
   (3, 3, 'SESSION_TOKEN_BOB_GHI', '2026-03-01', 1);
-
-
-
-
--- WITH FriendsInteractions AS (
---     SELECT 
---         Friends.id AS friend_id,
---         Friends.birthday AS friend_birthday,
---         Friends.created_at,
---         Friends.name AS friend_name,
---         Relationships.relationship_tier,
---         Images.filepath AS profile_image_path,
---         Interactions.id AS interaction_id,
---         Interactions.interaction_type,
---         Interactions.date AS interaction_date
---     FROM Friends
---     LEFT JOIN Images ON Images.id = Friends.profile_image_id
---     LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
---     LEFT JOIN Interactions ON Relationships.user_id = Interactions.user_id
---     WHERE Relationships.user_id = 2
--- ),
--- RecentInteractions AS (
---     SELECT 
---         friend_id,
---         interaction_id,
---         interaction_type,
---         interaction_date,
---         ROW_NUMBER() OVER(PARTITION BY friend_id ORDER BY interaction_date DESC) AS rn
---     FROM FriendsInteractions
--- ),
--- RecentMeetups AS (
---     SELECT 
---         friend_id,
---         interaction_id AS meetup_id,
---         interaction_date AS meetup_date,
---         ROW_NUMBER() OVER(PARTITION BY friend_id ORDER BY interaction_date DESC) AS rn
---     FROM FriendsInteractions
---     WHERE interaction_type = 'meetup'
--- )
-
--- SELECT 
---     fi.friend_id,
---     fi.friend_birthday,
---     fi.created_at,
---     fi.friend_name,
---     fi.relationship_tier,
---     fi.profile_image_path,
---     ri.interaction_id,
---     ri.interaction_type,
---     ri.interaction_date,
---     rm.meetup_id,
---     rm.meetup_date
--- FROM 
---     FriendsInteractions fi
--- LEFT JOIN RecentInteractions ri ON fi.friend_id = ri.friend_id AND ri.rn = 1
--- LEFT JOIN RecentMeetups rm ON fi.friend_id = rm.friend_id AND rm.rn = 1
--- GROUP BY 
---     fi.friend_id, fi.friend_birthday, fi.created_at, fi.friend_name, fi.relationship_tier, fi.profile_image_path
--- ORDER BY 
---     fi.friend_name ASC;
