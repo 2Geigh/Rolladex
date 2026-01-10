@@ -1,0 +1,17 @@
+$shadow_color: rgba(0, 0, 0, 0.159);
+
+#addFriendsContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
+	align-items: center;
+	// background-color: orange;
+
+	min-height: 50vh;
+	height: 100%;
+	width: 100%;
+
+	h2 {
+		font-size: 2rem;
+	}
+}

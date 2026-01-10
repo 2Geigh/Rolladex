@@ -19,6 +19,7 @@ import { useEffect } from "react"
 import { GetSessionData } from "./contexts/LoginSession"
 import Loading from "./components/Loading/Loading"
 import Navbar from "./components/Navbar/Navbar"
+import AddFriends from "./components/AddFriends/AddFriends"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -42,7 +43,7 @@ function App() {
 	if (isLoading) {
 		return (
 			<>
-				<Navbar />
+				<Navbar username={String(loginSessionData.user?.username)} />
 				<Loading />
 			</>
 		)
@@ -64,6 +65,7 @@ function App() {
 							path="/friends/:friendId"
 							element={<FriendStandalonePage />}
 						/>
+						<Route path="/addfriend" element={<AddFriends />} />
 						<Route path="/meetups" element={<Meetups />} />
 						<Route
 							path="/meetups/:meetupId"

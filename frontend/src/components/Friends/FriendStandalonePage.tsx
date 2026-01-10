@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom"
 import Navbar from "../Navbar/Navbar"
-import "./styles/dist/FriendStandalonePage.min.css"
 import PageNotFound from "../PageNotFound/PageNotFound"
 import Footer from "../Footer/Footer"
 import type { Friend } from "../../types/models/Friend"

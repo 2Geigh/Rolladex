@@ -18,7 +18,7 @@ const ProtectedRoutes: React.FC = () => {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar username={String(loginSessionContext.user?.username)} />
 			<Outlet />
 			<Footer />
 		</>

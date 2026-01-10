@@ -40,7 +40,7 @@ export function GetRelationshipTierInfo(
 			break
 
 		default:
-			name = ""
+			name = "Uncategorised"
 			emoji = "👤"
 	}
 
@@ -52,3 +52,10 @@ export type RelationshipTier = {
 	name: string
 	emoji: string
 }
+
+export const DefaultRelationshipTiers: Array<RelationshipTier> = [
+	{ code: 1, name: "Inner clique", emoji: "🫂" },
+	{ code: 2, name: "Close friend", emoji: "🍷" },
+	{ code: 3, name: "Ordinary friend", emoji: "☕" },
+	{ code: 4, name: "Acquaintance", emoji: "🤝" },
+]

@@ -40,31 +40,74 @@ header {
 		flex-direction: row;
 		justify-content: end;
 		align-items: end;
+
+		margin-bottom: -1.9rem;
 		// background-color: pink;
 
 		font-size: 2rem;
 	}
 
-	.sortBy {
-		display: inline-flex;
-		flex-direction: row-reverse;
-		justify-content: end;
+	.subheader {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
 		align-items: center;
-
-		height: 100%;
 		width: 100%;
 
-		// background-color: orange;
+		margin-bottom: 0.5rem;
 
-		#sortby {
-			margin-right: 0.5rem;
+		// background-color: red;
+
+		#addFriend {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			text-wrap: none;
+			width: 10rem;
+
+			padding: 0.5rem;
+			text-decoration: none;
+			border-radius: 5px;
+
+			font-size: 1rem;
+			color: black;
+			background-color: magenta;
+			box-shadow: 0px 0px 10px 0px $shadow_color;
+		}
+		#addFriend:hover {
+			background-color: violet;
+			box-shadow: 0px 0px 10px 0px $shadow_color;
+		}
+		#addFriend:active {
+			color: black;
+			box-shadow:
+				0px 0px 10px 0px inset purple,
+				0px 0px 10px 0px $shadow_color;
 		}
 
-		#sortbyOptions {
-			padding: 0.5rem;
+		.sortBy {
+			display: inline-flex;
+			flex-direction: row-reverse;
+			justify-content: end;
+			align-items: center;
 
-			border: none;
-			border-radius: 5px;
+			height: 100%;
+			width: 100%;
+
+			// background-color: orange;
+
+			#sortby {
+				margin-right: 0.5rem;
+			}
+
+			#sortbyOptions {
+				padding: 0.5rem;
+				width: 10rem;
+
+				border: none;
+				border-radius: 5px;
+			}
 		}
 	}
 }

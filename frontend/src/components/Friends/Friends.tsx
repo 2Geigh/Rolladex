@@ -1,18 +1,13 @@
 import { useSearchParams } from "react-router-dom"
-import "./styles/dist/Friends.min.css"
+import { useLayoutEffect, useState, type ChangeEventHandler } from "react"
 import {
-	useEffect,
-	useLayoutEffect,
-	useState,
-	type ChangeEventHandler,
-} from "react"
-import {
-	Friend,
+	type Friend,
 	GetRelationshipTierInfo,
 	type RelationshipTier,
 } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
+import "./styles/dist/Friends.min.css"
 
 function goToNextPage() {}
 
@@ -274,7 +269,15 @@ const Friends: React.FC = () => {
 				<div id="friendsWrapper">
 					<header>
 						<h2>Friends</h2>
-						<SortBy selected={sortBy} onSortChange={onSortChange} />
+						<div className="subheader">
+							<a id="addFriend" href="/addfriend">
+								Add friend
+							</a>
+							<SortBy
+								selected={sortBy}
+								onSortChange={onSortChange}
+							/>
+						</div>
 					</header>
 
 					<table id="friendList">
