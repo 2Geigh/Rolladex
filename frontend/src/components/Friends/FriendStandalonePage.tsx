@@ -3,6 +3,7 @@ import Navbar from "../Navbar/Navbar"
 import PageNotFound from "../PageNotFound/PageNotFound"
 import Footer from "../Footer/Footer"
 import type { Friend } from "../../types/models/Friend"
+import { useLoginSessionContext } from "../../contexts/LoginSession"
 
 type FriendCardProps = {
 	id: number | string
@@ -29,6 +30,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 const friends: Array<Friend> = []
 
 const FriendStandalonePage: React.FC = () => {
+	const loginSessionContext = useLoginSessionContext()
 	const params = useParams()
 
 	const friendId: number = Number(params.friendId)
@@ -47,7 +49,7 @@ const FriendStandalonePage: React.FC = () => {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar username={loginSessionContext.user?.username} />
 
 			<div className="content">
 				<FriendCard

@@ -12,50 +12,35 @@ export type Friend = {
 	updated_at?: Date
 }
 
-export function GetRelationshipTierInfo(
-	relationship_tier_code: number | undefined,
-): RelationshipTier {
-	let name
-	let emoji
-
-	switch (relationship_tier_code) {
-		case 1:
-			name = "Inner clique"
-			emoji = "🫂"
-			break
-
-		case 2:
-			name = "Close friend"
-			emoji = "🍷"
-			break
-
-		case 3:
-			name = "Ordinary friend"
-			emoji = "☕"
-			break
-
-		case 4:
-			name = "Acquaintance" // 'I know a guy' kinda friendships
-			emoji = "🤝"
-			break
-
-		default:
-			name = "Uncategorised"
-			emoji = "👤"
-	}
-
-	return { code: relationship_tier_code, name: name, emoji: emoji }
-}
-
 export type RelationshipTier = {
 	code: number | undefined
 	name: string
 	emoji: string
+	description: string
 }
 
-export const DefaultRelationshipTiers: Array<RelationshipTier> = [
-	{ code: 1, name: "Inner clique", emoji: "🫂" },
-	{ code: 2, name: "Close friend", emoji: "🍷" },
-	{ code: 3, name: "Ordinary friend", emoji: "☕" },
-	{ code: 4, name: "Acquaintance", emoji: "🤝" },
-]
+export const DefaultRelationshipTiers: Record<number, RelationshipTier> = {
+	1: { code: 1, name: "Inner clique", emoji: "🫂", description: "🫂" },
+	2: { code: 2, name: "Close friend", emoji: "🍷", description: "🍷" },
+	3: { code: 3, name: "Ordinary friend", emoji: "☕", description: "☕" },
+	4: { code: 4, name: "Acquaintance", emoji: "🤝", description: "🤝" },
+}
+
+export function GetRelationshipTierInfo(
+	relationship_tier_code: number | undefined,
+): RelationshipTier {
+	if (
+		relationship_tier_code === undefined ||
+		relationship_tier_code < 1 ||
+		relationship_tier_code > 4
+	) {
+		return {
+			code: undefined,
+			name: "Uncategorised",
+			emoji: "👤",
+			description: "This is a relationship of an undefined tier.",
+		}
+	}
+
+	return DefaultRelationshipTiers[relationship_tier_code]
+}
