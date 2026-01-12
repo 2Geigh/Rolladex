@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import {
 	DefaultRelationshipTiers,
 	GetRelationshipTierInfo,
@@ -638,10 +638,6 @@ const AddFriends: React.FC = () => {
 	] = useState<number | undefined>(undefined)
 	const [lastHoveredRelationshipTier, setLastHoveredRelationshipTier] =
 		useState<number | undefined>(undefined)
-
-	useEffect(() => {
-		console.log(formData)
-	}, [formData])
 
 	function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
 		e.preventDefault()
