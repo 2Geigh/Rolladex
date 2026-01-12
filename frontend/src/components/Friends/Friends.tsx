@@ -3,6 +3,7 @@ import { useLayoutEffect, useState, type ChangeEventHandler } from "react"
 import {
 	type Friend,
 	GetRelationshipTierInfo,
+	MAX_NUMBER_OF_FRIENDS,
 	type RelationshipTier,
 } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
@@ -161,6 +162,8 @@ const Friends: React.FC = () => {
 			code: undefined,
 			name: "Undefined",
 			emoji: "👤",
+			description: "Undefined",
+			max: MAX_NUMBER_OF_FRIENDS,
 		}
 		if (friend.relationship_tier)
 			relationshipTier = GetRelationshipTierInfo(friend.relationship_tier)
@@ -200,6 +203,9 @@ const Friends: React.FC = () => {
 					<div id="friendsWrapper">
 						<header className="noFriends">
 							<h2>Friends</h2>
+							<a id="addFriend" href="/addfriend">
+								Add friend
+							</a>
 							{/* <SortBy
 								selected={sortBy}
 								onSortChange={onSortChange}

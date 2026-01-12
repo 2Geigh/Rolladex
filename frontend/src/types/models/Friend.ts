@@ -7,7 +7,8 @@ export type Friend = {
 	name: string
 	last_meetup_date?: Date
 	last_interaction?: Interaction
-	birthday?: Date
+	birthday_month: number
+	birthday_day: number
 	profile_image_path?: string
 	relationship_tier: number
 	created_at?: Date

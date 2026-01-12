@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
@@ -11,6 +12,7 @@ import (
 	"slices"
 	"sort"
 	"time"
+	"unicode/utf8"
 )
 
 type GetFriendsSortedByColumnParams struct {
@@ -25,6 +27,14 @@ type ColumnNamesToSortFriendsBy struct {
 	last_meetup_date      string
 	birthday              string
 	relationship_tier     string
+}
+
+type AddFriendFormData struct {
+	Name                   string    `json:"name"`
+	Last_interaction_date  time.Time `json:"last_interaction_date"`
+	Relationship_tier_code int       `json:"relationship_tier_code"`
+	BirthdayMonth          int       `json:"birthday_month"`
+	BirthdayDay            int       `json:"birthday_day"`
 }
 
 var (
@@ -80,9 +90,124 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+	case http.MethodPost:
+		var (
+			addFriendFormData AddFriendFormData
+		)
+
+		user_id, err := validateSession(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		reqBody, err := io.ReadAll(req.Body)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't read request body", http.StatusInternalServerError)
+			return
+		}
+
+		err = json.Unmarshal(reqBody, &addFriendFormData)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't unmarshall request body", http.StatusInternalServerError)
+			return
+		}
+
+		statusCode, err := addFriend(user_id, addFriendFormData)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't add friend", statusCode)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+}
+
+func addFriend(user_id string, formData AddFriendFormData) (int, error) {
+	var (
+		name                 string    = formData.Name
+		lastInteractionDate  time.Time = formData.Last_interaction_date
+		relationshipTierCode int       = formData.Relationship_tier_code
+		birthdayMonth                  = formData.BirthdayMonth
+		birthdayDay                    = formData.BirthdayDay
+
+		MAX_NAME_LENGTH int = 64
+
+		err error
+	)
+
+	if util.IsEmpty(name) {
+		return http.StatusBadRequest, fmt.Errorf("name field can't be empty")
+	} else if utf8.RuneCountInString(name) > MAX_NAME_LENGTH {
+		return http.StatusBadRequest, fmt.Errorf("name can't be longer than %d characters", MAX_NAME_LENGTH)
+	}
+
+	today := time.Now()
+	if lastInteractionDate.After(today) {
+		return http.StatusBadRequest, fmt.Errorf("last interaction date can't be in the future")
+	}
+
+	if relationshipTierCode < 1 {
+		return http.StatusBadRequest, fmt.Errorf("invalid relationship tier")
+	} else if relationshipTierCode > 4 {
+		relationshipTierCode = 4 // acquaintance
+	}
+
+	if birthdayMonth != 0 && birthdayDay != 0 {
+		if birthdayMonth > 12 || birthdayMonth < 0 {
+			return http.StatusBadRequest, fmt.Errorf("invalid birthday month")
+		}
+		if birthdayDay < 0 || birthdayDay > 31 {
+			return http.StatusBadRequest, fmt.Errorf("invalid birthday day")
+		}
+		if birthdayMonth == 2 && birthdayDay > 29 {
+			return http.StatusBadRequest, fmt.Errorf("invalid birthday day")
+		}
+		if (birthdayMonth == 4 || birthdayMonth == 6 || birthdayMonth == 9 || birthdayMonth == 11) && (birthdayDay > 30) {
+			return http.StatusBadRequest, fmt.Errorf("invalid birthday day")
+		}
+	}
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	// First insert into Friends
+	stmtFriend, err := tx.Prepare(`INSERT INTO Friends (name, birthday_month, birthday_day) VALUES (?, ?, ?)`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare friend insert statement: %w", err)
+	}
+	defer stmtFriend.Close()
+	result, err := stmtFriend.Exec(name, birthdayMonth, birthdayDay)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute friend insert statement: %w", err)
+	}
+	friendID, err := result.LastInsertId()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't get last insert ID: %w", err)
+	}
+
+	// Then insert into Relationships
+	stmtRelationship, err := tx.Prepare(`INSERT INTO Relationships (user_id, friend_id, relationship_tier) VALUES (?, ?, ?)`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare relationship insert statement: %w", err)
+	}
+	defer stmtRelationship.Close()
+	_, err = stmtRelationship.Exec(user_id, friendID, relationshipTierCode)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute relationship insert statement: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't commit transaction: %w", err)
+	}
+	return http.StatusOK, err
 }
 
 func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
@@ -169,7 +294,8 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 								Images.filepath AS pfp_path,
 								Friends.name AS name,
 								Relationships.relationship_tier AS relationship_tier,
-								Friends.birthday AS birthday,
+								Friends.birthday_month AS birthday_month,
+								Friends.birthday_day AS birthday_day,
 								Friends.created_at AS friend_created_at,
 								LatestInteractions.interaction_date as last_interaction_date,
 								LatestInteractions.interaction_name,
@@ -208,7 +334,8 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 			pfp_path          sql.NullString
 			friend_name       string
 			relationship_tier sql.NullInt64
-			birthday          sql.NullTime
+			birthday_month    sql.NullInt64
+			birthday_day      sql.NullInt64
 			friend_created_at time.Time
 			interaction_date  sql.NullTime
 			interaction_name  sql.NullString
@@ -222,7 +349,8 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 			&pfp_path,
 			&friend_name,
 			&relationship_tier,
-			&birthday,
+			&birthday_month,
+			&birthday_day,
 			&friend_created_at,
 			&interaction_date,
 			&interaction_name,
@@ -243,8 +371,11 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 		if relationship_tier.Valid {
 			friend.RelationshipTier = uint(relationship_tier.Int64)
 		}
-		if birthday.Valid {
-			friend.Birthday = birthday.Time
+		if birthday_month.Valid {
+			friend.BirthdayMonth = int(birthday_month.Int64)
+		}
+		if birthday_day.Valid {
+			friend.BirthdayDay = int(birthday_day.Int64)
 		}
 
 		if interaction_name.Valid {
@@ -284,7 +415,8 @@ func getFriends(user_id string) ([]models.Friend, error) {
 	SELECT
 		f.id AS friend_id,
 		f.name,
-		f.birthday,
+		f.birthday_month,
+		f.birthday_day,
 		i.filepath AS profile_image_path,
 		r.relationship_tier,
 		-- Last interaction (any type)
@@ -322,7 +454,8 @@ func getFriends(user_id string) ([]models.Friend, error) {
 		var (
 			friend_id        int
 			name             string
-			birthday         sql.NullTime
+			birthdayMonth    sql.NullInt64
+			birthdayDay      sql.NullInt64
 			profileImagePath sql.NullString
 			relationshipTier sql.NullInt64
 			lastInteraction  sql.NullTime
@@ -332,7 +465,8 @@ func getFriends(user_id string) ([]models.Friend, error) {
 		err = rows.Scan(
 			&friend_id,
 			&name,
-			&birthday,
+			&birthdayMonth,
+			&birthdayDay,
 			&profileImagePath,
 			&relationshipTier,
 			&lastInteraction,
@@ -347,8 +481,11 @@ func getFriends(user_id string) ([]models.Friend, error) {
 			Name: name,
 		}
 
-		if birthday.Valid {
-			friend.Birthday = birthday.Time
+		if birthdayMonth.Valid {
+			friend.BirthdayMonth = int(birthdayMonth.Int64)
+		}
+		if birthdayDay.Valid {
+			friend.BirthdayDay = int(birthdayDay.Int64)
 		}
 		if profileImagePath.Valid {
 			friend.ProfileImagePath = profileImagePath.String
@@ -359,7 +496,6 @@ func getFriends(user_id string) ([]models.Friend, error) {
 		if lastInteraction.Valid {
 			friend.LastInteraction.Date = lastInteraction.Time
 		}
-
 		if lastMeetup.Valid {
 			friend.LastMeetup.Date = lastMeetup.Time
 		}

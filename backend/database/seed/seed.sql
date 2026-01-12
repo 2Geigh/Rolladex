@@ -36,31 +36,30 @@ VALUES
 ------------------------------------------------------------
 -- Users
 ------------------------------------------------------------
-INSERT INTO "Users" ("id", "username", "passwordHash", "passwordSalt", "email", "profile_image_id", "birthday")
+INSERT INTO "Users" ("id", "username", "passwordHash", "passwordSalt", "email", "profile_image_id", "birthday_month", "birthday_day")
 VALUES
-    (1, 'jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@nazareth.ps', 1, '0000-12-25'),
-    (2, 'party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@wonderland.gb', NULL, NULL),
-    (3, 'bob_minimal', 'HASH_BOB_123', 'SALT_BOB_123', NULL, NULL, NULL);
-
+    (1, 'jesus_christ', 'HASH_JESUS_123', 'SALT_JESUS_123', 'jesus@nazareth.ps', 1, 12, 25),
+    (2, 'party_pal_alice', 'HASH_ALICE_123', 'SALT_ALICE_123', 'alice@wonderland.gb', NULL, NULL, NULL),
+    (3, 'bob_minimal', 'HASH_BOB_123', 'SALT_BOB_123', NULL, NULL, NULL, NULL);
 
 ------------------------------------------------------------
 -- Friends
 ------------------------------------------------------------
-INSERT INTO "Friends" ("id", "name", "birthday", "profile_image_id")
+INSERT INTO "Friends" ("id", "name", "birthday_month", "birthday_day", "profile_image_id")
 VALUES
-    (1, 'Simon Peter', '0010-01-01', 2),
-    (2, 'John Egbert', '0010-01-02', 3),
-    (3, 'James son of Zebedee', '0010-01-03', 4),
-    (4, 'Andrew', '0010-01-04', 5),
-    (5, 'Philip', '0010-01-05', 6),
-    (6, 'Bartholomew', '0010-01-06', 7),
-    (7, 'Matthew', '0010-01-07', 8),
-    (8, 'Thomas', '0010-01-08', 9),
-    (9, 'James son of Alphaeus', '0010-01-09', 10),
-    (10, 'Thaddaeus', '0010-01-10', 11),
-    (11, 'Simon the Zealot', '0010-01-11', 12),
-    (12, 'Judas Iscariot', '0010-01-12', 13),
-    (13, 'Fun Alice Friend', NULL, 14);
+    (1, 'Simon Peter', 1, 1, 2),
+    (2, 'John Egbert', 1, 2, 3),
+    (3, 'James son of Zebedee', 1, 3, 4),
+    (4, 'Andrew', 1, 4, 5),
+    (5, 'Philip', 1, 5, 6),
+    (6, 'Bartholomew', 1, 6, 7),
+    (7, 'Matthew', 1, 7, 8),
+    (8, 'Thomas', 1, 8, 9),
+    (9, 'James son of Alphaeus', 1, 9, 10),
+    (10, 'Thaddaeus', 1, 10, 11),
+    (11, 'Simon the Zealot', 1, 11, 12),
+    (12, 'Judas Iscariot', 1, 12, 13),
+    (13, 'Fun Alice Friend', NULL, NULL, 14);
 
 
 ------------------------------------------------------------

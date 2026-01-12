@@ -58,34 +58,6 @@ header {
 
 		// background-color: red;
 
-		#addFriend {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			text-wrap: none;
-			width: 10rem;
-
-			padding: 0.5rem;
-			text-decoration: none;
-			border-radius: 5px;
-
-			font-size: 1rem;
-			color: black;
-			background-color: magenta;
-			box-shadow: 0px 0px 10px 0px $shadow_color;
-		}
-		#addFriend:hover {
-			background-color: violet;
-			box-shadow: 0px 0px 10px 0px $shadow_color;
-		}
-		#addFriend:active {
-			color: black;
-			box-shadow:
-				0px 0px 10px 0px inset purple,
-				0px 0px 10px 0px $shadow_color;
-		}
-
 		.sortBy {
 			display: inline-flex;
 			flex-direction: row-reverse;
@@ -366,4 +338,32 @@ header {
 			background-color: rgb(157, 157, 157);
 		}
 	}
+}
+
+#addFriend {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	text-wrap: none;
+	width: 10rem;
+
+	padding: 0.5rem;
+	text-decoration: none;
+	border-radius: 5px;
+
+	font-size: 1rem;
+	color: black;
+	background-color: magenta;
+	box-shadow: 0px 0px 10px 0px $shadow_color;
+}
+#addFriend:hover {
+	background-color: violet;
+	box-shadow: 0px 0px 10px 0px $shadow_color;
+}
+#addFriend:active {
+	color: black;
+	box-shadow:
+		0px 0px 10px 0px inset purple,
+		0px 0px 10px 0px $shadow_color;
 }

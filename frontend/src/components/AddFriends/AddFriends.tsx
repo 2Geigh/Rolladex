@@ -4,6 +4,8 @@ import {
 	GetRelationshipTierInfo,
 } from "../../types/models/Friend"
 import "./styles/dist/AddFriends.min.css"
+import { backend_base_url } from "../../util/url"
+import { useNavigate } from "react-router-dom"
 
 type OptionalProps = {
 	formData: FormData
@@ -108,16 +110,13 @@ const Optional: React.FC<OptionalProps> = ({
 							if (e.target.value.trim() !== "") {
 								setFormData({
 									...formData,
-									birthday: {
-										...formData.birthday,
-										month: parseInt(e.target.value),
-									},
+									birthday_month: parseInt(e.target.value),
 								})
 							}
 						}}
-						defaultValue={""}
+						defaultValue={"00"}
 					>
-						<option id="defaultMonth" disabled selected value="">
+						<option id="defaultMonth" disabled selected value="00">
 							Month
 						</option>
 						<option value="01">January</option>
@@ -142,15 +141,12 @@ const Optional: React.FC<OptionalProps> = ({
 							if (e.target.value.trim() !== "") {
 								setFormData({
 									...formData,
-									birthday: {
-										...formData.birthday,
-										day: parseInt(e.target.value),
-									},
+									birthday_day: parseInt(e.target.value),
 								})
 							}
 						}}
 					>
-						<option id="defaultDay" disabled selected value="">
+						<option id="defaultDay" disabled selected value="00">
 							Day
 						</option>
 						{Array.from({ length: maxDays }, (_, index) => (
@@ -608,10 +604,8 @@ type RequiredFormData = {
 	relationship_tier_code: number | null | undefined
 }
 type OptionalFormData = {
-	birthday: {
-		month: number | null | undefined
-		day: number | null | undefined
-	}
+	birthday_month: number | undefined
+	birthday_day: number | undefined
 }
 type FormData = RequiredFormData & OptionalFormData
 
@@ -620,7 +614,8 @@ const AddFriends: React.FC = () => {
 		name: undefined,
 		last_interaction_date: undefined,
 		relationship_tier_code: undefined,
-		birthday: { month: undefined, day: undefined },
+		birthday_month: undefined,
+		birthday_day: undefined,
 	})
 	const [
 		knowsApproximateLastInteraction,
@@ -639,7 +634,9 @@ const AddFriends: React.FC = () => {
 	const [lastHoveredRelationshipTier, setLastHoveredRelationshipTier] =
 		useState<number | undefined>(undefined)
 
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
+	const navigate = useNavigate()
+
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
 
 		if (!formData.name) {
@@ -651,6 +648,22 @@ const AddFriends: React.FC = () => {
 		} else if (!formData.relationship_tier_code) {
 			alert("Please specify the relationship type")
 			return
+		}
+
+		try {
+			const response = await fetch(`${backend_base_url}/friends`, {
+				method: "POST",
+				credentials: "include",
+				body: JSON.stringify(formData),
+			})
+
+			if (response.ok) {
+				navigate("/friends")
+			} else {
+				alert(`Error: ${response.text}`)
+			}
+		} catch (err) {
+			throw new Error(String(err))
 		}
 	}
 

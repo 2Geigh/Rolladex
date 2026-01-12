@@ -9,7 +9,8 @@ type Friend struct {
 	Name             string      `json:"name"`
 	LastMeetup       Interaction `json:"last_meetup"`
 	LastInteraction  Interaction `json:"last_interaction"`
-	Birthday         time.Time   `json:"birthday"`
+	BirthdayMonth    int         `json:"birthday_month"`
+	BirthdayDay      int         `json:"birthday_day"`
 	ProfileImagePath string      `json:"profile_image_path"`
 	RelationshipTier uint        `json:"relationship_tier"`
 	CreatedAt        time.Time   `json:"created_at"`

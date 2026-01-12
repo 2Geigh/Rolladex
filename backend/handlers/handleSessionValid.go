@@ -154,7 +154,8 @@ func getSessionUser(user_id string) (models.User, error) {
 		username         sql.NullString
 		email            sql.NullString
 		profile_image_id sql.NullInt64
-		birthday         sql.NullTime
+		birthday_month   sql.NullInt64
+		birthday_day     sql.NullInt64
 		created_at       sql.NullTime
 
 		err error
@@ -172,7 +173,7 @@ func getSessionUser(user_id string) (models.User, error) {
 	}
 	defer tx.Rollback()
 	stmt, err := tx.Prepare(`
-		SELECT username, email, profile_image_id, birthday, created_at
+		SELECT username, email, profile_image_id, birthday_month, birthday_day, created_at
 		FROM Users
 		WHERE id = ?;`,
 	)
@@ -180,7 +181,7 @@ func getSessionUser(user_id string) (models.User, error) {
 		return user, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
-	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday, &created_at)
+	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday_month, &birthday_day, &created_at)
 	if err != nil {
 		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}
@@ -194,8 +195,11 @@ func getSessionUser(user_id string) (models.User, error) {
 	if profile_image_id.Valid {
 		user.ProfileImageID = uint(profile_image_id.Int64)
 	}
-	if birthday.Valid {
-		user.Birthday = birthday.Time
+	if birthday_month.Valid {
+		user.BirthdayMonth = int(birthday_month.Int64)
+	}
+	if birthday_day.Valid {
+		user.BirthdayDay = int(birthday_day.Int64)
 	}
 	if created_at.Valid {
 		user.CreatedAt = created_at.Time

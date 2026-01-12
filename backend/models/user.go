@@ -22,15 +22,6 @@ const (
 	Auto  UiThemeMode = "auto"
 )
 
-type Setting struct {
-	ID                        uint      `gorm:"primaryKey;autoIncrement:true"`
-	UserID                    uint      `gorm:"constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
-	NotificationPreferencesID *uint     `gorm:"foreignKey:ID;constraint:OnUpdate:NO ACTION,OnDelete:NO ACTION"`
-	UiTheme                   string    `gorm:"type:varchar"`
-	CreatedAt                 time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt                 time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-}
-
 type Email string
 
 type User struct {
@@ -40,16 +31,8 @@ type User struct {
 	PasswordSalt   string    `json:"password_salt"`
 	Email          Email     `json:"email"`
 	ProfileImageID uint      `json:"profile_image_id"`
-	Birthday       time.Time `json:"birthday"`
+	BirthdayMonth  int       `json:"birthday_month"`
+	BirthdayDay    int       `json:"birthday_day"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
-}
-
-type UsersFriend struct {
-	ID                 uint      `gorm:"primaryKey;autoIncrement:true"`
-	UserID             uint      `gorm:"not null"`
-	FriendID           uint      `gorm:"not null;constraint:OnUpdate:NO ACTION,OnDelete:CASCADE"`
-	CreatedAt          time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	UpdatedAt          time.Time `gorm:"default:CURRENT_TIMESTAMP"`
-	RelationshipStatus string    `gorm:"type:text"`
 }
