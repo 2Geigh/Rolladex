@@ -319,7 +319,14 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 
 	return (
 		<div className="section" id="relationshipTier">
-			<div className="fieldset_content">
+			<div
+				className="fieldset_content"
+				onMouseLeave={() => {
+					setLastHoveredRelationshipTier(
+						currentlySelectedRelationshipTier,
+					)
+				}}
+			>
 				<label className="selectionPrompt">
 					Please select the level of friendship you want to maintain
 					with {friendName}&nbsp;
@@ -335,11 +342,14 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 				{wantsToKnowWhy ?
 					<div id="algorithmExplanation">
 						<p>
-							In consectetur sint nam nobis non. Exercitationem
-							voluptatum sit recusandae aspernatur velit. Aut
-							commodi natus laboriosam. Minus iste aut ipsum
-							quasi. Consequuntur deleniti cumque explicabo et
-							culpa tempore laudantium.
+							This app's algorithm heavily depends on the type of
+							relationship you declare for each friend you add.
+							<br />
+							<br />
+							For example, you'd be recommended to keep in contact
+							with a 'close friend' more frequently than an
+							'acquaintance' as the former generally requires
+							higher maintenance
 						</p>
 						<span
 							className="close"
