@@ -1,29 +1,22 @@
-import { useState } from "react"
+import React, { useEffect, useState } from "react"
 import {
 	DefaultRelationshipTiers,
 	GetRelationshipTierInfo,
 } from "../../types/models/Friend"
 import "./styles/dist/AddFriends.min.css"
-import { backend_base_url } from "../../util/url"
 
 type OptionalProps = {
+	formData: FormData
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	friendName: string
 }
-const Optional: React.FC<OptionalProps> = ({ friendName }) => {
+const Optional: React.FC<OptionalProps> = ({
+	formData,
+	setFormData,
+	friendName,
+}) => {
 	const [month, setMonth] = useState<string | null>(null)
 	const [day, setDay] = useState<string | null>(null)
-
-	function getMaxDaysInMonth(month: string | null) {
-		if (!month) {
-			return 31
-		}
-
-		if (month === "02") return 29
-
-		if (["04", "06", "09", "11"].includes(month)) return 30
-
-		return 31
-	}
 
 	function getZodiac(
 		month: string | null,
@@ -85,6 +78,17 @@ const Optional: React.FC<OptionalProps> = ({ friendName }) => {
 		return {}
 	}
 
+	function getMaxDaysInMonth(month: string | null) {
+		if (!month) {
+			return 31
+		}
+
+		if (month === "02") return 29
+
+		if (["04", "06", "09", "11"].includes(month)) return 30
+
+		return 31
+	}
 	const maxDays = getMaxDaysInMonth(month)
 
 	return (
@@ -92,13 +96,25 @@ const Optional: React.FC<OptionalProps> = ({ friendName }) => {
 			<legend>Optional</legend>
 
 			<div id="birthday" className="section">
-				<label htmlFor="birthday">{friendName}'s birthday</label>
+				<label htmlFor="birthday">{friendName}'s birthday: </label>
 
 				<div className="formField">
 					<select
 						name="birthday_month"
 						id="birthdayMonth"
-						onChange={(e) => setMonth(e.target.value)}
+						onChange={(e) => {
+							setMonth(e.target.value)
+
+							if (e.target.value.trim() !== "") {
+								setFormData({
+									...formData,
+									birthday: {
+										...formData.birthday,
+										month: parseInt(e.target.value),
+									},
+								})
+							}
+						}}
 						defaultValue={""}
 					>
 						<option id="defaultMonth" disabled selected value="">
@@ -122,6 +138,16 @@ const Optional: React.FC<OptionalProps> = ({ friendName }) => {
 						id="birthdayDay"
 						onChange={(e) => {
 							setDay(e.target.value)
+
+							if (e.target.value.trim() !== "") {
+								setFormData({
+									...formData,
+									birthday: {
+										...formData.birthday,
+										day: parseInt(e.target.value),
+									},
+								})
+							}
 						}}
 					>
 						<option id="defaultDay" disabled selected value="">
@@ -150,16 +176,15 @@ const Optional: React.FC<OptionalProps> = ({ friendName }) => {
 
 type RelationshipTierDescriptionProps = {
 	relationship_tier_code: number | undefined
-	hasInputtedRelationshipTier: boolean
 }
 const RelationshipTierDescription: React.FC<
 	RelationshipTierDescriptionProps
-> = ({ relationship_tier_code, hasInputtedRelationshipTier }) => {
+> = ({ relationship_tier_code }) => {
 	const relationship_tier = GetRelationshipTierInfo(relationship_tier_code)
 
 	return (
 		<p className="relationship_tier_description">
-			{hasInputtedRelationshipTier ?
+			{relationship_tier_code ?
 				relationship_tier.description + "."
 			:	"Hover over a relationship type to see its description."}
 		</p>
@@ -167,6 +192,8 @@ const RelationshipTierDescription: React.FC<
 }
 
 type RelationshipTierSelectOptionsProps = {
+	formData: FormData
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	hasInputtedRelationshipTier: boolean
 	setHasInputtedRelationshipTier: React.Dispatch<
 		React.SetStateAction<boolean>
@@ -181,11 +208,12 @@ type RelationshipTierSelectOptionsProps = {
 	>
 }
 const RelationshipTierSelectOptions = ({
+	formData,
+	setFormData,
 	hasInputtedRelationshipTier,
 	setHasInputtedRelationshipTier,
 	currentlySelectedRelationshipTier,
 	setCurrentlySelectedRelationshipTier,
-	lastHoveredRelationshipTier,
 	setLastHoveredRelationshipTier,
 }: RelationshipTierSelectOptionsProps) => {
 	const options = Object.values(DefaultRelationshipTiers).map(
@@ -207,11 +235,27 @@ const RelationshipTierSelectOptions = ({
 						onChange={() => {
 							if (!hasInputtedRelationshipTier) {
 								setHasInputtedRelationshipTier(true)
+								setFormData({
+									...formData,
+									relationship_tier_code: null,
+								})
 							}
 
-							setCurrentlySelectedRelationshipTier(
-								relationship_tier.code,
-							)
+							if (relationship_tier.code !== undefined) {
+								setCurrentlySelectedRelationshipTier(
+									relationship_tier.code,
+								)
+								setFormData({
+									...formData,
+									relationship_tier_code:
+										relationship_tier.code,
+								})
+							} else {
+								setFormData({
+									...formData,
+									relationship_tier_code: null,
+								})
+							}
 						}}
 					/>
 
@@ -220,9 +264,6 @@ const RelationshipTierSelectOptions = ({
 						onMouseEnter={() => {
 							setLastHoveredRelationshipTier(
 								relationship_tier.code,
-							)
-							console.log(
-								`\nlastHoveredRelationshipTier: ${lastHoveredRelationshipTier}\ncurrentlySelectedRelationshipTier: ${currentlySelectedRelationshipTier}`,
 							)
 						}}
 						className={
@@ -247,6 +288,8 @@ const RelationshipTierSelectOptions = ({
 }
 
 type RelationshipSectionProps = {
+	formData: FormData
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	friendName: string
 	hasInputtedRelationshipTier: boolean
 	setHasInputtedRelationshipTier: React.Dispatch<
@@ -262,6 +305,8 @@ type RelationshipSectionProps = {
 	>
 }
 const RelationshipSection: React.FC<RelationshipSectionProps> = ({
+	formData,
+	setFormData,
 	friendName,
 	hasInputtedRelationshipTier,
 	setHasInputtedRelationshipTier,
@@ -309,11 +354,10 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 				<div className="tiersAndInfo">
 					<RelationshipTierDescription
 						relationship_tier_code={lastHoveredRelationshipTier}
-						hasInputtedRelationshipTier={
-							hasInputtedRelationshipTier
-						}
 					/>
 					<RelationshipTierSelectOptions
+						formData={formData}
+						setFormData={setFormData}
 						hasInputtedRelationshipTier={
 							hasInputtedRelationshipTier
 						}
@@ -340,6 +384,8 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 }
 
 type LastInteractionInputsProps = {
+	formData: FormData
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	friendName: string
 	knowsApproximateLastInteraction: boolean | undefined
 	setKnowsApproximateLastInteraction: React.Dispatch<
@@ -355,6 +401,8 @@ type LastInteractionInputsProps = {
 	>
 }
 const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
+	formData,
+	setFormData,
 	friendName,
 	knowsApproximateLastInteraction,
 	setKnowsApproximateLastInteraction,
@@ -381,9 +429,16 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			e.target.value !== null ||
 			e.target.value !== undefined
 		) {
+			const date = new Date(e.target.value).toISOString()
+
 			setHasInputtedLastInteractionDate(true)
+			setFormData({
+				...formData,
+				last_interaction_date: date,
+			})
 		} else {
 			setHasInputtedLastInteractionDate(false)
+			setFormData({ ...formData, last_interaction_date: null })
 		}
 	}
 
@@ -394,23 +449,47 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			"time_unit_multiple",
 		) as HTMLInputElement
-		console.log(
-			`inputtedTimeAgoMultipleElement: ${inputtedTimeAgoMultipleElement.value}`,
-		)
 
 		const inputtedTimeAgoUnitElement = document.getElementById(
 			"time_unit",
 		) as HTMLSelectElement
-		console.log(
-			`inputtedTimeAgoUnitElement: ${inputtedTimeAgoUnitElement.value}`,
-		)
 
 		const inputtedAbsoluteLastInteractionDate = document.getElementById(
 			"last_interaction_date_absolute",
 		) as HTMLInputElement
-		console.log(
-			`inputtedAbsoluteLastInteractionDate: ${inputtedAbsoluteLastInteractionDate.value}`,
-		)
+
+		function calculatePastDate(n: number, unit: string): string {
+			const localDate = new Date()
+
+			switch (unit.toLowerCase()) {
+				case "years":
+				case "year":
+					localDate.setFullYear(localDate.getFullYear() - n)
+					break
+				case "months":
+				case "month":
+					localDate.setMonth(localDate.getMonth() - n)
+					break
+				case "weeks":
+				case "week":
+					localDate.setDate(localDate.getDate() - n * 7)
+					break
+				case "days":
+				case "day":
+					localDate.setDate(localDate.getDate() - n)
+					break
+				case "hours":
+				case "hour":
+					localDate.setHours(localDate.getHours() - n)
+					break
+				default:
+					throw new Error(
+						'Invalid unit of time. Use "years", "months", "weeks", "days", or "hours".',
+					)
+			}
+
+			return localDate.toISOString()
+		}
 
 		if (
 			inputtedTimeAgoMultipleElement.value.trim() !== "" &&
@@ -418,8 +497,16 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		) {
 			inputtedAbsoluteLastInteractionDate.value = ""
 			setHasInputtedLastInteractionDate(true)
+
+			const timeUnit = inputtedTimeAgoUnitElement.value.trim()
+			const numberOf = parseInt(
+				inputtedTimeAgoMultipleElement.value.trim(),
+			)
+			const pastDate = calculatePastDate(numberOf, timeUnit)
+			setFormData({ ...formData, last_interaction_date: pastDate })
 		} else {
 			setHasInputtedLastInteractionDate(false)
+			setFormData({ ...formData, last_interaction_date: null })
 		}
 	}
 
@@ -505,8 +592,26 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 	)
 }
 
+type RequiredFormData = {
+	name: string | undefined
+	last_interaction_date: string | null | undefined
+	relationship_tier_code: number | null | undefined
+}
+type OptionalFormData = {
+	birthday: {
+		month: number | null | undefined
+		day: number | null | undefined
+	}
+}
+type FormData = RequiredFormData & OptionalFormData
+
 const AddFriends: React.FC = () => {
-	const [friendName, setFriendName] = useState<string>("")
+	const [formData, setFormData] = useState<FormData>({
+		name: undefined,
+		last_interaction_date: undefined,
+		relationship_tier_code: undefined,
+		birthday: { month: undefined, day: undefined },
+	})
 	const [
 		knowsApproximateLastInteraction,
 		setKnowsApproximateLastInteraction,
@@ -524,11 +629,30 @@ const AddFriends: React.FC = () => {
 	const [lastHoveredRelationshipTier, setLastHoveredRelationshipTier] =
 		useState<number | undefined>(undefined)
 
+	useEffect(() => {
+		console.log(formData)
+	}, [formData])
+
+	function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
+		e.preventDefault()
+
+		if (!formData.name) {
+			alert("Please fill out the name field")
+			return
+		} else if (!formData.last_interaction_date) {
+			alert("Please properly fill out the last interaction date")
+			return
+		} else if (!formData.relationship_tier_code) {
+			alert("Please specify the relationship type")
+			return
+		}
+	}
+
 	return (
 		<>
 			<div id="addFriendsContent">
 				<h2>Add a friend</h2>
-				<form action={`${backend_base_url}/friends`} method="POST">
+				<form action="" onSubmit={handleSubmit}>
 					<div id="nameFormField">
 						<label htmlFor="name">Name</label>
 						<input
@@ -538,15 +662,21 @@ const AddFriends: React.FC = () => {
 							maxLength={64}
 							onChange={(e) => {
 								const inputtedText = e.target.value
-								setFriendName(inputtedText)
+
+								setFormData({
+									...formData,
+									name: inputtedText,
+								})
 							}}
 						/>
 					</div>
 
-					{friendName.trim() !== "" && (
+					{formData.name !== undefined && (
 						<>
 							<LastInteractionInputs
-								friendName={friendName}
+								formData={formData}
+								setFormData={setFormData}
+								friendName={formData.name}
 								knowsApproximateLastInteraction={
 									knowsApproximateLastInteraction
 								}
@@ -567,10 +697,12 @@ const AddFriends: React.FC = () => {
 								}
 							/>
 
-							{hasInputtedLastInteractionDate && (
+							{formData.last_interaction_date !== undefined && (
 								<>
 									<RelationshipSection
-										friendName={friendName}
+										formData={formData}
+										setFormData={setFormData}
+										friendName={formData.name}
 										hasInputtedRelationshipTier={
 											hasInputtedRelationshipTier
 										}
@@ -591,9 +723,14 @@ const AddFriends: React.FC = () => {
 										}
 									/>
 
-									{hasInputtedRelationshipTier && (
+									{formData.relationship_tier_code !==
+										undefined && (
 										<>
-											<Optional friendName={friendName} />
+											<Optional
+												formData={formData}
+												setFormData={setFormData}
+												friendName={formData.name}
+											/>
 											<input
 												type="submit"
 												id="Submit"

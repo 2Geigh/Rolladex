@@ -41,14 +41,14 @@ export const DefaultRelationshipTiers: Record<number, RelationshipTier> = {
 		code: 3,
 		name: "Ordinary friend",
 		emoji: "☕",
-		description: `Someone you can reliably hang out with and trust for a favour. Reciprocating such reliability with them should be more than okay with you`,
+		description: `Someone you can reliably hang out with and trust for a favour. Reciprocating such reliability should be more than okay with you`,
 		max: 50,
 	},
 	4: {
 		code: 4,
 		name: "Acquaintance",
 		emoji: "🤝",
-		description: `Someone you know on a first-name basis, nothing too deep and that's okay with you`,
+		description: `Someone you know on a first-name basis, nothing too deep and that's alright with you`,
 		max: MAX_NUMBER_OF_FRIENDS,
 	},
 }
