@@ -6,7 +6,10 @@ import {
 import "./styles/dist/AddFriends.min.css"
 import { backend_base_url } from "../../util/url"
 
-const Optional: React.FC = () => {
+type OptionalProps = {
+	friendName: string
+}
+const Optional: React.FC<OptionalProps> = ({ friendName }) => {
 	const [month, setMonth] = useState<string | null>(null)
 	const [day, setDay] = useState<string | null>(null)
 
@@ -22,69 +25,124 @@ const Optional: React.FC = () => {
 		return 31
 	}
 
-	function getZodiac(month: string | null, day: string | null): string {
-		if (!month || !day) return ""
+	function getZodiac(
+		month: string | null,
+		day: string | null,
+	): Record<string, string> {
+		if (!month || !day)
+			return { zodiacName: "No birthday selected yet", zodiacEmoji: "🎂" }
 
 		const dayNumber = parseInt(day, 10)
-		if (month === "01") return dayNumber < 20 ? "🐐" : "🏺"
-		if (month === "02") return dayNumber < 19 ? "🏺" : "🐟"
-		if (month === "03") return dayNumber < 21 ? "🐟" : "🐏"
-		if (month === "04") return dayNumber < 20 ? "🐏" : "🐂"
-		if (month === "05") return dayNumber < 21 ? "🐂" : "👯"
-		if (month === "06") return dayNumber < 21 ? "👯" : "🦀"
-		if (month === "07") return dayNumber < 23 ? "🦀" : "🦁"
-		if (month === "08") return dayNumber < 23 ? "🦁" : "🍒"
-		if (month === "09") return dayNumber < 23 ? "🍒" : "⚖️"
-		if (month === "10") return dayNumber < 23 ? "⚖️" : "🦂"
-		if (month === "11") return dayNumber < 22 ? "🦂" : " 🏹"
-		if (month === "12") return dayNumber < 22 ? " 🏹" : "🐐"
+		if (month === "01")
+			return dayNumber < 20 ?
+					{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
+				:	{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
+		if (month === "02")
+			return dayNumber < 19 ?
+					{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
+				:	{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
+		if (month === "03")
+			return dayNumber < 21 ?
+					{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
+				:	{ zodiacName: "Aries", zodiacEmoji: "🐏" }
+		if (month === "04")
+			return dayNumber < 20 ?
+					{ zodiacName: "Aries", zodiacEmoji: "🐏" }
+				:	{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
+		if (month === "05")
+			return dayNumber < 21 ?
+					{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
+				:	{ zodiacName: "Gemini", zodiacEmoji: "👯" }
+		if (month === "06")
+			return dayNumber < 21 ?
+					{ zodiacName: "Gemini", zodiacEmoji: "👯" }
+				:	{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
+		if (month === "07")
+			return dayNumber < 23 ?
+					{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
+				:	{ zodiacName: "Leo", zodiacEmoji: "🦁" }
+		if (month === "08")
+			return dayNumber < 23 ?
+					{ zodiacName: "Leo", zodiacEmoji: "🦁" }
+				:	{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
+		if (month === "09")
+			return dayNumber < 23 ?
+					{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
+				:	{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
+		if (month === "10")
+			return dayNumber < 23 ?
+					{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
+				:	{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
+		if (month === "11")
+			return dayNumber < 22 ?
+					{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
+				:	{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
+		if (month === "12")
+			return dayNumber < 22 ?
+					{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
+				:	{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
 
-		return ""
+		return {}
 	}
 
 	const maxDays = getMaxDaysInMonth(month)
 
 	return (
-		<div id="birthday" className="section">
+		<div id="optional">
 			<legend>Optional</legend>
-			<div className="formField">
-				<label htmlFor="birthday">Birthday</label>
-				<select
-					name="birthday_month"
-					id="birthdayMonth"
-					onChange={(e) => setMonth(e.target.value)}
-					defaultValue="01"
-				>
-					<option value="01">January</option>
-					<option value="02">February</option>
-					<option value="03">March</option>
-					<option value="04">April</option>
-					<option value="05">May</option>
-					<option value="06">June</option>
-					<option value="07">July</option>
-					<option value="08">August</option>
-					<option value="09">September</option>
-					<option value="10">October</option>
-					<option value="11">November</option>
-					<option value="12">December</option>
-				</select>
-				<select
-					name="birthday_day"
-					id="birthdayDay"
-					onChange={(e) => {
-						setDay(e.target.value)
-					}}
-				>
-					{Array.from({ length: maxDays }, (_, index) => (
-						<option
-							key={index + 1}
-							value={String(index + 1).padStart(2, "0")}
-						>
-							{index + 1}
+
+			<div id="birthday" className="section">
+				<label htmlFor="birthday">{friendName}'s birthday</label>
+
+				<div className="formField">
+					<select
+						name="birthday_month"
+						id="birthdayMonth"
+						onChange={(e) => setMonth(e.target.value)}
+						defaultValue={""}
+					>
+						<option id="defaultMonth" disabled selected value="">
+							Month
 						</option>
-					))}
-				</select>
-				<div id="zodiacEmoji">{getZodiac(month, day)}</div>
+						<option value="01">January</option>
+						<option value="02">February</option>
+						<option value="03">March</option>
+						<option value="04">April</option>
+						<option value="05">May</option>
+						<option value="06">June</option>
+						<option value="07">July</option>
+						<option value="08">August</option>
+						<option value="09">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+					</select>
+					<select
+						name="birthday_day"
+						id="birthdayDay"
+						onChange={(e) => {
+							setDay(e.target.value)
+						}}
+					>
+						<option id="defaultDay" disabled selected value="">
+							Day
+						</option>
+						{Array.from({ length: maxDays }, (_, index) => (
+							<option
+								key={index + 1}
+								value={String(index + 1).padStart(2, "0")}
+							>
+								{index + 1}
+							</option>
+						))}
+					</select>
+					<div
+						id="zodiacEmoji"
+						title={getZodiac(month, day).zodiacName}
+					>
+						{getZodiac(month, day).zodiacEmoji}
+					</div>
+				</div>
 			</div>
 		</div>
 	)
@@ -102,9 +160,8 @@ const RelationshipTierDescription: React.FC<
 	return (
 		<p className="relationship_tier_description">
 			{hasInputtedRelationshipTier ?
-				relationship_tier.description
-			:	"Not sure which type of relationship to pick? Select one to see a detailed description of it here."
-			}
+				relationship_tier.description + "."
+			:	"Hover over a relationship type to see its description."}
 		</p>
 	)
 }
@@ -114,14 +171,22 @@ type RelationshipTierSelectOptionsProps = {
 	setHasInputtedRelationshipTier: React.Dispatch<
 		React.SetStateAction<boolean>
 	>
+	currentlySelectedRelationshipTier: number | undefined
 	setCurrentlySelectedRelationshipTier: React.Dispatch<
+		React.SetStateAction<number | undefined>
+	>
+	lastHoveredRelationshipTier: number | undefined
+	setLastHoveredRelationshipTier: React.Dispatch<
 		React.SetStateAction<number | undefined>
 	>
 }
 const RelationshipTierSelectOptions = ({
 	hasInputtedRelationshipTier,
 	setHasInputtedRelationshipTier,
+	currentlySelectedRelationshipTier,
 	setCurrentlySelectedRelationshipTier,
+	lastHoveredRelationshipTier,
+	setLastHoveredRelationshipTier,
 }: RelationshipTierSelectOptionsProps) => {
 	const options = Object.values(DefaultRelationshipTiers).map(
 		(relationship_tier) => {
@@ -135,6 +200,7 @@ const RelationshipTierSelectOptions = ({
 				<div key={inputValue} className="relationshipLabelAndRadio">
 					<input
 						name={name}
+						required
 						type="radio"
 						value={relationship_tier.code}
 						id={inputId}
@@ -149,7 +215,29 @@ const RelationshipTierSelectOptions = ({
 						}}
 					/>
 
-					<label htmlFor={labelFor}>{labelInnerHtml}</label>
+					<label
+						htmlFor={labelFor}
+						onMouseEnter={() => {
+							setLastHoveredRelationshipTier(
+								relationship_tier.code,
+							)
+							console.log(
+								`\nlastHoveredRelationshipTier: ${lastHoveredRelationshipTier}\ncurrentlySelectedRelationshipTier: ${currentlySelectedRelationshipTier}`,
+							)
+						}}
+						className={
+							(
+								currentlySelectedRelationshipTier !==
+									undefined &&
+								currentlySelectedRelationshipTier ===
+									relationship_tier.code
+							) ?
+								"selected"
+							:	""
+						}
+					>
+						{labelInnerHtml}
+					</label>
 				</div>
 			)
 		},
@@ -168,6 +256,10 @@ type RelationshipSectionProps = {
 	setCurrentlySelectedRelationshipTier: React.Dispatch<
 		React.SetStateAction<number | undefined>
 	>
+	lastHoveredRelationshipTier: number | undefined
+	setLastHoveredRelationshipTier: React.Dispatch<
+		React.SetStateAction<number | undefined>
+	>
 }
 const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 	friendName,
@@ -175,6 +267,8 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 	setHasInputtedRelationshipTier,
 	currentlySelectedRelationshipTier,
 	setCurrentlySelectedRelationshipTier,
+	lastHoveredRelationshipTier,
+	setLastHoveredRelationshipTier,
 }) => {
 	const [wantsToKnowWhy, setWantsToKnowWhy] = useState<boolean>(false)
 
@@ -213,6 +307,12 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 					</div>
 				:	<></>}
 				<div className="tiersAndInfo">
+					<RelationshipTierDescription
+						relationship_tier_code={lastHoveredRelationshipTier}
+						hasInputtedRelationshipTier={
+							hasInputtedRelationshipTier
+						}
+					/>
 					<RelationshipTierSelectOptions
 						hasInputtedRelationshipTier={
 							hasInputtedRelationshipTier
@@ -220,16 +320,17 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						setHasInputtedRelationshipTier={
 							setHasInputtedRelationshipTier
 						}
+						currentlySelectedRelationshipTier={
+							currentlySelectedRelationshipTier
+						}
 						setCurrentlySelectedRelationshipTier={
 							setCurrentlySelectedRelationshipTier
 						}
-					/>
-					<RelationshipTierDescription
-						relationship_tier_code={
-							currentlySelectedRelationshipTier
+						lastHoveredRelationshipTier={
+							lastHoveredRelationshipTier
 						}
-						hasInputtedRelationshipTier={
-							hasInputtedRelationshipTier
+						setLastHoveredRelationshipTier={
+							setLastHoveredRelationshipTier
 						}
 					/>
 				</div>
@@ -293,24 +394,51 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			"time_unit_multiple",
 		) as HTMLInputElement
+		console.log(
+			`inputtedTimeAgoMultipleElement: ${inputtedTimeAgoMultipleElement.value}`,
+		)
+
 		const inputtedTimeAgoUnitElement = document.getElementById(
 			"time_unit",
 		) as HTMLSelectElement
+		console.log(
+			`inputtedTimeAgoUnitElement: ${inputtedTimeAgoUnitElement.value}`,
+		)
 
 		const inputtedAbsoluteLastInteractionDate = document.getElementById(
 			"last_interaction_date_absolute",
 		) as HTMLInputElement
-		inputtedAbsoluteLastInteractionDate.value = ""
+		console.log(
+			`inputtedAbsoluteLastInteractionDate: ${inputtedAbsoluteLastInteractionDate.value}`,
+		)
 
 		if (
-			inputtedTimeAgoMultipleElement.value.trim() !== "" ||
+			inputtedTimeAgoMultipleElement.value.trim() !== "" &&
 			inputtedTimeAgoUnitElement.value.trim() !== ""
 		) {
+			inputtedAbsoluteLastInteractionDate.value = ""
 			setHasInputtedLastInteractionDate(true)
 		} else {
 			setHasInputtedLastInteractionDate(false)
 		}
 	}
+
+	function formatDate(date: Date) {
+		const year = date.getFullYear()
+		const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-indexed
+		const day = String(date.getDate()).padStart(2, "0")
+
+		return `${year}-${month}-${day}`
+	}
+
+	function addOneDay(date: Date) {
+		const nextDay = new Date(date)
+		nextDay.setDate(nextDay.getDate() + 1)
+		return nextDay
+	}
+
+	const today = new Date()
+	const tomorrow = addOneDay(today)
 
 	return (
 		<div className="section" id="lastInteraction">
@@ -332,6 +460,8 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 						type="date"
 						id="last_interaction_date_absolute"
 						onChange={onChangeAbsoluteDate}
+						min="1900-01-01"
+						max={formatDate(tomorrow)}
 					/>
 				</div>
 				<span className="or">or</span>
@@ -343,7 +473,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 					}
 				>
 					<span className="inputtedTimeAgo">
-						~{" "}
+						〜{" "}
 						<input
 							name="time_unit_multiple"
 							id="time_unit_multiple"
@@ -355,8 +485,12 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 						<select
 							name="time_unit"
 							id="time_unit"
-							defaultValue="days"
+							defaultValue=""
+							onChange={onChangeApproximateDate}
 						>
+							<option value="" disabled>
+								Time units
+							</option>
 							<option value="hours">Hours</option>
 							<option value="days">Days</option>
 							<option value="weeks">Weeks</option>
@@ -381,13 +515,14 @@ const AddFriends: React.FC = () => {
 		useState<boolean | undefined>(undefined)
 	const [hasInputtedLastInteractionDate, setHasInputtedLastInteractionDate] =
 		useState<boolean>(false)
-
 	const [hasInputtedRelationshipTier, setHasInputtedRelationshipTier] =
 		useState<boolean>(false)
 	const [
 		currentlySelectedRelationshipTier,
 		setCurrentlySelectedRelationshipTier,
 	] = useState<number | undefined>(undefined)
+	const [lastHoveredRelationshipTier, setLastHoveredRelationshipTier] =
+		useState<number | undefined>(undefined)
 
 	return (
 		<>
@@ -400,6 +535,7 @@ const AddFriends: React.FC = () => {
 							type="text"
 							name="name"
 							required
+							maxLength={64}
 							onChange={(e) => {
 								const inputtedText = e.target.value
 								setFriendName(inputtedText)
@@ -447,11 +583,17 @@ const AddFriends: React.FC = () => {
 										setCurrentlySelectedRelationshipTier={
 											setCurrentlySelectedRelationshipTier
 										}
+										lastHoveredRelationshipTier={
+											lastHoveredRelationshipTier
+										}
+										setLastHoveredRelationshipTier={
+											setLastHoveredRelationshipTier
+										}
 									/>
 
 									{hasInputtedRelationshipTier && (
 										<>
-											<Optional />
+											<Optional friendName={friendName} />
 											<input
 												type="submit"
 												id="Submit"

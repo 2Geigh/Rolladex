@@ -1,5 +1,7 @@
 import type { Interaction } from "./Interaction"
 
+export const MAX_NUMBER_OF_FRIENDS = 150
+
 export type Friend = {
 	id: number
 	name: string
@@ -17,13 +19,38 @@ export type RelationshipTier = {
 	name: string
 	emoji: string
 	description: string
+	max: number
 }
 
 export const DefaultRelationshipTiers: Record<number, RelationshipTier> = {
-	1: { code: 1, name: "Inner clique", emoji: "🫂", description: "🫂" },
-	2: { code: 2, name: "Close friend", emoji: "🍷", description: "🍷" },
-	3: { code: 3, name: "Ordinary friend", emoji: "☕", description: "☕" },
-	4: { code: 4, name: "Acquaintance", emoji: "🤝", description: "🤝" },
+	1: {
+		code: 1,
+		name: "Inner clique",
+		emoji: "🫂",
+		description: `Someone you'd be happy to call a co-founder of your life, and vice-versa`,
+		max: 5,
+	},
+	2: {
+		code: 2,
+		name: "Close friend",
+		emoji: "🍷",
+		description: `Someone you can confide in and depend on when times are tough`,
+		max: 15,
+	},
+	3: {
+		code: 3,
+		name: "Ordinary friend",
+		emoji: "☕",
+		description: `Someone you can reliably hang out with and trust for a favour. Reciprocating such reliability with them should be more than okay with you`,
+		max: 50,
+	},
+	4: {
+		code: 4,
+		name: "Acquaintance",
+		emoji: "🤝",
+		description: `Someone you know on a first-name basis, nothing too deep and that's okay with you`,
+		max: MAX_NUMBER_OF_FRIENDS,
+	},
 }
 
 export function GetRelationshipTierInfo(
@@ -39,6 +66,7 @@ export function GetRelationshipTierInfo(
 			name: "Uncategorised",
 			emoji: "👤",
 			description: "This is a relationship of an undefined tier.",
+			max: MAX_NUMBER_OF_FRIENDS,
 		}
 	}
 
