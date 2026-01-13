@@ -196,138 +196,91 @@ const Friends: React.FC = () => {
 		return <Loading />
 	}
 
-	if (!FriendListItems || FriendListItems.length < 1) {
-		return (
-			<>
-				<div id="friendsContent" className="noFriends">
-					<div id="friendsWrapper">
-						<header className="noFriends">
-							<h2>Friends</h2>
-							<a id="addFriend" href="/addfriend">
-								Add friend
-							</a>
-							{/* <SortBy
-								selected={sortBy}
-								onSortChange={onSortChange}
-							/> */}
-						</header>
-
-						<table id="friendList" className="noFriends">
-							<thead className="noFriends">
-								<tr className="labels">
-									<th id="leftmost">Name</th>
-									<th>Relationship</th>
-									<th>Last interaction</th>
-									<th>Birthday</th>
-									<th id="rightmost">Date added</th>
-								</tr>
-							</thead>
-
-							<tbody>
-								<tr id="noFriends">
-									<td colSpan={5}>Nobody to be found...</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div id="pagenav">
-						<div
-							className="arrow"
-							id="left"
-							onClick={goToPreviousPage}
-						>
-							〈
-						</div>
-						<div className="buttons">
-							<a href="/friends" className="button selected">
-								1
-							</a>
-							<a href="/friends" className="button">
-								2
-							</a>
-							<a href="/friends" className="button">
-								3
-							</a>
-							<div className="button" id="ellipsis">
-								&#8943;
-							</div>
-							<a href="/friends" className="button">
-								7
-							</a>
-						</div>
-						<div
-							className="arrow"
-							id="right"
-							onClick={goToNextPage}
-						>
-							〉
-						</div>
-					</div>
-				</div>
-			</>
-		)
-	}
-
 	return (
-		<>
-			<div id="friendsContent">
-				<div id="friendsWrapper">
-					<header>
-						<h2>Friends</h2>
-						<div className="subheader">
-							<a id="addFriend" href="/addfriend">
-								Add friend
-							</a>
+		<div
+			id="friendsContent"
+			className={!FriendListItems?.length ? "noFriends" : undefined}
+		>
+			<div id="friendsWrapper">
+				<header
+					className={
+						!FriendListItems?.length ? "noFriends" : undefined
+					}
+				>
+					<h2>Friends</h2>
+
+					<div className="subheader">
+						<a id="addFriend" href="/addfriend">
+							Add friend
+						</a>
+
+						{/* Show SortBy only if there are friends */}
+						{FriendListItems && FriendListItems?.length > 0 && (
 							<SortBy
 								selected={sortBy}
 								onSortChange={onSortChange}
 							/>
-						</div>
-					</header>
+						)}
+					</div>
+				</header>
 
-					<table id="friendList">
-						<thead>
-							<tr className="labels">
-								<th id="name">Name</th>
-								<th id="relationship">Relationship</th>
-								<th id="last_interaction">Last interaction</th>
-								<th id="birthday">Birthday</th>
-								<th id="created_at">Date added</th>
+				<table
+					id="friendList"
+					className={
+						!FriendListItems?.length ? "noFriends" : undefined
+					}
+				>
+					<thead
+						className={
+							!FriendListItems?.length ? "noFriends" : undefined
+						}
+					>
+						<tr className="labels">
+							<th id="name">Name</th>
+							<th id="relationship">Relationship</th>
+							<th id="last_interaction">Last interaction</th>
+							<th id="birthday">Birthday</th>
+							<th id="created_at">Date added</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{FriendListItems && FriendListItems?.length > 0 ?
+							FriendListItems
+						:	<tr id="noFriends">
+								<td colSpan={5}>Nobody to be found...</td>
 							</tr>
-						</thead>
+						}
+					</tbody>
+				</table>
+			</div>
 
-						<tbody>{FriendListItems}</tbody>
-					</table>
+			<div id="pagenav">
+				<div className="arrow" id="left" onClick={goToPreviousPage}>
+					〈
 				</div>
-
-				<div id="pagenav">
-					<div className="arrow" id="left" onClick={goToPreviousPage}>
-						〈
+				<div className="buttons">
+					<a href="/friends" className="button selected">
+						1
+					</a>
+					<a href="/friends" className="button">
+						2
+					</a>
+					<a href="/friends" className="button">
+						3
+					</a>
+					<div className="button" id="ellipsis">
+						&#8943;
 					</div>
-					<div className="buttons">
-						<a href="/friends" className="button selected">
-							1
-						</a>
-						<a href="/friends" className="button">
-							2
-						</a>
-						<a href="/friends" className="button">
-							3
-						</a>
-						<div className="button" id="ellipsis">
-							&#8943;
-						</div>
-						<a href="/friends" className="button">
-							7
-						</a>
-					</div>
-					<div className="arrow" id="right" onClick={goToNextPage}>
-						〉
-					</div>
+					<a href="/friends" className="button">
+						7
+					</a>
+				</div>
+				<div className="arrow" id="right" onClick={goToNextPage}>
+					〉
 				</div>
 			</div>
-		</>
+		</div>
 	)
 }
 
