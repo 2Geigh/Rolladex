@@ -1,0 +1,246 @@
+$shadow_color: rgba(0, 0, 0, 0.159);
+$FRIEND_CARD_BORDER_RADIUS: 2rem;
+$FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
+
+#friendStandalonePageContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	min-height: 50vh;
+	height: 100%;
+
+	width: 100%;
+
+	// background-color: orange;
+
+	#friendCard {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+
+		padding: 2rem;
+		box-sizing: border-box;
+
+		// width: 90%;
+		// max-width: 50rem;
+
+		border-radius: $FRIEND_CARD_BORDER_RADIUS;
+
+		box-shadow: 0px 0px 30px 0px lightgray;
+
+		background-color: white;
+
+		.content {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: start;
+
+			width: 100%;
+			height: 100%;
+
+			padding: 0px;
+
+			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+
+			// background-color: orange;
+
+			.pfp {
+				$DIMENSION: 20rem;
+
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				min-height: $DIMENSION;
+				height: 100%;
+				min-height: $DIMENSION;
+
+				min-width: $DIMENSION;
+				width: 100%;
+				max-width: $DIMENSION;
+
+				padding: 1rem;
+				box-sizing: border-box;
+
+				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+
+				font-size: 4rem;
+				font-weight: 100;
+				font-family:
+					"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+					sans-serif;
+
+				text-align: center;
+
+				color: white;
+				background-color: blue;
+			}
+
+			#nameAndRelationship {
+				display: flex;
+				flex-direction: column;
+				justify-content: start;
+				align-items: start;
+
+				width: 100%;
+
+				padding-left: 1.75rem;
+				margin-top: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+
+				// background-color: red;
+
+				.name {
+					display: flex;
+					flex-direction: row;
+					justify-content: start;
+					align-items: center;
+
+					font-size: 2rem;
+					font-weight: 400;
+
+					width: 100%;
+
+					padding-bottom: 0.5rem;
+
+					// background-color: yellow;
+				}
+
+				.relationship {
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+					align-items: center;
+
+					height: 100%;
+					width: 100%;
+
+					font-weight: 300;
+
+					// background-color: teal;
+
+					.relationship_tier {
+						display: flex;
+						flex-direction: row-reverse;
+						justify-content: start;
+						align-items: center;
+
+						width: 100%;
+
+						font-weight: inherit;
+
+						// background-color: yellowgreen;
+
+						.emoji,
+						.relationship_name {
+							font-size: 1.5rem;
+						}
+
+						.emoji {
+							display: flex;
+							flex-direction: row;
+							justify-content: center;
+							align-items: center;
+
+							// background-color: pink;
+
+							min-width: 2.1rem;
+							width: 100%;
+							max-width: 2.1rem;
+
+							margin-left: 0.4rem;
+
+							margin-bottom: 0.15rem;
+
+							// min-height: 2.15rem;
+							// height: 100%;
+							// max-height: 2.15rem;
+
+							border-radius: 100%;
+						}
+
+						.relationship_name {
+							display: flex;
+							flex-direction: row;
+							justify-content: start;
+							align-items: center;
+
+							// margin-left: 0.51rem;
+
+							height: 100%;
+
+							font-weight: inherit;
+
+							// background-color: aquamarine;
+						}
+					}
+
+					.relationship_health {
+						display: flex;
+						flex-direction: row;
+						justify-content: start;
+						align-items: center;
+
+						width: 100%;
+
+						font-size: 1.25rem;
+
+						margin-top: 0.5rem;
+						// padding-left: 2.6rem;
+
+						box-sizing: border-box;
+
+						font-weight: 200;
+
+						// background-color: azure;
+
+						.health {
+							margin-left: 0.5rem;
+
+							font-size: inherit;
+
+							text-decoration: underline;
+
+							color: rgb(177, 226, 103);
+
+							font-weight: normal;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.friend_card_content_section {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		min-width: 15rem;
+
+		padding: 1.5rem;
+		box-sizing: border-box;
+
+		background-color: burlywood;
+
+		h3 {
+			display: flex;
+			flex-direction: row;
+			justify-content: start;
+			align-items: center;
+
+			width: 100%;
+
+			font-size: 1.25rem;
+			font-weight: normal;
+
+			background-color: coral;
+		}
+	}
+}
