@@ -1,0 +1,14 @@
+services:
+  frontend:
+    image: node
+    ports: 
+      - "5000:5173"
+  backend:
+    image: golang
+    ports:
+      - "3000:3001"
+    volumes:
+      - db_data:/var/lib/sqlite
+
+volumes:
+  db_data:
