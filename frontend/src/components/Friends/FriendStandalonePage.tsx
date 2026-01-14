@@ -90,10 +90,19 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				<div className="friend_card_content_section" id="birthday">
 					<h3>Birthday</h3>
 					<span className="birthday_date">
-						<span className="month">
-							{MonthNumberToString(birthday_month)}
-						</span>
-						<span className="day">{birthday_day}</span>
+						{(
+							birthday_day &&
+							birthday_day > 0 &&
+							birthday_month &&
+							birthday_month > 0
+						) ?
+							<>
+								<span className="month">
+									{MonthNumberToString(birthday_month)}
+								</span>
+								<span className="day">{birthday_day}</span>
+							</>
+						:	"Unknown"}
 					</span>
 					<span className="emoji">{zodiac.zodiacEmoji}</span>
 				</div>
