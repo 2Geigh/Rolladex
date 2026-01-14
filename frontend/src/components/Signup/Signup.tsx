@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react"
 import Footer from "../Footer/Footer"
 import { Navigate } from "react-router-dom"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
-import "./dist/Signup.min.css"
+import "./Signup.css"
 
 export type SignupData = {
 	username: string

@@ -1,0 +1,27 @@
+#AddFriendsForm {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-bottom: 1em;
+  font-family: "Helvetica", Arial, sans-serif;
+  border-radius: 10px;
+  box-shadow: 1px 1px 26px 1px rgba(0, 0, 0, 0.159);
+  -webkit-box-shadow: 1px 1px 26px 1px rgba(0, 0, 0, 0.159);
+  -moz-box-shadow: 1px 1px 26px 1px rgba(0, 0, 0, 0.159);
+}
+#AddFriendsForm .inputAndLabel {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5em;
+}
+#AddFriendsForm .inputAndLabel input {
+  margin-left: 1em;
+}
+#AddFriendsForm #AddFriendsSubmit {
+  margin-top: 1em;
+}/*# sourceMappingURL=AddFriends.css.map */

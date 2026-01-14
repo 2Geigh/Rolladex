@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"log"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
@@ -16,6 +17,25 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 	util.LogHttpRequest(req)
 
+	var (
+		uri                   string = req.URL.Path
+		isFriendIdPathPresent bool   = len(uri) > len("/friends/")
+		isUriRouteValid       bool   = uri[:len("/friends/")] == "/friends/"
+		isUriValid            bool   = isFriendIdPathPresent && isUriRouteValid
+	)
+
+	if !(isUriValid) {
+		util.ReportHttpError(fmt.Errorf("invalid URI format"), w, "invalid URI syntax", http.StatusBadRequest)
+		return
+	}
+
+	friendIdStr := uri[len("/friends/"):]
+	friendId, err := strconv.Atoi(friendIdStr)
+	if err != nil {
+		util.ReportHttpError(err, w, "couldn't parse friend ID from URI", http.StatusBadRequest)
+		return
+	}
+
 	switch req.Method {
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
@@ -26,25 +46,6 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 		_, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
-			return
-		}
-
-		var (
-			uri                   string = req.URL.Path
-			isFriendIdPathPresent bool   = len(uri) > len("/friends/")
-			isUriRouteValid       bool   = uri[:len("/friends/")] == "/friends/"
-			isUriValid            bool   = isFriendIdPathPresent && isUriRouteValid
-		)
-
-		if !(isUriValid) {
-			util.ReportHttpError(fmt.Errorf("invalid URI format"), w, "invalid URI syntax", http.StatusBadRequest)
-			return
-		}
-
-		friendIdStr := uri[len("/friends/"):]
-		friendId, err := strconv.Atoi(friendIdStr)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't parse friend ID from URI", http.StatusBadRequest)
 			return
 		}
 
@@ -70,6 +71,19 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 		}
 
 	case http.MethodDelete:
+		_, err := validateSession(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		err = deleteFriend(friendId)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't delete friend", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -171,4 +185,43 @@ func getFriend(friend_id int) (models.Friend, error) {
 		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
 	}
 	return friend, nil
+}
+
+func deleteFriend(friend_id int) error {
+	var (
+		err error
+	)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(`
+		DELETE FROM Friends 
+		WHERE id = ?;
+	`)
+	if err != nil {
+		return fmt.Errorf("couldn't prepare statment: %w", err)
+	}
+	defer stmt.Close()
+
+	result, err := stmt.Exec(friend_id)
+	if err != nil {
+		return fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("couldn't get statement execution result: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return fmt.Errorf("couldn't complete transaction: %w", err)
+	}
+
+	log.Printf(`Affected %d row(s)`, rowsAffected)
+	return err
 }

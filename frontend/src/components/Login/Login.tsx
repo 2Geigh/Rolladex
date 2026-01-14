@@ -1,6 +1,6 @@
 import Footer from "../Footer/Footer"
 import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
-import "./dist/Login.min.css"
+import "./Login.css"
 import { Navigate } from "react-router-dom"
 import type { FormEvent } from "react"
 import { useLayoutEffect, useState } from "react"

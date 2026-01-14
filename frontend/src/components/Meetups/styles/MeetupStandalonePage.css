@@ -1,0 +1,89 @@
+.MeetupListItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  box-sizing: border-box;
+  width: auto;
+  margin-bottom: 1em;
+  padding: 1.25em;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.159);
+  -webkit-box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.159);
+  -moz-box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.159);
+}
+.MeetupListItem .timeAndPlace {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  min-width: 10em;
+}
+.MeetupListItem .timeAndPlace .date {
+  display: inline;
+  font-weight: bolder;
+  font-size: 1.35em;
+  text-wrap: nowrap;
+  margin-right: 2em;
+}
+.MeetupListItem .timeAndPlace .location {
+  width: 100%;
+  text-align: right;
+  font-size: 1.2em;
+}
+.MeetupListItem .bottomRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.75em;
+  width: 100%;
+}
+.MeetupListItem .bottomRow .attendees {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: baseline;
+  align-items: center;
+  height: 100%;
+  padding-left: 0.8333333333em;
+}
+.MeetupListItem .bottomRow .attendees .attendeeMinimizedImg {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 2.5em;
+  font-variant: small-caps;
+  padding-top: 0.26875em;
+  font-size: 0.8333333333em;
+  color: white;
+  font-weight: normal;
+  background-color: hsl(145, 100%, 50%);
+  border: 1px solid white;
+  margin-left: -0.8333333333em;
+}
+.MeetupListItem .bottomRow .attendees .noAttendees {
+  font-size: 1em;
+  display: flex;
+  width: 100%;
+  padding-left: -0.8333333333em;
+}
+.MeetupListItem .bottomRow .view {
+  margin-top: 0.5em;
+  padding: 0.25em;
+  padding-left: 2em;
+  padding-right: 2em;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  text-decoration: none;
+  background-color: lightgray;
+  color: black;
+}
+.MeetupListItem .bottomRow .view:hover {
+  background-color: gray;
+}/*# sourceMappingURL=MeetupStandalonePage.css.map */

@@ -1,5 +1,5 @@
-import "./styles/dist/Meetups.min.css"
-import type { Meetup } from "../../types/models/Interaction"
+import "./styles/Meetups.css"
+import type { Interaction } from "../../types/models/Interaction"
 import type { Friend } from "../../types/models/Friend"
 import type React from "react"
 

@@ -1,5 +1,5 @@
 import Navbar from "../Navbar/Navbar"
-import "./styles/dist/MeetupStandalonePage.min.css"
+import "./styles/MeetupStandalonePage.css"
 import Footer from "../Footer/Footer"
 import type React from "react"
 

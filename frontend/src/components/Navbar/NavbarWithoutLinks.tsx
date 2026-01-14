@@ -1,4 +1,4 @@
-import "./styles/dist/Navbar.min.css"
+import "./styles/Navbar.css"
 
 const NavbarWithoutLinks = () => {
     return (

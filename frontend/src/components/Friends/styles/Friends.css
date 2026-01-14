@@ -1,0 +1,272 @@
+#friendsContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  min-height: 50vh;
+  height: 100%;
+  width: 100%;
+}
+
+#friendsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 2000px;
+  height: 100%;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 1rem;
+}
+header h2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: end;
+  margin-bottom: -1.9rem;
+  font-size: 2rem;
+}
+header .subheader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+header .subheader .sortBy {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  justify-content: end;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+header .subheader .sortBy #sortby {
+  margin-right: 0.5rem;
+}
+header .subheader .sortBy #sortbyOptions {
+  padding: 0.5rem;
+  width: 10rem;
+  border: none;
+  border-radius: 5px;
+}
+
+#friendList {
+  box-sizing: border-box;
+  border-radius: 1rem;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  overflow: hidden;
+  background-color: lightgray;
+  border: none;
+  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.159);
+}
+#friendList th,
+#friendList td {
+  background-color: none;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: normal;
+  border: none;
+}
+#friendList th:hover {
+  box-shadow: 0px 0px 10px 0px lightgray inset;
+  background-color: rgb(183, 183, 183);
+  cursor: pointer;
+}
+#friendList thead th {
+  padding-top: 1.25rem;
+  padding-bottom: 0.75rem;
+  font-weight: 500;
+}
+#friendList thead .labels #name {
+  width: auto;
+}
+#friendList thead .labels #relationship {
+  width: auto;
+}
+#friendList thead .labels #last_interaction {
+  width: 12rem;
+}
+#friendList thead .labels #birthday {
+  width: 6rem;
+}
+#friendList thead .labels #created_at {
+  width: 7rem;
+}
+#friendList tbody td {
+  background-color: white;
+}
+#friendList tbody td:hover {
+  box-shadow: 0px 0px 10px 0px rgb(233, 233, 233) inset;
+  background-color: white;
+  cursor: cell;
+}
+#friendList tbody .created_at,
+#friendList tbody .birthday,
+#friendList tbody .last_interaction {
+  text-align: center;
+}
+#friendList tbody .relationship {
+  text-align: center;
+  line-height: 0.75rem;
+}
+#friendList tbody a {
+  height: 100%;
+  width: 100%;
+}
+
+.noFriends header h2 {
+  margin-bottom: 1rem;
+}
+.noFriends #friendList thead .labels #leftmost,
+.noFriends .noFriends thead .labels #leftmost {
+  padding-left: 2rem;
+}
+.noFriends #friendList thead .labels #rightmost,
+.noFriends .noFriends thead .labels #rightmost {
+  padding-right: 2rem;
+}
+.noFriends #friendList thead .labels th,
+.noFriends .noFriends thead .labels th {
+  padding-left: 2rem;
+  padding-right: 2rem;
+  color: gray;
+}
+.noFriends #friendList thead .labels th:hover,
+.noFriends .noFriends thead .labels th:hover {
+  box-shadow: none;
+  background-color: inherit;
+  cursor: default;
+}
+.noFriends #friendList #noFriends,
+.noFriends .noFriends #noFriends {
+  width: 100%;
+  color: rgb(112, 112, 112);
+}
+.noFriends #friendList #noFriends td,
+.noFriends .noFriends #noFriends td {
+  text-align: center;
+  border: 1px solid white;
+  background-color: white;
+  padding-top: 3rem;
+  padding-bottom: 2.5rem;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.noFriends #friendList #noFriends td:hover,
+.noFriends .noFriends #noFriends td:hover {
+  box-shadow: none;
+  cursor: default;
+}
+
+#pagenav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  margin-top: 2rem;
+  background-color: red;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0px 0px 10px 0px lightgray;
+}
+#pagenav .arrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 2rem;
+  background-color: rgb(246, 246, 246);
+}
+#pagenav #left {
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  padding-right: 0.75rem;
+}
+#pagenav #right {
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  padding-left: 0.75rem;
+}
+#pagenav .arrow:hover {
+  cursor: pointer;
+  color: black;
+  font-weight: bold;
+  background-color: rgb(225, 225, 225);
+  box-shadow: 0px 0px 5px 0px rgb(150, 150, 150) inset;
+}
+#pagenav .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+#pagenav .buttons .button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 3rem;
+  width: 3rem;
+  text-decoration: none;
+  color: gray;
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+}
+#pagenav .buttons .button:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 5px 0px lightgray inset;
+}
+#pagenav .buttons #ellipsis:hover {
+  box-shadow: none;
+  cursor: default;
+}
+#pagenav .buttons .selected {
+  background-color: rgb(157, 157, 157);
+  color: white;
+}
+#pagenav .buttons .selected:hover {
+  border: none;
+  color: white;
+  box-shadow: 0px 0px 5px 0px rgb(103, 103, 103) inset;
+  background-color: rgb(157, 157, 157);
+}
+
+#addFriend {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-wrap: none;
+  width: 10rem;
+  padding: 0.5rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: black;
+  background-color: magenta;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.159);
+}
+
+#addFriend:hover {
+  background-color: violet;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.159);
+}
+
+#addFriend:active {
+  color: black;
+  box-shadow: 0px 0px 10px 0px inset purple, 0px 0px 10px 0px rgba(0, 0, 0, 0.159);
+}/*# sourceMappingURL=Friends.css.map */

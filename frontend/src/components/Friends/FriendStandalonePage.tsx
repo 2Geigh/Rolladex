@@ -1,14 +1,15 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import PageNotFound from "../PageNotFound/PageNotFound"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import { useEffect, useState } from "react"
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
-import "./styles/dist/FriendStandalonePage.min.css"
+import "./styles/FriendStandalonePage.css"
 import type { Interaction } from "../../types/models/Interaction"
 import { GetZodiac, MonthNumberToString, TimeAgo } from "../../util/dates"
 
 type FriendCardProps = {
+	id: number
 	name: string
 	profile_image_path: string | undefined
 	relationship_tier: number
@@ -17,6 +18,7 @@ type FriendCardProps = {
 	birthday_day: number | undefined
 }
 const FriendCard: React.FC<FriendCardProps> = ({
+	id,
 	name,
 	profile_image_path,
 	relationship_tier,
@@ -27,7 +29,18 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	const relationship = GetRelationshipTierInfo(relationship_tier)
 	const lastInteractionDate = last_interaction?.date
 
-	function deleteFriend() {
+	const navigate = useNavigate()
+
+	async function deleteFriend() {
+		const response = await fetch(`${backend_base_url}/friends/${id}`, {
+			method: "DELETE",
+			credentials: "include",
+		})
+
+		if (!response.ok) {
+			throw new Error(`${response.status}: ${response.statusText}`)
+		}
+
 		return
 	}
 
@@ -41,16 +54,14 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		<div id="friendCard">
 			<div className="nameAndPhoto">
 				<img
-					// src={
-					// 	(
-					// 		profile_image_path !== undefined &&
-					// 		profile_image_path.trim() !== ""
-					// 	) ?
-					// 		profile_image_path
-					// 	:	"not_found"
-					// }
-
-					src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg-s-msn-com.akamaized.net%2Ftenant%2Famp%2Fentityid%2FAA1U4RrL.img%3Fw%3D1540%26h%3D800%26m%3D4%26q%3D70&f=1&nofb=1&ipt=f8864105c21c63c8016536524df770cec92606e9bc85e0321dbe7a312ff1f911"
+					src={
+						(
+							profile_image_path !== undefined &&
+							profile_image_path.trim() !== ""
+						) ?
+							profile_image_path
+						:	"not_found"
+					}
 					alt={name}
 					className="pfp"
 				/>
@@ -122,7 +133,16 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					Edit friend
 				</button>
 
-				<button id="deleteFriend" onClick={deleteFriend}>
+				<button
+					id="deleteFriend"
+					onClick={() => {
+						deleteFriend()
+							.catch((err) => {
+								throw new Error(err)
+							})
+							.finally(() => navigate("/friends"))
+					}}
+				>
 					Delete friend
 				</button>
 			</div>
@@ -186,6 +206,7 @@ const FriendStandalonePage: React.FC = () => {
 		<>
 			<div id="friendStandalonePageContent">
 				<FriendCard
+					id={friend.id}
 					name={friend.name}
 					profile_image_path={friend.profile_image_path}
 					relationship_tier={friend.relationship_tier}

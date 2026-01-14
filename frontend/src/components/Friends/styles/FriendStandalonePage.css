@@ -1,0 +1,292 @@
+#friendStandalonePageContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+#friendStandalonePageContent #friendCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 2rem;
+  box-sizing: border-box;
+  width: 90%;
+  max-width: 62.5rem;
+  border-radius: 2rem;
+  box-shadow: 0px 0px 30px 0px lightgray;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2em;
+  box-sizing: border-box;
+  border-radius: 1rem;
+  box-shadow: 0px 0px 10px 0px lightgray;
+  width: 100%;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto .pfp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 20rem;
+  height: 100%;
+  min-height: 20rem;
+  min-width: 20rem;
+  width: 100%;
+  max-width: 20rem;
+  border-radius: 100%;
+  box-shadow: 0px 0px 0px 0px gray;
+  -o-object-fit: cover;
+     object-fit: cover;
+  font-size: 3rem;
+  font-weight: 100;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  text-align: center;
+  color: white;
+  background-color: black;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  justify-self: stretch;
+  padding-left: 1.75rem;
+  margin-top: 1rem;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .name {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 2rem;
+  font-weight: 400;
+  width: 100%;
+  max-width: 20rem;
+  padding-bottom: 0.5rem;
+  box-sizing: border-box;
+  text-wrap: wrap;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-weight: 300;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_tier {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  font-weight: inherit;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_tier .emoji,
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_tier .relationship_name {
+  font-size: 1.5rem;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_tier .emoji {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  min-width: 2.1rem;
+  width: 100%;
+  max-width: 2.1rem;
+  margin-left: 0.4rem;
+  margin-bottom: 0.15rem;
+  border-radius: 100%;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_tier .relationship_name {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  height: 100%;
+  font-weight: inherit;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_health {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+  font-size: 1.25rem;
+  margin-top: 0.5rem;
+  box-sizing: border-box;
+  font-weight: 200;
+}
+#friendStandalonePageContent #friendCard .nameAndPhoto #nameAndRelationship .relationship .relationship_health .health {
+  margin-left: 0.5rem;
+  font-size: inherit;
+  text-decoration: underline;
+  color: rgb(177, 226, 103);
+  font-weight: normal;
+}
+#friendStandalonePageContent #friendCard .card_content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-radius: 1rem;
+}
+#friendStandalonePageContent #friendCard .card_content .friend_card_content_section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 18rem;
+  min-height: 10rem;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  box-shadow: 0px 0px 7.5px 0px lightgray;
+  border-radius: 1rem;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .card_content .friend_card_content_section h3 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1em;
+  font-size: 1.5rem;
+  font-weight: lighter;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .time_ago {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .time_ago .number_of_time_units {
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .time_ago .time_unit {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .time_ago .ago {
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .update {
+  padding: 0.5em;
+  padding-left: 2em;
+  padding-right: 2em;
+  box-sizing: border-box;
+  margin-top: 1.75rem;
+  margin-bottom: -0.5rem;
+  border: 2px solid lightgray;
+  border-radius: 0.75rem;
+  color: gray;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .update:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 5px 0px lightgray;
+  background-color: rgb(231, 231, 231);
+}
+#friendStandalonePageContent #friendCard .card_content #lastInteraction .update:active {
+  box-shadow: 0px 0px 3px 0px gray inset;
+}
+#friendStandalonePageContent #friendCard .card_content #birthday .emoji {
+  font-size: 2em;
+  margin-bottom: -0.1em;
+}
+#friendStandalonePageContent #friendCard .card_content #birthday .birthday_date {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: inherit;
+  margin-bottom: 0.5em;
+}
+#friendStandalonePageContent #friendCard .card_content #birthday .birthday_date .month {
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #birthday .birthday_date .day {
+  margin-left: 0.5rem;
+  font-size: inherit;
+}
+#friendStandalonePageContent #friendCard .card_content #notesSection #notes {
+  min-height: 4em;
+  height: 100%;
+  text-wrap: wrap;
+  width: 100%;
+  border: 2px solid lightgray;
+  border-radius: 0.375rem;
+  resize: none;
+  color: rgb(65, 65, 65);
+}
+#friendStandalonePageContent #friendCard .buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  max-width: 40rem;
+}
+#friendStandalonePageContent #friendCard .buttons button {
+  width: 90%;
+  max-width: 15rem;
+  box-sizing: border-box;
+}
+#friendStandalonePageContent #friendCard .buttons #deleteFriend {
+  padding: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  border: 2px solid red;
+  border-radius: 0.75rem;
+  color: red;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .buttons #deleteFriend:hover {
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px 0px red;
+  color: white;
+  background-color: red;
+}
+#friendStandalonePageContent #friendCard .buttons #deleteFriend:active {
+  border-color: crimson;
+  box-shadow: 0px 0px 10px 0px crimson inset;
+}
+#friendStandalonePageContent #friendCard .buttons #editFriend {
+  padding: 1rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  border: 2px solid lightgray;
+  border-radius: 0.75rem;
+  color: lightgray;
+  background-color: white;
+}
+#friendStandalonePageContent #friendCard .buttons #editFriend:hover {
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0px 0px 10px 0px lightgray;
+  color: white;
+  background-color: lightgray;
+}
+#friendStandalonePageContent #friendCard .buttons #editFriend:active {
+  border-color: gray;
+  box-shadow: 0px 0px 10px 0px gray inset;
+}/*# sourceMappingURL=FriendStandalonePage.css.map */

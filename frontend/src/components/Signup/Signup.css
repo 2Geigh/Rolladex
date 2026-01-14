@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 4em);
+  background: #2A7B9B;
+  background: linear-gradient(0deg, rgb(255, 212, 230) 0%, rgb(255, 255, 255) 100%);
+}
+
+#signupForm {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: auto;
+  padding: 2em;
+  padding-bottom: 1em;
+  border: 1px solid grey;
+  background-color: white;
+  color: darkslategrey;
+  border-radius: 0.75em;
+  box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  -webkit-box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  -moz-box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  max-width: 30em;
+}
+#signupForm input {
+  margin-bottom: 1.25em;
+  width: 100%;
+  border-style: solid;
+  border-radius: 0.1em;
+  border-width: 1px;
+}
+#signupForm .agreements {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: top;
+  text-align: center;
+}
+#signupForm .agreements #tos-agree {
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+#signupForm .agreements label {
+  display: inline;
+  text-wrap: wrap;
+  margin-left: 0.5em;
+  max-width: 63.5%;
+  text-align: left;
+}
+#signupForm #loginButton {
+  margin-top: 2.5em;
+  padding: 0.2em;
+  max-width: 11em;
+  font-size: 95%;
+}/*# sourceMappingURL=Signup.css.map */

@@ -1,4 +1,4 @@
-import "./styles/dist/Footer.min.css"
+import "./styles/Footer.css"
 
 const Footer = () => {
 	const today = new Date()

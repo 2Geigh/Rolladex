@@ -1,0 +1,10 @@
+#loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  font-size: 5vh;
+  color: lightgray;
+  cursor: progress;
+}/*# sourceMappingURL=Loading.css.map */

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import "./styles/dist/Home.min.css"
+import "./styles/Home.css"
 import ToContactSection from "./ToContactSection"
 import Calendar from "react-calendar"
 import type { Interaction } from "../../types/models/Interaction"

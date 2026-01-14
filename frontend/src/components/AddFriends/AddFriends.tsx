@@ -3,7 +3,7 @@ import {
 	DefaultRelationshipTiers,
 	GetRelationshipTierInfo,
 } from "../../types/models/Friend"
-import "./styles/dist/AddFriends.min.css"
+import "./styles/AddFriends.css"
 import { backend_base_url } from "../../util/url"
 import { useNavigate } from "react-router-dom"
 import { GetZodiac } from "../../util/dates"

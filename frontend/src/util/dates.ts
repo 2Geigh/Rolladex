@@ -117,6 +117,10 @@ export function GetZodiac(
 }
 
 export function MonthNumberToString(month_number: number | undefined): string {
+	if (!month_number) {
+		return "Unknown"
+	}
+
 	const month_names = [
 		"January",
 		"February",
@@ -131,14 +135,11 @@ export function MonthNumberToString(month_number: number | undefined): string {
 		"November",
 		"December",
 	]
+	const month_index = month_number - 1
 
-	if (!month_number) {
-		return ""
+	if (month_index < 0 || month_index > 11) {
+		throw new Error("Some month")
 	}
 
-	if (month_number < 0 || month_number > 11) {
-		throw new Error("input must be a number between 0 and 11")
-	}
-
-	return month_names[month_number - 1]
+	return month_names[month_index]
 }

@@ -1,4 +1,4 @@
-import "./dist/Loading.min.css"
+import "./Loading.css"
 
 const Loading: React.FC = () => {
 	return <span id="loading">Loading...</span>

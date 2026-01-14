@@ -1,0 +1,49 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 4em);
+  background: #2a7b9b;
+  background: linear-gradient(0deg, rgb(255, 212, 230) 0%, rgb(255, 255, 255) 100%);
+}
+
+#loginForm {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: auto;
+  padding: 2em;
+  padding-bottom: 1em;
+  border: 1px solid grey;
+  background-color: white;
+  color: darkslategrey;
+  border-radius: 0.75em;
+  box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  -webkit-box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  -moz-box-shadow: 1px 1px 20px 1px rgba(0, 0, 0, 0.283);
+  max-width: 30em;
+}
+#loginForm input {
+  box-sizing: border-box;
+  margin-bottom: 1.25em;
+  margin-top: 0.25em;
+  padding: 0.35em;
+  width: 100%;
+  border-style: solid;
+  border-radius: 0.1em;
+  border-width: 1px;
+}
+#loginForm #loginButton {
+  margin-top: 1.25em;
+  margin-bottom: 0.7em;
+  padding: 0.5em;
+  max-width: 11em;
+  font-size: 95%;
+}
+
+#toSignup {
+  margin-top: 2.5em;
+}/*# sourceMappingURL=Login.css.map */
