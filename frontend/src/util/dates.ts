@@ -14,11 +14,11 @@ export function DaysSinceDate(date: Date): number {
 
 export function TimeAgo(date: Date | undefined): string {
 	if (date === undefined) {
-		return "unspecified time"
+		return "Unspecified"
 	}
 
 	if (!(date instanceof Date) || isNaN(date.getTime())) {
-		return "unknown time"
+		return "Unknown"
 	}
 
 	const now = new Date()
@@ -44,4 +44,101 @@ export function TimeAgo(date: Date | undefined): string {
 	} else {
 		return `Just now`
 	}
+}
+
+export function GetZodiac(
+	month: string | null | number | undefined,
+	day: string | null | number | undefined,
+): Record<string, string> {
+	if (
+		!month ||
+		!day ||
+		String(month).trim() === "" ||
+		String(day).trim() === ""
+	) {
+		return { zodiacName: "No birthday selected yet", zodiacEmoji: "🎂" }
+	}
+
+	const monthString =
+		typeof month === "number" ? month.toString().padStart(2, "0") : month
+	const dayNumber =
+		typeof day === "number" ? day : parseInt(day as string, 10)
+
+	if (monthString === "01")
+		return dayNumber < 20 ?
+				{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
+			:	{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
+	if (monthString === "02")
+		return dayNumber < 19 ?
+				{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
+			:	{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
+	if (monthString === "03")
+		return dayNumber < 21 ?
+				{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
+			:	{ zodiacName: "Aries", zodiacEmoji: "🐏" }
+	if (monthString === "04")
+		return dayNumber < 20 ?
+				{ zodiacName: "Aries", zodiacEmoji: "🐏" }
+			:	{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
+	if (monthString === "05")
+		return dayNumber < 21 ?
+				{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
+			:	{ zodiacName: "Gemini", zodiacEmoji: "👯" }
+	if (monthString === "06")
+		return dayNumber < 21 ?
+				{ zodiacName: "Gemini", zodiacEmoji: "👯" }
+			:	{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
+	if (monthString === "07")
+		return dayNumber < 23 ?
+				{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
+			:	{ zodiacName: "Leo", zodiacEmoji: "🦁" }
+	if (monthString === "08")
+		return dayNumber < 23 ?
+				{ zodiacName: "Leo", zodiacEmoji: "🦁" }
+			:	{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
+	if (monthString === "09")
+		return dayNumber < 23 ?
+				{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
+			:	{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
+	if (monthString === "10")
+		return dayNumber < 23 ?
+				{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
+			:	{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
+	if (monthString === "11")
+		return dayNumber < 22 ?
+				{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
+			:	{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
+	if (monthString === "12")
+		return dayNumber < 22 ?
+				{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
+			:	{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
+
+	return {}
+}
+
+export function MonthNumberToString(month_number: number | undefined): string {
+	const month_names = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+	]
+
+	if (!month_number) {
+		return ""
+	}
+
+	if (month_number < 0 || month_number > 11) {
+		throw new Error("input must be a number between 0 and 11")
+	}
+
+	return month_names[month_number - 1]
 }

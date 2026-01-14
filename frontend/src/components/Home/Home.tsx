@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import "./styles/dist/Home.min.css"
 import ToContactSection from "./ToContactSection"
 import Calendar from "react-calendar"
-import "react-calendar/dist/Calendar.css"
 import type { Interaction } from "../../types/models/Interaction"
 import { backend_base_url } from "../../util/url"
 

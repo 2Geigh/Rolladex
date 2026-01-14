@@ -6,6 +6,7 @@ import {
 import "./styles/dist/AddFriends.min.css"
 import { backend_base_url } from "../../util/url"
 import { useNavigate } from "react-router-dom"
+import { GetZodiac } from "../../util/dates"
 
 type OptionalProps = {
 	formData: FormData
@@ -19,66 +20,6 @@ const Optional: React.FC<OptionalProps> = ({
 }) => {
 	const [month, setMonth] = useState<string | null>(null)
 	const [day, setDay] = useState<string | null>(null)
-
-	function getZodiac(
-		month: string | null,
-		day: string | null,
-	): Record<string, string> {
-		if (!month || !day)
-			return { zodiacName: "No birthday selected yet", zodiacEmoji: "🎂" }
-
-		const dayNumber = parseInt(day, 10)
-		if (month === "01")
-			return dayNumber < 20 ?
-					{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
-				:	{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
-		if (month === "02")
-			return dayNumber < 19 ?
-					{ zodiacName: "Aquarius", zodiacEmoji: "🏺" }
-				:	{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
-		if (month === "03")
-			return dayNumber < 21 ?
-					{ zodiacName: "Pisces", zodiacEmoji: "🐟" }
-				:	{ zodiacName: "Aries", zodiacEmoji: "🐏" }
-		if (month === "04")
-			return dayNumber < 20 ?
-					{ zodiacName: "Aries", zodiacEmoji: "🐏" }
-				:	{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
-		if (month === "05")
-			return dayNumber < 21 ?
-					{ zodiacName: "Taurus", zodiacEmoji: "🐂" }
-				:	{ zodiacName: "Gemini", zodiacEmoji: "👯" }
-		if (month === "06")
-			return dayNumber < 21 ?
-					{ zodiacName: "Gemini", zodiacEmoji: "👯" }
-				:	{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
-		if (month === "07")
-			return dayNumber < 23 ?
-					{ zodiacName: "Cancer", zodiacEmoji: "🦀" }
-				:	{ zodiacName: "Leo", zodiacEmoji: "🦁" }
-		if (month === "08")
-			return dayNumber < 23 ?
-					{ zodiacName: "Leo", zodiacEmoji: "🦁" }
-				:	{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
-		if (month === "09")
-			return dayNumber < 23 ?
-					{ zodiacName: "Virgo", zodiacEmoji: "🍒" }
-				:	{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
-		if (month === "10")
-			return dayNumber < 23 ?
-					{ zodiacName: "Libra", zodiacEmoji: "⚖️" }
-				:	{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
-		if (month === "11")
-			return dayNumber < 22 ?
-					{ zodiacName: "Scorpio", zodiacEmoji: "🦂" }
-				:	{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
-		if (month === "12")
-			return dayNumber < 22 ?
-					{ zodiacName: "Sagittarius", zodiacEmoji: "🏹" }
-				:	{ zodiacName: "Capricorn", zodiacEmoji: "🐐" }
-
-		return {}
-	}
 
 	function getMaxDaysInMonth(month: string | null) {
 		if (!month) {
@@ -160,9 +101,9 @@ const Optional: React.FC<OptionalProps> = ({
 					</select>
 					<div
 						id="zodiacEmoji"
-						title={getZodiac(month, day).zodiacName}
+						title={GetZodiac(month, day).zodiacName}
 					>
-						{getZodiac(month, day).zodiacEmoji}
+						{GetZodiac(month, day).zodiacEmoji}
 					</div>
 				</div>
 			</div>

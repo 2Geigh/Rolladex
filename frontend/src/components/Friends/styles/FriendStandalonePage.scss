@@ -1,6 +1,7 @@
 $shadow_color: rgba(0, 0, 0, 0.159);
 $FRIEND_CARD_BORDER_RADIUS: 2rem;
 $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
+$FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 #friendStandalonePageContent {
 	display: flex;
@@ -8,12 +9,7 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 	justify-content: center;
 	align-items: center;
 
-	min-height: 50vh;
-	height: 100%;
-
-	width: 100%;
-
-	// background-color: orange;
+	// background-color: yellow;
 
 	#friendCard {
 		display: flex;
@@ -25,29 +21,31 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 		padding: 2rem;
 		box-sizing: border-box;
 
-		// width: 90%;
-		// max-width: 50rem;
+		width: 90%;
+		max-width: 62.5rem;
 
 		border-radius: $FRIEND_CARD_BORDER_RADIUS;
 
 		box-shadow: 0px 0px 30px 0px lightgray;
 
 		background-color: white;
+		// background-color: crimson;
 
-		.content {
+		.nameAndPhoto {
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
-			align-items: start;
+			align-items: center;
 
-			width: 100%;
-			height: 100%;
-
-			padding: 0px;
+			padding: 2em;
+			box-sizing: border-box;
 
 			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
 
-			// background-color: orange;
+			box-shadow: 0px 0px 10px 0px lightgray;
+
+			width: 100%;
+			background-color: white;
 
 			.pfp {
 				$DIMENSION: 20rem;
@@ -65,12 +63,13 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 				width: 100%;
 				max-width: $DIMENSION;
 
-				padding: 1rem;
-				box-sizing: border-box;
+				border-radius: 100%;
 
-				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+				box-shadow: 0px 0px 0px 0px gray;
 
-				font-size: 4rem;
+				object-fit: cover;
+
+				font-size: 3rem;
 				font-weight: 100;
 				font-family:
 					"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
@@ -79,7 +78,7 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 				text-align: center;
 
 				color: white;
-				background-color: blue;
+				background-color: black;
 			}
 
 			#nameAndRelationship {
@@ -87,8 +86,7 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 				flex-direction: column;
 				justify-content: start;
 				align-items: start;
-
-				width: 100%;
+				justify-self: stretch;
 
 				padding-left: 1.75rem;
 				margin-top: $FRIEND_CARD_FIELD_BORDER_RADIUS;
@@ -100,13 +98,18 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 					flex-direction: row;
 					justify-content: start;
 					align-items: center;
+					flex-wrap: wrap;
 
 					font-size: 2rem;
 					font-weight: 400;
 
 					width: 100%;
+					max-width: 20rem;
 
 					padding-bottom: 0.5rem;
+					box-sizing: border-box;
+
+					text-wrap: wrap;
 
 					// background-color: yellow;
 				}
@@ -214,33 +217,239 @@ $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
 				}
 			}
 		}
-	}
 
-	.friend_card_content_section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-
-		min-width: 15rem;
-
-		padding: 1.5rem;
-		box-sizing: border-box;
-
-		background-color: burlywood;
-
-		h3 {
+		.card_content {
 			display: flex;
 			flex-direction: row;
-			justify-content: start;
-			align-items: center;
+			justify-content: space-between;
+			align-items: stretch;
 
 			width: 100%;
 
-			font-size: 1.25rem;
-			font-weight: normal;
+			margin-top: 2em;
+			margin-bottom: 2em;
 
-			background-color: coral;
+			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+
+			// background-color: orange;
+
+			.friend_card_content_section {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				align-items: center;
+
+				min-width: 18rem;
+				min-height: 10rem;
+
+				padding: 1.5rem;
+				box-sizing: border-box;
+
+				font-size: 1.6rem;
+
+				box-shadow: 0px 0px 7.5px 0px lightgray;
+
+				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+
+				background-color: white;
+
+				h3 {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+
+					width: 100%;
+
+					margin-bottom: 1em;
+
+					font-size: 1.5rem;
+					font-weight: lighter;
+
+					// background-color: coral;
+				}
+			}
+
+			#lastInteraction {
+				// background-color: violet;
+
+				.time_ago {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+
+					width: 100%;
+
+					font-size: inherit;
+
+					// background-color: aquamarine;
+
+					.number_of_time_units {
+						// font-weight: bold;
+						font-size: inherit;
+					}
+
+					.time_unit {
+						margin-left: 0.25em;
+						margin-right: 0.25em;
+
+						// font-weight: bold;
+						font-size: inherit;
+					}
+
+					.ago {
+						font-size: inherit;
+					}
+				}
+
+				.update {
+					padding: 0.5em;
+					padding-left: 2em;
+					padding-right: 2em;
+					box-sizing: border-box;
+
+					margin-top: 1.75rem;
+					margin-bottom: -0.5rem;
+
+					border: 2px solid lightgray;
+					border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
+
+					color: gray;
+					background-color: white;
+				}
+				.update:hover {
+					cursor: pointer;
+					box-shadow: 0px 0px 5px 0px lightgray;
+					background-color: rgb(231, 231, 231);
+				}
+				.update:active {
+					box-shadow: 0px 0px 3px 0px gray inset;
+				}
+			}
+
+			#birthday {
+				.emoji {
+					font-size: 2em;
+
+					margin-bottom: -0.1em;
+				}
+
+				.birthday_date {
+					display: flex;
+					flex-direction: row;
+					justify-content: center;
+					align-items: center;
+
+					width: 100%;
+
+					font-size: inherit;
+
+					margin-bottom: 0.5em;
+
+					.month {
+						font-size: inherit;
+					}
+
+					.day {
+						margin-left: 0.5rem;
+
+						font-size: inherit;
+					}
+				}
+			}
+
+			#notesSection {
+				#notes {
+					min-height: 4em;
+					height: 100%;
+
+					text-wrap: wrap;
+
+					width: 100%;
+
+					border: 2px solid lightgray;
+					border-radius: calc($FRIEND_CARD_BUTTON_BORDER_RADIUS / 2);
+
+					resize: none;
+
+					color: rgb(65, 65, 65);
+					// background-color: blue;
+				}
+			}
+		}
+
+		.buttons {
+			display: flex;
+			flex-direction: row;
+			justify-content: space-evenly;
+			align-items: center;
+
+			width: 100%;
+			max-width: 40rem;
+
+			// background-color: blue;
+
+			button {
+				width: 90%;
+				max-width: 15rem;
+
+				box-sizing: border-box;
+			}
+
+			#deleteFriend {
+				padding: 1rem;
+				padding-left: 3rem;
+				padding-right: 3rem;
+
+				border: 2px solid red;
+				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
+
+				color: red;
+
+				background-color: white;
+			}
+			#deleteFriend:hover {
+				cursor: pointer;
+
+				font-weight: bold;
+
+				box-shadow: 0px 0px 10px 0px red;
+
+				color: white;
+				background-color: red;
+			}
+			#deleteFriend:active {
+				border-color: crimson;
+				box-shadow: 0px 0px 10px 0px crimson inset;
+			}
+
+			#editFriend {
+				padding: 1rem;
+				padding-left: 3rem;
+				padding-right: 3rem;
+
+				border: 2px solid lightgray;
+				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
+
+				color: lightgray;
+
+				background-color: white;
+			}
+			#editFriend:hover {
+				cursor: pointer;
+
+				font-weight: bold;
+
+				box-shadow: 0px 0px 10px 0px lightgray;
+
+				color: white;
+				background-color: lightgray;
+			}
+			#editFriend:active {
+				border-color: gray;
+				box-shadow: 0px 0px 10px 0px gray inset;
+			}
 		}
 	}
 }
