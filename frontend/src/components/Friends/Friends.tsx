@@ -9,6 +9,7 @@ import {
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import "./styles/Friends.css"
+import { GetZodiac, MonthNumberToString } from "../../util/dates"
 
 function goToNextPage() {}
 
@@ -138,14 +139,15 @@ const Friends: React.FC = () => {
 			}
 		}
 
-		let formatted_birthday: string = ""
-		if (friend.birthday) {
-			const birthday = new Date(friend.birthday)
-			formatted_birthday = birthday.toLocaleDateString("en-US", {
-				year: "numeric",
-				month: "short",
-				day: "2-digit",
-			})
+		let birthday: { month: number | null; day: number | null } = {
+			month: null,
+			day: null,
+		}
+		if (friend.birthday_day) {
+			birthday = { ...birthday, day: friend.birthday_day }
+		}
+		if (friend.birthday_month) {
+			birthday = { ...birthday, month: friend.birthday_month }
 		}
 
 		let formatted_created_at: string = ""
@@ -174,10 +176,12 @@ const Friends: React.FC = () => {
 					<a href={`/friends/${friend_id}`}>{name}</a>
 				</td>
 				<td className="relationship">
-					<div className="emoji">{relationshipTier.emoji}</div>
-					<br></br>
-					<div className="relationship_title">
-						{relationshipTier.name}
+					<div className="cell_content">
+						<div className="emoji">{relationshipTier.emoji}</div>
+						{/* <br></br> */}
+						<div className="relationship_title">
+							{relationshipTier.name}
+						</div>
 					</div>
 				</td>
 
@@ -186,7 +190,26 @@ const Friends: React.FC = () => {
 						{formatted_interaction_column_text}
 					</a>
 				</td>
-				<td className="birthday">{formatted_birthday}</td>
+				<td className="birthday">
+					<div className="birthday_content">
+						<span className="birthday_string">
+							{birthday.month && birthday.day ?
+								<>
+									<span className="month">
+										{MonthNumberToString(birthday.month)}
+									</span>{" "}
+									<span className="day">{birthday.day}</span>
+								</>
+							:	<>Unknown</>}
+						</span>
+						<div className="emoji">
+							{
+								GetZodiac(birthday.month, birthday.day)
+									.zodiacEmoji
+							}
+						</div>
+					</div>
+				</td>
 				<td className="created_at">{formatted_created_at}</td>
 			</tr>
 		)

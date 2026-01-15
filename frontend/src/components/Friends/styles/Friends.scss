@@ -1,4 +1,5 @@
 $shadow_color: rgba(0, 0, 0, 0.159);
+$table_max_width: 1200px;
 
 #friendsContent {
 	display: flex;
@@ -6,6 +7,9 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 	justify-content: space-evenly;
 	align-items: center;
 	// background-color: orange;
+
+	padding-top: 2rem;
+	padding-bottom: 2rem;
 
 	min-height: 50vh;
 	height: 100%;
@@ -17,8 +21,8 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	// width: 90%;
-	max-width: 2000px;
+	width: 100%;
+	max-width: $table_max_width;
 	height: 100%;
 
 	// background-color: green;
@@ -44,7 +48,7 @@ header {
 		margin-bottom: -1.9rem;
 		// background-color: pink;
 
-		font-size: 2rem;
+		font-size: 1.75rem;
 	}
 
 	.subheader {
@@ -95,12 +99,17 @@ header {
 
 	border: none;
 
+	width: 100%;
+	max-width: $table_max_width;
+
 	box-shadow: 0px 0px 20px 0px $shadow_color;
 
 	th,
 	td {
 		background-color: none;
-		padding: 1rem;
+		padding: 0.25rem;
+		padding-left: 1rem;
+		padding-right: 1rem;
 
 		font-size: 1rem;
 		font-weight: normal;
@@ -114,7 +123,7 @@ header {
 
 	thead {
 		th {
-			padding-top: 1.25rem;
+			padding-top: 0.75rem;
 			padding-bottom: 0.75rem;
 			font-weight: 500;
 		}
@@ -129,15 +138,17 @@ header {
 			}
 
 			#last_interaction {
-				width: 12rem;
+				width: auto;
 			}
 
 			#birthday {
-				width: 6rem;
+				max-width: 10rem;
+				width: auto;
 			}
 
 			#created_at {
-				width: 7rem;
+				width: auto;
+				max-width: 7rem;
 			}
 		}
 	}
@@ -159,19 +170,47 @@ header {
 		}
 
 		.relationship {
-			text-align: center;
-			line-height: 0.75rem;
+			.cell_content {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				flex-wrap: wrap;
 
-			.emoji {
-				// margin-bottom: 0.5rem;
-			}
-			.relationship_title {
-				// text-transform: capitalize;
+				width: auto;
+
 				// background-color: red;
+
+				.emoji {
+					margin: 0.5rem;
+					margin-left: 0;
+				}
+				.relationship_title {
+					text-transform: capitalize;
+				}
+			}
+
+			text-align: center;
+		}
+
+		.birthday {
+			.birthday_content {
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+
+				.emoji {
+					margin-left: 0.33rem;
+
+					font-size: 1.33rem;
+				}
 			}
 		}
 
 		a {
+			text-decoration: none;
+
 			height: 100%;
 			width: 100%;
 		}
@@ -355,14 +394,13 @@ header {
 	font-size: 1rem;
 	color: black;
 	background-color: magenta;
-	box-shadow: 0px 0px 10px 0px $shadow_color;
 }
 #addFriend:hover {
-	background-color: violet;
+	color: white;
+	background-color: rgb(185, 0, 185);
 	box-shadow: 0px 0px 10px 0px $shadow_color;
 }
 #addFriend:active {
-	color: black;
 	box-shadow:
 		0px 0px 10px 0px inset purple,
 		0px 0px 10px 0px $shadow_color;
