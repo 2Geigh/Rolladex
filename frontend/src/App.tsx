@@ -20,6 +20,7 @@ import { GetSessionData } from "./contexts/LoginSession"
 import Loading from "./components/Loading/Loading"
 import Navbar from "./components/Navbar/Navbar"
 import AddFriends from "./components/AddFriends/AddFriends"
+import "../static/styles/app.css"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({

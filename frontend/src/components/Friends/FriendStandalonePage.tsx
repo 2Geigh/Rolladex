@@ -115,7 +115,9 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							</>
 						:	"Unknown"}
 					</span>
-					<span className="emoji">{zodiac.zodiacEmoji}</span>
+					<span className="emoji" title={zodiac.zodiacName}>
+						{zodiac.zodiacEmoji}
+					</span>
 				</div>
 
 				<div className="friend_card_content_section" id="notesSection">
