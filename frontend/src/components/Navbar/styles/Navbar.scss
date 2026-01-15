@@ -4,19 +4,27 @@
 	justify-content: space-between;
 	align-items: center;
 
-	padding-left: 1em;
-	padding-right: 1em;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
 	box-sizing: border-box;
 
-	height: 4em;
+	height: 6vh;
+	max-height: 4rem;
 
 	background-color: #e91d6f;
 
 	.logo {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+
 		color: white;
 		// background-color: purple;
 
-		font-size: 2.25em;
+		margin-top: -0.175rem;
+
+		font-size: 1.75rem;
 		font-weight: 600;
 		text-decoration: none;
 	}
@@ -49,8 +57,7 @@
 				align-items: center;
 
 				color: white;
-				font-size: 1.3em;
-				font-weight: 500;
+				font-size: 1.2rem;
 				text-decoration: none;
 
 				// background-color: aquamarine;
