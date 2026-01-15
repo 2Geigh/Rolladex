@@ -291,7 +291,7 @@
   padding: 1rem;
   padding-left: 3rem;
   padding-right: 3rem;
-  border: 2px solid lightgray;
+  border: 2px solid rgb(168, 168, 168);
   border-radius: 0.75rem;
   color: gray;
   background-color: white;
@@ -299,7 +299,8 @@
 #friendStandalonePageContent #friendCard .buttons #editFriend:hover {
   cursor: pointer;
   box-shadow: 0px 0px 10px 0px lightgray;
-  background-color: rgb(231, 231, 231);
+  color: rgb(98, 98, 98);
+  background-color: lightgray;
 }
 #friendStandalonePageContent #friendCard .buttons #editFriend:active {
   border-color: gray;

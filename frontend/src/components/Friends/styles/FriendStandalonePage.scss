@@ -449,7 +449,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				padding-left: 3rem;
 				padding-right: 3rem;
 
-				border: 2px solid lightgray;
+				border: 2px solid rgb(168, 168, 168);
 				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
 
 				color: gray;
@@ -461,7 +461,8 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				box-shadow: 0px 0px 10px 0px lightgray;
 
-				background-color: rgb(231, 231, 231);
+				color: rgb(98, 98, 98);
+				background-color: lightgray;
 			}
 			#editFriend:active {
 				border-color: gray;
