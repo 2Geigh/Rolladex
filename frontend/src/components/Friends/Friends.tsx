@@ -1,5 +1,9 @@
-import { useSearchParams } from "react-router-dom"
-import { useLayoutEffect, useState, type ChangeEventHandler } from "react"
+import {
+	useSearchParams,
+	useNavigate,
+	type NavigateFunction,
+} from "react-router-dom"
+import React, { useLayoutEffect, useState } from "react"
 import {
 	type Friend,
 	GetRelationshipTierInfo,
@@ -10,27 +14,35 @@ import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import "./styles/Friends.css"
 import { GetZodiac, MonthNumberToString } from "../../util/dates"
-
-function goToNextPage() {}
-
-function goToPreviousPage() {}
+import type { JSX } from "react"
+import type { SetURLSearchParams } from "react-router-dom"
 
 type SortByProps = {
-	selected: string
-	onSortChange: ChangeEventHandler<HTMLSelectElement>
+	validSortParams: string[]
+	validSortParamLabels: Record<string, string>
+	searchParams: URLSearchParams
+	setSearchParams: SetURLSearchParams
 }
-const SortBy: React.FC<SortByProps> = ({ selected, onSortChange }) => {
-	const validSortQueryParams = [
-		"name",
-		"last_interaction_date",
-		"relationship_tier",
-		"birthday",
-		"created_at",
-	]
+const SortBy: React.FC<SortByProps> = ({
+	validSortParams,
+	validSortParamLabels,
+	searchParams,
+	setSearchParams,
+}) => {
+	const selected = searchParams.get("sortby")!
 
-	if (!validSortQueryParams.includes(selected)) {
-		selected = "name"
+	function onSortChange(event: React.ChangeEvent<HTMLSelectElement>) {
+		const { value } = event.target
+
+		searchParams.set("sortby", value)
+		setSearchParams(searchParams)
 	}
+
+	const Options = validSortParams.map((sortby) => (
+		<option value={sortby} key={sortby}>
+			{validSortParamLabels[String(sortby)]}
+		</option>
+	))
 
 	return (
 		<div className="sortBy">
@@ -40,12 +52,7 @@ const SortBy: React.FC<SortByProps> = ({ selected, onSortChange }) => {
 				value={selected}
 				onChange={onSortChange}
 			>
-				<option value="name">Name</option>
-				<option value="relationship_tier">Relationship</option>
-				<option value="last_interaction_date">Last interaction</option>
-				{/* <option value="last_meetup_date">Last meetup</option> */}
-				<option value="birthday">Birthday</option>
-				<option value="created_at">Date added</option>
+				{Options}
 			</select>
 			<label htmlFor="sortby" id="sortby">
 				Sort by:
@@ -56,17 +63,13 @@ const SortBy: React.FC<SortByProps> = ({ selected, onSortChange }) => {
 
 type getFriendsProps = {
 	sortBy: string
-	pageNumber: number
 }
-async function getFriends({
-	sortBy,
-	pageNumber,
-}: getFriendsProps): Promise<Array<Friend>> {
+async function getFriends({ sortBy }: getFriendsProps): Promise<Array<Friend>> {
 	let friends: Array<Friend> = []
 
 	try {
 		const response = await fetch(
-			`${backend_base_url}/friends?sortby=${sortBy}&page=${pageNumber}`,
+			`${backend_base_url}/friends?sortby=${sortBy}`,
 			{
 				method: "GET",
 				credentials: "include",
@@ -86,39 +89,151 @@ async function getFriends({
 	return friends
 }
 
+type PageNavProps = {
+	numberOfPages: number
+	searchParams: URLSearchParams
+	setSearchParams: SetURLSearchParams
+}
+const PageNav: React.FC<PageNavProps> = ({
+	numberOfPages,
+	searchParams,
+	setSearchParams,
+}) => {
+	const pageNumber = parseInt(searchParams.get("page")!)
+
+	let pageNumbers: Array<number> = []
+	for (let i = 1; i <= numberOfPages; i++) {
+		pageNumbers.push(i)
+	}
+	const PageSelectOptions = pageNumbers.map((pageNum) => (
+		<option value={pageNum} key={pageNum}>
+			{pageNum}
+		</option>
+	))
+
+	function onSelectPageNumber(e: React.ChangeEvent<HTMLSelectElement>) {
+		const selectValue = e.target.value
+		const pageNum = parseInt(selectValue, 10)
+
+		if (isNaN(pageNum) || pageNum < 1) {
+			searchParams.set("page", "1")
+			setSearchParams(searchParams)
+		} else {
+			searchParams.set("page", String(pageNum))
+			setSearchParams(searchParams)
+		}
+	}
+
+	function goToNextPage() {
+		if (pageNumber < numberOfPages) {
+			// navigate(`/friends?sortby=${sortBy}&page=${pageNumber + 1}`)
+
+			const pageNum = parseInt(searchParams.get("page")!)
+			searchParams.set("page", String(pageNum + 1))
+			setSearchParams(searchParams)
+		}
+	}
+
+	function goToPreviousPage() {
+		if (pageNumber > 1) {
+			// navigate(`/friends?sortby=${sortBy}&page=${pageNumber - 1}`)
+
+			const pageNum = parseInt(searchParams.get("page")!)
+			searchParams.set("page", String(pageNum - 1))
+			setSearchParams(searchParams)
+		}
+	}
+
+	return (
+		<div id="pagenav">
+			{pageNumber > 1 && numberOfPages > 1 ?
+				<div className="arrow" id="left" onClick={goToPreviousPage}>
+					〈
+				</div>
+			:	<div className="blocked" id="left"></div>}
+			<select
+				name="page"
+				id="pageSelect"
+				onChange={onSelectPageNumber}
+				value={pageNumber}
+			>
+				{PageSelectOptions}
+			</select>
+			{pageNumber < numberOfPages && numberOfPages > 1 ?
+				<div className="arrow" id="right" onClick={goToNextPage}>
+					〉
+				</div>
+			:	<div className="blocked" id="right"></div>}
+		</div>
+	)
+}
+
+type TableProps = {
+	FriendListItems: JSX.Element[]
+}
+const Table: React.FC<TableProps> = ({ FriendListItems }) => {
+	return (
+		<table
+			id="friendList"
+			className={!FriendListItems?.length ? "noFriends" : undefined}
+		>
+			<thead
+				className={!FriendListItems?.length ? "noFriends" : undefined}
+			>
+				<tr className="labels">
+					<th id="name">Name</th>
+					<th id="relationship">Relationship</th>
+					<th id="last_interaction">Last interaction</th>
+					<th id="birthday">Birthday</th>
+					<th id="created_at">Date added</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				{FriendListItems && FriendListItems?.length > 0 ?
+					FriendListItems
+				:	<tr id="noFriends">
+						<td colSpan={5}>Nobody to be found...</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	)
+}
+
 const Friends: React.FC = () => {
-	// const query = new URLSearchParams(useLocation().search)
-	const [friends, setFriends] = useState<Array<Friend> | undefined>(undefined)
+	const [friends, setFriends] = useState<Array<Friend>>([])
 	const [isLoading, setIsLoading] = useState(true)
-	const [searchParams, setSearchParams] = useSearchParams()
 
-	const sortBy = searchParams.get("sortby") || "default"
-	const pageParam = searchParams.get("page") || ""
-
-	const parsedPage = parseInt(pageParam, 10)
-	let pageNumber = 1
-	if (!isNaN(parsedPage) && parsedPage > 0) {
-		pageNumber = parsedPage
+	// const query = new URLSearchParams(useLocation().search)
+	const validSortParams = [
+		"name",
+		"last_interaction_date",
+		"relationship_tier",
+		"birthday",
+		"created_at",
+	]
+	const validSortParamLabels = {
+		name: "Name",
+		last_interaction_date: "Last interaction date",
+		relationship_tier: "Relationship",
+		birthday: "Birthday",
+		created_at: "Date added",
 	}
+	const [searchParams, setSearchParams] = useSearchParams({
+		sortby: "name",
+		page: "1",
+	})
 
-	function onSortChange(event: React.ChangeEvent<HTMLSelectElement>) {
-		const { value } = event.target
+	const [numberOfFriendsPerPage, setNumberOfFriendsPerPage] =
+		useState<number>(25)
+	const [numberOfPages, setNumberOfPages] = useState<number>(1)
 
-		setSearchParams({ ...searchParams, sortby: value })
-	}
-
-	useLayoutEffect(() => {
-		getFriends({ sortBy, pageNumber })
-			.then((friendArray) => {
-				console.log(friendArray)
-				setFriends(friendArray)
-			})
-			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [pageNumber, sortBy])
-
-	const FriendListItems = friends?.map((friend) => {
+	const index_start =
+		numberOfFriendsPerPage * (parseInt(searchParams.get("page")!) - 1)
+	const index_end = index_start + numberOfFriendsPerPage
+	const friendsForTheCurrentPage = friends.slice(index_start, index_end)
+	const FriendListItems = friendsForTheCurrentPage?.map((friend) => {
 		const name = friend.name
 		const friend_id = friend.id
 		const last_interaction_id = friend.last_interaction?.id
@@ -215,6 +330,38 @@ const Friends: React.FC = () => {
 		)
 	})
 
+	useLayoutEffect(() => {
+		const sortBy = searchParams.get("sortby")!
+		getFriends({ sortBy })
+			.then((friendArray) => {
+				setFriends(friendArray)
+
+				const numberOfFriends = friendArray.length
+				const totalPageNum = Math.ceil(
+					numberOfFriends / numberOfFriendsPerPage,
+				)
+				setNumberOfPages(totalPageNum)
+
+				if (
+					isNaN(parseInt(searchParams.get("page")!)) ||
+					parseInt(searchParams.get("page")!) < 1 ||
+					parseInt(searchParams.get("page")!) > totalPageNum
+				) {
+					searchParams.set("page", "1")
+					setSearchParams(searchParams)
+				}
+			})
+			.then(() => {
+				if (searchParams.get("sortby") === "default") {
+					searchParams.set("sortby", "name")
+					setSearchParams(searchParams)
+				}
+			})
+			.finally(() => {
+				setIsLoading(false)
+			})
+	}, [searchParams])
+
 	if (isLoading) {
 		return <Loading />
 	}
@@ -230,79 +377,31 @@ const Friends: React.FC = () => {
 						!FriendListItems?.length ? "noFriends" : undefined
 					}
 				>
-					<h2>Friends</h2>
+					<h2>Your network</h2>
 
 					<div className="subheader">
 						<a id="addFriend" href="/addfriend">
-							Add friend
+							Add person
 						</a>
 
-						{/* Show SortBy only if there are friends */}
 						{FriendListItems && FriendListItems?.length > 0 && (
 							<SortBy
-								selected={sortBy}
-								onSortChange={onSortChange}
+								validSortParams={validSortParams}
+								validSortParamLabels={validSortParamLabels}
+								searchParams={searchParams}
+								setSearchParams={setSearchParams}
 							/>
 						)}
 					</div>
 				</header>
 
-				<table
-					id="friendList"
-					className={
-						!FriendListItems?.length ? "noFriends" : undefined
-					}
-				>
-					<thead
-						className={
-							!FriendListItems?.length ? "noFriends" : undefined
-						}
-					>
-						<tr className="labels">
-							<th id="name">Name</th>
-							<th id="relationship">Relationship</th>
-							<th id="last_interaction">Last interaction</th>
-							<th id="birthday">Birthday</th>
-							<th id="created_at">Date added</th>
-						</tr>
-					</thead>
-
-					<tbody>
-						{FriendListItems && FriendListItems?.length > 0 ?
-							FriendListItems
-						:	<tr id="noFriends">
-								<td colSpan={5}>Nobody to be found...</td>
-							</tr>
-						}
-					</tbody>
-				</table>
+				<Table FriendListItems={FriendListItems} />
 			</div>
-
-			<div id="pagenav">
-				<div className="arrow" id="left" onClick={goToPreviousPage}>
-					〈
-				</div>
-				<div className="buttons">
-					<a href="/friends" className="button selected">
-						1
-					</a>
-					<a href="/friends" className="button">
-						2
-					</a>
-					<a href="/friends" className="button">
-						3
-					</a>
-					<div className="button" id="ellipsis">
-						&#8943;
-					</div>
-					<a href="/friends" className="button">
-						7
-					</a>
-				</div>
-				<div className="arrow" id="right" onClick={goToNextPage}>
-					〉
-				</div>
-			</div>
+			<PageNav
+				numberOfPages={numberOfPages}
+				searchParams={searchParams}
+				setSearchParams={setSearchParams}
+			/>
 		</div>
 	)
 }

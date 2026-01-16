@@ -258,7 +258,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 
 		friends        []models.Friend
 		sqlQuery       string
-		columnToSortBy string = "name" // "name" will be used when query is "default"
+		columnToSortBy string = "name" // "name"'s used when query is "default"
 		AscDesc        string = "ASC"
 
 		err error

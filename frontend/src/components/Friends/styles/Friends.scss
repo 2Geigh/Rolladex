@@ -286,14 +286,17 @@ header {
 
 	background-color: red;
 
-	border-radius: 16px;
+	border: 2px solid lightgray;
+	$BORDER_RADIUS: 20px;
+	border-radius: $BORDER_RADIUS;
 	overflow: hidden;
 
 	background-color: white;
 
-	box-shadow: 0px 0px 10px 0px lightgray;
+	box-shadow: 0px 0px 5px 0px lightgray;
 
-	.arrow {
+	.arrow,
+	.blocked {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -302,19 +305,22 @@ header {
 		height: 100%;
 		width: 2rem;
 
+		border-radius: calc($BORDER_RADIUS - 3px);
+		padding-left: 0.75rem;
+		padding-right: 0.75rem;
+	}
+	.arrow {
 		background-color: rgb(246, 246, 246);
 	}
 	#left {
-		border-top-left-radius: 16px;
-		border-bottom-left-radius: 16px;
-
-		padding-right: 0.75rem;
+		border-top-right-radius: 0px;
+		border-bottom-right-radius: 0px;
+		padding-left: 0px;
 	}
 	#right {
-		border-top-right-radius: 16px;
-		border-bottom-right-radius: 16px;
-
-		padding-left: 0.75rem;
+		border-top-left-radius: 0px;
+		border-bottom-left-radius: 0px;
+		padding-right: 0px;
 	}
 	.arrow:hover {
 		cursor: pointer;
@@ -322,60 +328,26 @@ header {
 		color: black;
 		font-weight: bold;
 		background-color: rgb(225, 225, 225);
-		box-shadow: 0px 0px 5px 0px rgb(150, 150, 150) inset;
 	}
 
-	.buttons {
+	select {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 
-		// padding-left: 0.5rem;
-		// padding-right: 1rem;
+		margin-left: 1rem;
+		margin-right: 1rem;
 
-		// background-color: orange;
+		padding: 0.25rem;
+		padding-left: 1rem;
+		padding-right: 1rem;
+		box-sizing: border-box;
 
-		.button {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
+		border-radius: 5px;
+		border: 2px solid lightgray;
 
-			height: 3rem;
-			width: 3rem;
-
-			text-decoration: none;
-			color: gray;
-
-			// margin-left: 0.5rem;
-
-			border-top: 1px solid lightgray;
-			border-bottom: 1px solid lightgray;
-
-			// background-color: yellow;
-		}
-
-		.button:hover {
-			cursor: pointer;
-			box-shadow: 0px 0px 5px 0px lightgray inset;
-		}
-
-		#ellipsis:hover {
-			box-shadow: none;
-			cursor: default;
-		}
-
-		.selected {
-			background-color: rgb(157, 157, 157);
-			color: white;
-		}
-		.selected:hover {
-			border: none;
-			color: white;
-			box-shadow: 0px 0px 5px 0px rgb(103, 103, 103) inset;
-			background-color: rgb(157, 157, 157);
-		}
+		background-color: white;
 	}
 }
 

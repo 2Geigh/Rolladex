@@ -125,12 +125,13 @@ func seed() error {
 func updateSeedPasswords() error {
 	var (
 		users = []struct {
-			username string
-			password string
+			username     string
+			new_password string
 		}{
 			{"jesus_christ", "jesus"},
 			{"party_pal_alice", "alice"},
 			{"bob_minimal", "bob"},
+			{"max_tester", "max"},
 		}
 
 		err error
@@ -150,7 +151,7 @@ func updateSeedPasswords() error {
 			return fmt.Errorf("couldn't generate salt for user %s: %w", user.username, err)
 		}
 
-		passwordHash, err := util.HashPassword(user.password + passwordSalt)
+		passwordHash, err := util.HashPassword(user.new_password + passwordSalt)
 		if err != nil {
 			return fmt.Errorf("couldn't hash salted password for user %s: %w", user.username, err)
 		}

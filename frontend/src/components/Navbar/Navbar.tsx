@@ -8,12 +8,12 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 		<>
 			<nav className="navbar">
 				<a href="/home" className="logo">
-					myFriends
+					justConnect
 				</a>
 
 				<ul className="links">
 					<li>
-						<a href="/friends?sortby=default&page=1">Friends</a>
+						<a href="/friends?sortby=default&page=1">Network</a>
 					</li>
 					{username !== undefined && (
 						<li>

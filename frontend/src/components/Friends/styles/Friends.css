@@ -211,72 +211,57 @@ header .subheader .sortBy #sortbyOptions {
   height: 3rem;
   margin-top: 2rem;
   background-color: red;
-  border-radius: 16px;
+  border: 2px solid lightgray;
+  border-radius: 20px;
   overflow: hidden;
   background-color: white;
-  box-shadow: 0px 0px 10px 0px lightgray;
+  box-shadow: 0px 0px 5px 0px lightgray;
 }
-#pagenav .arrow {
+#pagenav .arrow,
+#pagenav .blocked {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   height: 100%;
   width: 2rem;
+  border-radius: 17px;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+#pagenav .arrow {
   background-color: rgb(246, 246, 246);
 }
 #pagenav #left {
-  border-top-left-radius: 16px;
-  border-bottom-left-radius: 16px;
-  padding-right: 0.75rem;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  padding-left: 0px;
 }
 #pagenav #right {
-  border-top-right-radius: 16px;
-  border-bottom-right-radius: 16px;
-  padding-left: 0.75rem;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  padding-right: 0px;
 }
 #pagenav .arrow:hover {
   cursor: pointer;
   color: black;
   font-weight: bold;
   background-color: rgb(225, 225, 225);
-  box-shadow: 0px 0px 5px 0px rgb(150, 150, 150) inset;
 }
-#pagenav .buttons {
+#pagenav select {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-#pagenav .buttons .button {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 3rem;
-  width: 3rem;
-  text-decoration: none;
-  color: gray;
-  border-top: 1px solid lightgray;
-  border-bottom: 1px solid lightgray;
-}
-#pagenav .buttons .button:hover {
-  cursor: pointer;
-  box-shadow: 0px 0px 5px 0px lightgray inset;
-}
-#pagenav .buttons #ellipsis:hover {
-  box-shadow: none;
-  cursor: default;
-}
-#pagenav .buttons .selected {
-  background-color: rgb(157, 157, 157);
-  color: white;
-}
-#pagenav .buttons .selected:hover {
-  border: none;
-  color: white;
-  box-shadow: 0px 0px 5px 0px rgb(103, 103, 103) inset;
-  background-color: rgb(157, 157, 157);
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 0.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 2px solid lightgray;
+  background-color: white;
 }
 
 #addFriend {
