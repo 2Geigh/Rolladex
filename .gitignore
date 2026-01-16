@@ -4,3 +4,4 @@ backend/bin/main.out
 /.vscode
 .vscode/settings.json
 *.db
+*.css
