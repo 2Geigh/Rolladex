@@ -1,8 +1,4 @@
-import {
-	useSearchParams,
-	useNavigate,
-	type NavigateFunction,
-} from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import React, { useLayoutEffect, useState } from "react"
 import {
 	type Friend,
@@ -225,8 +221,7 @@ const Friends: React.FC = () => {
 		page: "1",
 	})
 
-	const [numberOfFriendsPerPage, setNumberOfFriendsPerPage] =
-		useState<number>(25)
+	const [numberOfFriendsPerPage] = useState<number>(25)
 	const [numberOfPages, setNumberOfPages] = useState<number>(1)
 
 	const index_start =

@@ -1,7 +1,7 @@
 import "./styles/Meetups.css"
-import type { Interaction } from "../../types/models/Interaction"
 import type { Friend } from "../../types/models/Friend"
 import type React from "react"
+import type { Interaction } from "../../types/models/Interaction"
 
 // const getRandomColor = () => {
 //     const hue = Math.floor(Math.random() * 360);
@@ -32,7 +32,7 @@ import type React from "react"
 // };
 
 type MeetupItemProps = {
-	meetup: Meetup
+	meetup: Interaction
 	friends: Friend[]
 }
 const MeetupItem: React.FC<MeetupItemProps> = ({ meetup }) => {

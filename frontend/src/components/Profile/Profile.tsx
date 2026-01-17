@@ -6,7 +6,7 @@ const Profile: React.FC = () => {
 
 	return (
 		<>
-			<Navbar />
+			<Navbar username={loginSessionContext.user?.username} />
 			<div className="content">
 				Hello, {loginSessionContext.user?.username}
 			</div>

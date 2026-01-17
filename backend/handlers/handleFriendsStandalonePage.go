@@ -54,7 +54,6 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't get friend", http.StatusInternalServerError)
 			return
 		}
-		fmt.Println(friend)
 
 		userJson, err := json.Marshal(friend)
 		if err != nil {

@@ -17,12 +17,13 @@ export function TimeAgo(date: Date | undefined): string {
 		return "Unspecified"
 	}
 
-	if (!(date instanceof Date) || isNaN(date.getTime())) {
+	const secondsSinceDate = new Date(date).getTime()
+	if (isNaN(secondsSinceDate)) {
 		return "Unknown"
 	}
 
 	const now = new Date()
-	const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000)
+	const secondsAgo = Math.floor((now.getTime() - secondsSinceDate) / 1000)
 
 	const minutesAgo = Math.floor(secondsAgo / 60)
 	const hoursAgo = Math.floor(minutesAgo / 60)

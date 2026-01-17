@@ -131,7 +131,7 @@ const ToContactSection: React.FC = () => {
 		<LessUrgentContact
 			name={friend.name}
 			profile_image_source={friend.profile_image_path}
-			last_interaction_date={friend.last_interaction_date}
+			last_interaction_date={friend.last_interaction?.date}
 			relationship_tier={friend.relationship_tier}
 			key={friend.id}
 		/>
@@ -146,7 +146,7 @@ const ToContactSection: React.FC = () => {
 			<MostUrgentContact
 				name={mostUrgentFriend.name}
 				profile_image_source={mostUrgentFriend.profile_image_path}
-				last_interaction_date={mostUrgentFriend.last_interaction_date}
+				last_interaction_date={mostUrgentFriend.last_meetup_date}
 				relationship_tier={mostUrgentFriend.relationship_tier}
 			/>
 

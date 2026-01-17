@@ -1,7 +1,7 @@
 import "./styles/Navbar.css"
 
 type NavbarProps = {
-	username: string
+	username: string | undefined
 }
 const Navbar: React.FC<NavbarProps> = ({ username }) => {
 	return (
@@ -15,7 +15,7 @@ const Navbar: React.FC<NavbarProps> = ({ username }) => {
 					<li>
 						<a href="/friends?sortby=default&page=1">Network</a>
 					</li>
-					{username !== undefined && (
+					{username && (
 						<li>
 							<a href={`/users/${username}`}>{username}</a>
 						</li>

@@ -93,7 +93,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				>
 					<h3>Last interaction</h3>
 					<span className="time_ago">
-						{TimeAgo(lastInteractionDate)}
+						{TimeAgo(lastInteractionDate)} ago
 					</span>
 					<button className="update">Update</button>
 				</div>
@@ -181,7 +181,6 @@ const FriendStandalonePage: React.FC = () => {
 	useEffect(() => {
 		getFriend(friendId)
 			.then((fetchedFriend) => {
-				console.log(fetchedFriend)
 				setFriend(fetchedFriend)
 			})
 			.catch((err) => {
