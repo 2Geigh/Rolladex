@@ -5,3 +5,4 @@ backend/bin/main.out
 .vscode/settings.json
 *.db
 *.css
+*.map
