@@ -1,4 +1,3 @@
-import Navbar from "../Navbar/Navbar"
 import { useLoginSessionContext } from "../../contexts/LoginSession"
 
 const Profile: React.FC = () => {
@@ -6,7 +5,6 @@ const Profile: React.FC = () => {
 
 	return (
 		<>
-			<Navbar username={loginSessionContext.user?.username} />
 			<div className="content">
 				Hello, {loginSessionContext.user?.username}
 			</div>

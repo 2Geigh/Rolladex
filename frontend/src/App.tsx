@@ -5,22 +5,25 @@ import Home from "./components/Home/Home"
 import Friends from "./components/Friends/Friends"
 import FriendStandalonePage from "./components/Friends/FriendStandalonePage"
 import Profile from "./components/Profile/Profile"
-import PageNotFound from "./components/PageNotFound/PageNotFound"
 import Logout from "./components/Logout/Logout"
 import { useState } from "react"
-import { LoginSessionContext } from "./contexts/LoginSession"
+import {
+	GetSessionAndUserData,
+	LoginSessionContext,
+} from "./contexts/LoginSession"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
 import Meetups from "./components/Meetups/Meetups"
 import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/AddFriends.css"
 import type { LoginSessionData } from "./contexts/LoginSession"
-import { useEffect } from "react"
-import { GetSessionData } from "./contexts/LoginSession"
+import { useLayoutEffect } from "react"
 import Loading from "./components/Loading/Loading"
 import Navbar from "./components/Navbar/Navbar"
 import AddFriends from "./components/AddFriends/AddFriends"
+import Footer from "./components/Footer/Footer"
 import "../static/styles/app.css"
+import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -33,10 +36,10 @@ function App() {
 		updateSession: setLoginSessionData,
 	}
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		console.log("<App/> useEffect running")
 		setIsLoading(true)
-		GetSessionData(loginSessionData, setLoginSessionData)
+		GetSessionAndUserData(loginSessionData, setLoginSessionData)
 			.catch((err) => console.error(`session check failed: ${err}`))
 			.finally(() => setIsLoading(false))
 	}, []) // Runs only once on app mount
@@ -44,7 +47,10 @@ function App() {
 	if (isLoading) {
 		return (
 			<>
-				<Navbar username={String(loginSessionData.user?.username)} />
+				<Navbar
+					isLoggedIn={loginSessionData.isLoggedIn}
+					username={loginSessionData.user?.username}
+				/>
 				<Loading />
 			</>
 		)
@@ -53,6 +59,10 @@ function App() {
 	return (
 		<>
 			<LoginSessionContext.Provider value={LoginSessionContextValue}>
+				<Navbar
+					isLoggedIn={LoginSessionContextValue.isLoggedIn}
+					username={LoginSessionContextValue.user?.username}
+				/>
 				<Routes>
 					<Route path="/login" element={<Login />} />
 					<Route path="/logout" element={<Logout />} />
@@ -76,8 +86,12 @@ function App() {
 						<Route path="/settings" element={<Settings />} />
 					</Route>
 
-					<Route path="*" element={<PageNotFound />}></Route>
+					<Route
+						path="*"
+						element={<PageNotFoundWithoutHeaderAndFooter />}
+					></Route>
 				</Routes>
+				<Footer />
 			</LoginSessionContext.Provider>
 		</>
 	)

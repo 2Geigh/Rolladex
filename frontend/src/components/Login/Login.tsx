@@ -1,5 +1,3 @@
-import Footer from "../Footer/Footer"
-import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./Login.css"
 import { Navigate } from "react-router-dom"
 import type { FormEvent } from "react"
@@ -70,8 +68,6 @@ const Login: React.FC = () => {
 
 	return (
 		<>
-			<NavbarWithoutLinks />
-
 			<div className="container">
 				<form id="loginForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
@@ -91,8 +87,6 @@ const Login: React.FC = () => {
 					Don't have an account? <a href="/signup">Register now!</a>
 				</span>
 			</div>
-
-			<Footer />
 		</>
 	)
 }

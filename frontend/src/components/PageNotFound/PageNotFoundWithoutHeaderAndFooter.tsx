@@ -1,6 +1,24 @@
+import Navbar from "../Navbar/Navbar"
+import Footer from "../Footer/Footer"
+import { useLoginSessionContext } from "../../contexts/LoginSession"
 import "./PageNotFound.css"
 
-export default function PageNotFound() {
+const PageNotFoundWithHeaderAndFooter = () => {
+	const loginSessionData = useLoginSessionContext()
+
+	return (
+		<>
+			<Navbar
+				isLoggedIn={loginSessionData.isLoggedIn}
+				username={loginSessionData.user?.username}
+			/>
+			<PageNotFoundWithoutHeaderAndFooter />
+			<Footer />
+		</>
+	)
+}
+
+const PageNotFoundWithoutHeaderAndFooter: React.FC = () => {
 	return (
 		<>
 			<div className="content">
@@ -33,3 +51,6 @@ export default function PageNotFound() {
 		</>
 	)
 }
+
+export default PageNotFoundWithoutHeaderAndFooter
+export { PageNotFoundWithHeaderAndFooter }

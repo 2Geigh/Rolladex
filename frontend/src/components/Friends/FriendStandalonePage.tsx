@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom"
-import PageNotFound from "../PageNotFound/PageNotFound"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import { useEffect, useState } from "react"
 import { backend_base_url } from "../../util/url"
@@ -7,6 +6,7 @@ import Loading from "../Loading/Loading"
 import "./styles/FriendStandalonePage.css"
 import type { Interaction } from "../../types/models/Interaction"
 import { GetZodiac, MonthNumberToString, TimeAgo } from "../../util/dates"
+import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 
 type FriendCardProps = {
 	id: number
@@ -198,7 +198,7 @@ const FriendStandalonePage: React.FC = () => {
 	if (!friend) {
 		return (
 			<>
-				<PageNotFound />
+				<PageNotFoundWithoutHeaderAndFooter />
 			</>
 		)
 	}

@@ -1,29 +1,32 @@
 import "./styles/Navbar.css"
 
 type NavbarProps = {
+	isLoggedIn: boolean
 	username: string | undefined
 }
-const Navbar: React.FC<NavbarProps> = ({ username }) => {
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username }) => {
 	return (
 		<>
 			<nav className="navbar">
-				<a href="/home" className="logo">
+				<a href={!isLoggedIn ? "/" : "/home"} className="logo">
 					justConnect
 				</a>
 
-				<ul className="links">
-					<li>
-						<a href="/friends?sortby=default&page=1">Network</a>
-					</li>
-					{username && (
+				{isLoggedIn ?
+					<ul className="links">
 						<li>
-							<a href={`/users/${username}`}>{username}</a>
+							<a href="/friends?sortby=default&page=1">Network</a>
 						</li>
-					)}
-					<li>
-						<a href="/logout">Logout</a>
-					</li>
-				</ul>
+						{username && (
+							<li>
+								<a href="/profile">{username}</a>
+							</li>
+						)}
+						<li>
+							<a href="/logout">Logout</a>
+						</li>
+					</ul>
+				:	<></>}
 			</nav>
 		</>
 	)

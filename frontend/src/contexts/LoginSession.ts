@@ -58,6 +58,7 @@ export async function GetSessionAndUserData(
 
 	try {
 		const parsed = await JSON.parse(await response.text())
+
 		if (parsed && parsed.id && typeof parsed.username === "string") {
 			const user: User = parsed as User
 			console.log(`user:`, user)
@@ -68,9 +69,8 @@ export async function GetSessionAndUserData(
 			})
 			return
 		}
-		throw new Error("Invalid user data from /session/user")
 	} catch (err) {
-		throw new Error(String(err))
+		throw new Error(`Invalid user data from /session/user: ${err}`)
 	}
 }
 

@@ -1,7 +1,5 @@
 import { useState, type FormEvent } from "react"
-import Footer from "../Footer/Footer"
 import { Navigate } from "react-router-dom"
-import NavbarWithoutLinks from "../Navbar/NavbarWithoutLinks"
 import "./Signup.css"
 
 export type SignupData = {
@@ -46,8 +44,6 @@ const SignUp = () => {
 
 	return (
 		<>
-			<NavbarWithoutLinks />
-
 			<div className="container">
 				<form id="signupForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
@@ -80,8 +76,6 @@ const SignUp = () => {
 					></input>
 				</form>
 			</div>
-
-			<Footer />
 		</>
 	)
 }
