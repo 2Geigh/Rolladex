@@ -49,7 +49,7 @@ export const DefaultRelationshipTiers: Record<number, RelationshipTier> = {
 		code: 4,
 		name: "Acquaintance",
 		emoji: "🤝",
-		description: `Someone you know on a first-name basis, nothing too deep and that's alright with you`,
+		description: `Someone you know on a first-name basis, nothing too deep, and that's alright with you`,
 		max: MAX_NUMBER_OF_FRIENDS,
 	},
 }

@@ -286,7 +286,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 							For example, you'd be recommended to keep in contact
 							with a 'close friend' more frequently than an
 							'acquaintance' as the former generally requires
-							higher maintenance
+							higher maintenance.
 						</p>
 						<span
 							className="close"
