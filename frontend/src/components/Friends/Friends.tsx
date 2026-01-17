@@ -394,11 +394,13 @@ const Friends: React.FC = () => {
 
 				<Table FriendListItems={FriendListItems} />
 			</div>
-			<PageNav
-				numberOfPages={numberOfPages}
-				searchParams={searchParams}
-				setSearchParams={setSearchParams}
-			/>
+			{numberOfPages > 1 ?
+				<PageNav
+					numberOfPages={numberOfPages}
+					searchParams={searchParams}
+					setSearchParams={setSearchParams}
+				/>
+			:	<></>}
 		</div>
 	)
 }

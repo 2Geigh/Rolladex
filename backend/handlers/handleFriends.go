@@ -305,11 +305,10 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 		columnToSortBy = "birthday_month"
 	case "last_interaction_date":
 		AscDesc = "DESC"
-	case "created_at":
-		AscDesc = "DESC"
 	case "relationship_tier":
 		AscDesc = "DESC"
 	}
+
 	sqlQuery = fmt.Sprintf(`
 							WITH LatestInteractions AS (
 														SELECT 
