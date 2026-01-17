@@ -286,6 +286,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 		sqlQuery       string
 		columnToSortBy string = "name" // "name"'s used when query is "default"
 		AscDesc        string = "ASC"
+		OrderBy        string
 
 		err error
 	)
@@ -301,12 +302,16 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 	}
 
 	switch sortBy {
-	case "birthday_month":
-		columnToSortBy = "birthday_month"
-	case "last_interaction_date":
-		AscDesc = "DESC"
+	case "name":
 	case "relationship_tier":
 		AscDesc = "DESC"
+	case "last_interaction_date":
+		AscDesc = "DESC"
+	case "birthday":
+		OrderBy = `ORDER BY birthday_month ASC, birthday_day ASC`
+	case "created_at":
+	default:
+		OrderBy = fmt.Sprintf(`ORDER BY %s %s`, columnToSortBy, AscDesc)
 	}
 
 	sqlQuery = fmt.Sprintf(`
@@ -342,7 +347,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 							LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
 							LEFT JOIN LatestInteractions ON LatestInteractions.friend_id = Friends.id AND LatestInteractions.rn = 1
 							WHERE Relationships.user_id = ?
-							ORDER BY %s %s;`, columnToSortBy, AscDesc)
+							%s;`, OrderBy)
 
 	tx, err := database.DB.Begin()
 	if err != nil {
