@@ -8,8 +8,8 @@ $table_max_width: 1200px;
 	align-items: center;
 	// background-color: orange;
 
-	padding-top: 2rem;
-	padding-bottom: 2rem;
+	padding-top: 3rem;
+	padding-bottom: 6rem;
 
 	min-height: 50vh;
 	height: 100%;
@@ -37,6 +37,7 @@ header {
 	width: 100%;
 	// background-color: red;
 
+	margin-top: 1.5rem;
 	padding-bottom: 1rem;
 
 	h2 {
@@ -45,7 +46,7 @@ header {
 		justify-content: end;
 		align-items: end;
 
-		margin-bottom: -1.9rem;
+		margin-bottom: 0rem;
 		// background-color: pink;
 
 		font-size: 1.75rem;
@@ -102,7 +103,7 @@ header {
 	width: 100%;
 	max-width: $table_max_width;
 
-	box-shadow: 0px 0px 20px 0px $shadow_color;
+	box-shadow: 0px 5px 10px 0px $shadow_color;
 
 	th,
 	td {
