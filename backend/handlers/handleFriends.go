@@ -177,7 +177,7 @@ func addFriend(user_id string, formData AddFriendFormData) (int, error) {
 	}
 	defer tx.Rollback()
 
-	// First insert into Friends
+	// Friends
 	stmtFriend, err := tx.Prepare(`INSERT INTO Friends (name, birthday_month, birthday_day) VALUES (?, ?, ?)`)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare friend insert statement: %w", err)
@@ -192,7 +192,7 @@ func addFriend(user_id string, formData AddFriendFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't get last insert ID: %w", err)
 	}
 
-	// Then insert into Relationships
+	// Relationships
 	stmtRelationship, err := tx.Prepare(`INSERT INTO Relationships (user_id, friend_id, relationship_tier) VALUES (?, ?, ?)`)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare relationship insert statement: %w", err)
@@ -201,6 +201,32 @@ func addFriend(user_id string, formData AddFriendFormData) (int, error) {
 	_, err = stmtRelationship.Exec(user_id, friendID, relationshipTierCode)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't execute relationship insert statement: %w", err)
+	}
+
+	//  Interactions
+	stmtInteraction, err := tx.Prepare(`INSERT INTO Interactions (date, user_id) VALUES (?, ?);`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf(("couldn't prepare statment: %w"), err)
+	}
+	defer stmtInteraction.Close()
+	result, err = stmtInteraction.Exec(lastInteractionDate, user_id)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+	interactionID, err := result.LastInsertId()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't get last insert ID: %w", err)
+	}
+
+	// InteractionsAttendees
+	stmtInteractionsAttendees, err := tx.Prepare(`INSERT INTO InteractionsAttendees (interaction_id, friend_id) VALUES (?, ?);`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf(("couldn't prepare statment: %w"), err)
+	}
+	defer stmtInteractionsAttendees.Close()
+	_, err = stmtInteractionsAttendees.Exec(interactionID, friendID)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
 	}
 
 	err = tx.Commit()
