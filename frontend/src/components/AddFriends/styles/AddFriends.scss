@@ -5,15 +5,20 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
-	// background-color: orange;
 
 	min-height: 50vh;
 	// height: 100%;
 	width: 100%;
 
+	padding-top: 5rem;
+	padding-bottom: 5rem;
+	box-sizing: border-box;
+
+	// background-color: orange;
+
 	h2 {
 		font-size: 2rem;
-		margin-bottom: 1.5rem;
+		margin-bottom: 2.25rem;
 	}
 
 	form {
@@ -248,7 +253,6 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 						font-style: italic;
 						color: gray;
 						text-decoration-style: dotted;
-						// margin-top: 0.5rem;
 					}
 					.why:hover {
 						cursor: pointer;
@@ -267,14 +271,15 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 					padding-bottom: 0.75rem;
 					box-sizing: border-box;
 
-					margin-bottom: 1rem;
+					margin-top: 0.5rem;
+					margin-bottom: 1.5rem;
 
 					border-radius: $SECTION-BORDER-RADIUS;
 					background-color: white;
 
 					line-height: 1.75rem;
 
-					box-shadow: 0px 0px 10px 0px lightgray;
+					box-shadow: 0px 2.5px 10px 0px lightgray;
 
 					color: gray;
 
