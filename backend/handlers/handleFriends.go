@@ -280,38 +280,26 @@ func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
 
 func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, error) {
 	var (
-		validSortByParameters = []string{"name", "relationship_tier", "last_interaction_date", "birthday", "created_at"}
-
-		friends        []models.Friend
-		sqlQuery       string
-		columnToSortBy string = "name" // "name"'s used when query is "default"
-		AscDesc        string = "ASC"
-		OrderBy        string
+		friends  []models.Friend
+		sqlQuery string
+		OrderBy  string
 
 		err error
 	)
 
-	for _, value := range validSortByParameters {
-		switch sortBy {
-
-		case value:
-			columnToSortBy = sortBy
-		case "created_at":
-			columnToSortBy = "friend_created_at"
-		}
-	}
-
 	switch sortBy {
 	case "name":
+		OrderBy = `ORDER BY name COLLATE NOCASE ASC`
 	case "relationship_tier":
-		AscDesc = "DESC"
+		OrderBy = `ORDER BY relationship_tier DESC`
 	case "last_interaction_date":
-		AscDesc = "DESC"
+		OrderBy = `ORDER BY last_interaction_date DESC`
 	case "birthday":
 		OrderBy = `ORDER BY birthday_month ASC, birthday_day ASC`
 	case "created_at":
+		OrderBy = `ORDER BY friend_created_at DESC`
 	default:
-		OrderBy = fmt.Sprintf(`ORDER BY %s %s`, columnToSortBy, AscDesc)
+		OrderBy = `ORDER BY name COLLATE NOCASE ASC`
 	}
 
 	sqlQuery = fmt.Sprintf(`

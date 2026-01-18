@@ -97,7 +97,7 @@ const PageNav: React.FC<PageNavProps> = ({
 }) => {
 	const pageNumber = parseInt(searchParams.get("page")!)
 
-	let pageNumbers: Array<number> = []
+	const pageNumbers: Array<number> = []
 	for (let i = 1; i <= numberOfPages; i++) {
 		pageNumbers.push(i)
 	}
@@ -227,7 +227,7 @@ const Friends: React.FC = () => {
 	const index_start =
 		numberOfFriendsPerPage * (parseInt(searchParams.get("page")!) - 1)
 	const index_end = index_start + numberOfFriendsPerPage
-	let friendsForTheCurrentPage: Friend[] =
+	const friendsForTheCurrentPage: Friend[] =
 		friends !== null ? friends.slice(index_start, index_end) : []
 	const FriendListItems = friendsForTheCurrentPage?.map((friend) => {
 		const name = friend.name
