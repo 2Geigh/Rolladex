@@ -28,7 +28,7 @@ $table_max_width: 1200px;
 	// background-color: green;
 }
 
-header {
+.header {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -270,6 +270,73 @@ header {
 			td:hover {
 				box-shadow: none;
 				cursor: default;
+			}
+		}
+	}
+}
+
+.table_footer {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	width: 100%;
+	// background-color: red;
+
+	margin-top: 1.5rem;
+	padding-bottom: 1rem;
+
+	h2 {
+		display: flex;
+		flex-direction: row;
+		justify-content: end;
+		align-items: end;
+
+		margin-bottom: 0rem;
+		// background-color: pink;
+
+		font-size: 1.75rem;
+	}
+
+	.subfooter {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+
+		margin-bottom: 0.5rem;
+
+		// background-color: red;
+
+		.perpage {
+			display: inline-flex;
+			flex-direction: row;
+			justify-content: end;
+			align-items: center;
+
+			height: 100%;
+			width: 100%;
+
+			// background-color: orange;
+
+			label {
+				margin-right: 0.5rem;
+			}
+
+			input {
+				padding: 0.5rem;
+
+				border: 2px solid lightgray;
+				border-radius: 5px;
+			}
+
+			.go {
+				margin-left: 0.5rem;
+			}
+			.go:hover {
+				cursor: pointer;
 			}
 		}
 	}

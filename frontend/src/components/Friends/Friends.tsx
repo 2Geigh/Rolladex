@@ -58,6 +58,65 @@ const SortBy: React.FC<SortByProps> = ({
 	)
 }
 
+type SetFriendsPerPageProps = {
+	searchParams: URLSearchParams
+	setSearchParams: SetURLSearchParams
+}
+const SetFriendsPerPage: React.FC<SetFriendsPerPageProps> = ({
+	searchParams,
+	setSearchParams,
+}) => {
+	const [isReadyToSubmit, setIsReadyToSubmit] = useState<boolean>(false)
+
+	function setNewPerPage() {
+		const value = (
+			document.getElementById("setFriendsPerPage")! as HTMLInputElement
+		).value
+
+		searchParams.set("perpage", value)
+		// searchParams.set("page", "1")
+		setSearchParams(searchParams)
+	}
+
+	function onPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
+		const value = event.target.value
+
+		const isValueValid =
+			value &&
+			!(value.trim() === "") &&
+			!isNaN(parseInt(value)) &&
+			parseInt(value) > 0
+
+		if (isValueValid) {
+			setIsReadyToSubmit(true)
+		} else {
+			setIsReadyToSubmit(false)
+		}
+	}
+
+	return (
+		<div className="perpage">
+			<label htmlFor="setFriendsPerPage">Entries per page: </label>
+			<input
+				id="setFriendsPerPage"
+				type="number"
+				min={1}
+				max={999}
+				defaultValue={searchParams.get("perpage")!}
+				onChange={onPerPageChange}
+			/>
+			{isReadyToSubmit ?
+				<input
+					className="go"
+					type="submit"
+					value="Go"
+					onClick={setNewPerPage}
+				/>
+			:	<></>}
+		</div>
+	)
+}
+
 type getFriendsProps = {
 	sortBy: string
 }
@@ -123,8 +182,6 @@ const PageNav: React.FC<PageNavProps> = ({
 
 	function goToNextPage() {
 		if (pageNumber < numberOfPages) {
-			// navigate(`/friends?sortby=${sortBy}&page=${pageNumber + 1}`)
-
 			const pageNum = parseInt(searchParams.get("page")!)
 			searchParams.set("page", String(pageNum + 1))
 			setSearchParams(searchParams)
@@ -133,8 +190,6 @@ const PageNav: React.FC<PageNavProps> = ({
 
 	function goToPreviousPage() {
 		if (pageNumber > 1) {
-			// navigate(`/friends?sortby=${sortBy}&page=${pageNumber - 1}`)
-
 			const pageNum = parseInt(searchParams.get("page")!)
 			searchParams.set("page", String(pageNum - 1))
 			setSearchParams(searchParams)
@@ -202,7 +257,6 @@ const Friends: React.FC = () => {
 	const [friends, setFriends] = useState<Array<Friend>>([])
 	const [isLoading, setIsLoading] = useState(true)
 
-	// const query = new URLSearchParams(useLocation().search)
 	const validSortParams = [
 		"name",
 		"last_interaction_date",
@@ -220,14 +274,15 @@ const Friends: React.FC = () => {
 	const [searchParams, setSearchParams] = useSearchParams({
 		sortby: "name",
 		page: "1",
+		perpage: "25",
 	})
 
-	const [numberOfFriendsPerPage] = useState<number>(25)
 	const [numberOfPages, setNumberOfPages] = useState<number>(1)
 
 	const index_start =
-		numberOfFriendsPerPage * (parseInt(searchParams.get("page")!) - 1)
-	const index_end = index_start + numberOfFriendsPerPage
+		parseInt(searchParams.get("perpage")!) *
+		(parseInt(searchParams.get("page")!) - 1)
+	const index_end = index_start + parseInt(searchParams.get("perpage")!)
 	const friendsForTheCurrentPage: Friend[] =
 		friends !== null ? friends.slice(index_start, index_end) : []
 	const FriendListItems = friendsForTheCurrentPage?.map((friend) => {
@@ -290,7 +345,6 @@ const Friends: React.FC = () => {
 				<td className="relationship">
 					<div className="cell_content">
 						<div className="emoji">{relationshipTier.emoji}</div>
-						{/* <br></br> */}
 						<div className="relationship_title">
 							{relationshipTier.name}
 						</div>
@@ -336,7 +390,7 @@ const Friends: React.FC = () => {
 				const numberOfFriends =
 					friendArray !== null ? friendArray.length : 0
 				const totalPageNum = Math.ceil(
-					numberOfFriends / numberOfFriendsPerPage,
+					numberOfFriends / parseInt(searchParams.get("perpage")!),
 				)
 				setNumberOfPages(totalPageNum)
 
@@ -350,8 +404,24 @@ const Friends: React.FC = () => {
 				}
 			})
 			.then(() => {
-				if (searchParams.get("sortby") === "default") {
+				const sortBy = searchParams.get("sortby")
+				if (
+					!sortBy ||
+					sortBy === "default" ||
+					!validSortParams.includes(sortBy)
+				) {
 					searchParams.set("sortby", "name")
+					setSearchParams(searchParams)
+				}
+
+				const perPage = searchParams.get("perpage")
+				if (
+					!perPage ||
+					perPage === "default" ||
+					isNaN(parseInt(perPage)) ||
+					parseInt(perPage) < 1
+				) {
+					searchParams.set("perpage", "15")
 					setSearchParams(searchParams)
 				}
 			})
@@ -370,9 +440,9 @@ const Friends: React.FC = () => {
 			className={!FriendListItems?.length ? "noFriends" : undefined}
 		>
 			<div id="friendsWrapper">
-				<header
+				<div
 					className={
-						!FriendListItems?.length ? "noFriends" : undefined
+						!FriendListItems?.length ? "noFriends header" : "header"
 					}
 				>
 					<h2>Your network</h2>
@@ -391,10 +461,30 @@ const Friends: React.FC = () => {
 							/>
 						)}
 					</div>
-				</header>
+				</div>
 
 				<Table FriendListItems={FriendListItems} />
+
+				<div
+					className={
+						!FriendListItems?.length ?
+							"noFriends table_footer"
+						:	"table_footer"
+					}
+				>
+					<div className="subfooter">
+						{FriendListItems && FriendListItems?.length > 0 && (
+							<SetFriendsPerPage
+								validSortParams={validSortParams}
+								validSortParamLabels={validSortParamLabels}
+								searchParams={searchParams}
+								setSearchParams={setSearchParams}
+							/>
+						)}
+					</div>
+				</div>
 			</div>
+
 			{numberOfPages > 1 ?
 				<PageNav
 					numberOfPages={numberOfPages}

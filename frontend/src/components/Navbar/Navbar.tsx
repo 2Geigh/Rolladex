@@ -15,7 +15,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username }) => {
 				{isLoggedIn ?
 					<ul className="links">
 						<li>
-							<a href="/friends?sortby=default&page=1">Network</a>
+							<a href="/friends?sortby=default&page=1&perpage=default">
+								Network
+							</a>
 						</li>
 						{username && (
 							<li>
