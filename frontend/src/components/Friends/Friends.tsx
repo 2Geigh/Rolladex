@@ -31,6 +31,7 @@ const SortBy: React.FC<SortByProps> = ({
 		const { value } = event.target
 
 		searchParams.set("sortby", value)
+		searchParams.set("page", "1")
 		setSearchParams(searchParams)
 	}
 
