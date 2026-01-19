@@ -40,3 +40,7 @@ In `/backend`, compile the API binary by running `$ make`.
 Execute the API binary at `/backend/bin/main.out`.
 
 The binary will create and seed `/backend/database/myFriends.db` SQLite database file automatically.
+
+## Literature
+
+[Hill and Dunbar, 2003](https://www.researchgate.net/publication/281203308_Social_Network_Size_in_Humans)
