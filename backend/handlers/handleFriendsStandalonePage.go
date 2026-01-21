@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"math/rand/v2"
 	"myfriends-backend/database"
+	"myfriends-backend/logic"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
 	"net/http"
@@ -44,13 +44,13 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodGet:
 
-		_, err := validateSession(req)
+		user_id, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
 			return
 		}
 
-		friend, err := getFriend(friendId)
+		friend, err := getFriend(friendId, user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't get friend", http.StatusInternalServerError)
 			return
@@ -90,7 +90,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getFriend(friend_id int) (models.Friend, error) {
+func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	var (
 		friend models.Friend
 
@@ -181,7 +181,10 @@ func getFriend(friend_id int) (models.Friend, error) {
 		friend.LastMeetup.Date = lastMeetup.Time
 	}
 
-	friend.RelationshipHealth = rand.Float64()
+	friend.RelationshipHealth, err = logic.GetRelationshipHealth(friend_id, user_id)
+	if err != nil {
+		return friend, fmt.Errorf("couldn't get relationship health: %w", err)
+	}
 
 	if err := tx.Commit(); err != nil {
 		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
