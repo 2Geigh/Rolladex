@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand/v2"
 	"myfriends-backend/database"
 	"myfriends-backend/models"
 	"myfriends-backend/util"
@@ -180,10 +181,12 @@ func getFriend(friend_id int) (models.Friend, error) {
 		friend.LastMeetup.Date = lastMeetup.Time
 	}
 
+	friend.RelationshipHealth = rand.Float64()
+
 	if err := tx.Commit(); err != nil {
 		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
 	}
-	return friend, nil
+	return friend, err
 }
 
 func deleteFriend(friend_id int) error {

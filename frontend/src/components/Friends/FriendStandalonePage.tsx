@@ -13,6 +13,7 @@ type FriendCardProps = {
 	name: string
 	profile_image_path: string | undefined
 	relationship_tier: number
+	relationship_health: number
 	last_interaction: Interaction | undefined
 	birthday_month: number | undefined
 	birthday_day: number | undefined
@@ -22,6 +23,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	name,
 	profile_image_path,
 	relationship_tier,
+	relationship_health,
 	last_interaction,
 	birthday_day,
 	birthday_month,
@@ -50,6 +52,21 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 	const zodiac = GetZodiac(birthday_month, birthday_day)
 
+	function percentageToHexColor(percentage: number): string {
+		percentage = Math.min(100, percentage)
+		percentage = Math.max(0, percentage)
+
+		const red = Math.round(((100 - percentage) * 255) / 100)
+		const green = Math.round((percentage * 255) / 100)
+
+		const redHex = red.toString(16).padStart(2, "0")
+		const greenHex = green.toString(16).padStart(2, "0")
+
+		return `#${redHex}${greenHex}00`
+	}
+
+	const relationship_health_percentage = Math.round(relationship_health * 100)
+
 	return (
 		<div id="friendCard">
 			<div className="nameAndPhoto">
@@ -66,10 +83,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					className="pfp"
 				/>
 
-				<div
-					// className="friend_card_content_section"
-					id="nameAndRelationship"
-				>
+				<div id="nameAndRelationship">
 					<h2 className="name">{name}</h2>
 					<span className="relationship">
 						<span className="relationship_tier">
@@ -80,7 +94,17 @@ const FriendCard: React.FC<FriendCardProps> = ({
 						</span>
 						<span className="relationship_health">
 							Relationship status:{" "}
-							<span className="health">healthy</span>
+							<span
+								id="healthValue"
+								className="health"
+								style={{
+									color: percentageToHexColor(
+										relationship_health_percentage,
+									),
+								}}
+							>
+								{relationship_health_percentage}%
+							</span>
 						</span>
 					</span>
 				</div>
@@ -211,6 +235,7 @@ const FriendStandalonePage: React.FC = () => {
 					name={friend.name}
 					profile_image_path={friend.profile_image_path}
 					relationship_tier={friend.relationship_tier}
+					relationship_health={friend.relationship_health}
 					last_interaction={friend.last_interaction}
 					birthday_month={friend.birthday_month}
 					birthday_day={friend.birthday_day}
