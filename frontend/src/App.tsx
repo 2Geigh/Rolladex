@@ -12,8 +12,6 @@ import {
 	LoginSessionContext,
 } from "./contexts/LoginSession"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
-import Meetups from "./components/Meetups/Meetups"
-import MeetupStandalonePage from "./components/Meetups/MeetupStandalonePage"
 import Settings from "./components/Settings/Settings"
 import "../static/styles/AddFriends.css"
 import type { LoginSessionData } from "./contexts/LoginSession"
@@ -77,11 +75,6 @@ function App() {
 							element={<FriendStandalonePage />}
 						/>
 						<Route path="/addfriend" element={<AddFriends />} />
-						<Route path="/meetups" element={<Meetups />} />
-						<Route
-							path="/meetups/:meetupId"
-							element={<MeetupStandalonePage />}
-						/>
 						<Route path="/profile" element={<Profile />} />
 						<Route path="/settings" element={<Settings />} />
 					</Route>

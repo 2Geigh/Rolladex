@@ -475,8 +475,6 @@ const Friends: React.FC = () => {
 					<div className="subfooter">
 						{FriendListItems && FriendListItems?.length > 0 && (
 							<SetFriendsPerPage
-								validSortParams={validSortParams}
-								validSortParamLabels={validSortParamLabels}
 								searchParams={searchParams}
 								setSearchParams={setSearchParams}
 							/>

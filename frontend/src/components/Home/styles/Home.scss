@@ -4,12 +4,15 @@
 	justify-content: center;
 	align-items: center;
 
+	min-height: 50vh;
 	width: 100%;
 
-	background-color: red;
+	// background-color: green;
 
 	h1 {
 		font-size: 2rem;
+
+		margin-bottom: 3.5rem;
 	}
 
 	#homeSections {
@@ -20,7 +23,7 @@
 
 		width: 100%;
 
-		background-color: orange;
+		// background-color: orange;
 
 		#urgentFriendsSection {
 			display: flex;
@@ -30,9 +33,11 @@
 
 			width: 100%;
 
-			background-color: yellow;
+			// background-color: yellow;
 
 			h2 {
+				margin-bottom: 1.25rem;
+
 				font-size: 1.5rem;
 				font-weight: normal;
 			}
@@ -43,7 +48,9 @@
 				justify-content: start;
 				align-content: center;
 
-				background-color: bisque;
+				min-width: 25rem;
+
+				// background-color: bisque;
 
 				.urgent_friend {
 					display: flex;
@@ -53,11 +60,12 @@
 
 					padding: 1rem;
 
-					border: 1px solid black;
+					box-shadow: 0px 0px 10px 0px rgb(174, 174, 174);
 					border-radius: 1rem;
 					overflow: hidden;
 
-					background-color: pink;
+					background-color: white;
+					// background-color: pink;
 
 					img {
 						display: flex;
@@ -94,9 +102,9 @@
 
 						width: 100%;
 
-						padding-left: 1rem;
+						padding-left: 0.75rem;
 
-						background-color: violet;
+						// background-color: violet;
 
 						.text {
 							display: flex;
@@ -105,14 +113,16 @@
 							height: 100%;
 
 							.name {
+								text-decoration: none;
+
 								font-size: 1.33rem;
 
-								background-color: magenta;
+								// background-color: magenta;
 							}
 
 							.under_name {
 								display: flex;
-								flex-direction: column;
+								flex-direction: row;
 								justify-content: center;
 								align-items: center;
 
@@ -124,14 +134,14 @@
 
 								text-align: center;
 
-								background-color: yellow;
+								// background-color: yellow;
 
-								hr {
-									background-color: red;
+								.time_ago {
+									margin-left: 0.5rem;
 								}
 							}
 
-							background-color: purple;
+							// background-color: purple;
 						}
 
 						.buttons {
@@ -142,7 +152,7 @@
 
 							width: 100%;
 
-							background-color: red;
+							// background-color: red;
 
 							button {
 								padding: 0.25rem;
@@ -151,13 +161,9 @@
 
 								border: none;
 								border-radius: 0.25rem;
-								box-shadow: 0px 0px 5px 0px lightgray;
 							}
 							button:hover {
 								cursor: pointer;
-							}
-							.ignore {
-								background-color: rgb(240, 240, 240);
 							}
 						}
 					}
