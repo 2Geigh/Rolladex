@@ -9,7 +9,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username }) => {
 		<>
 			<nav className="navbar">
 				<a href={!isLoggedIn ? "/" : "/home"} className="logo">
-					justConnect
+					Rolladex
 				</a>
 
 				{isLoggedIn ?
@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username }) => {
 							<a href="/logout">Logout</a>
 						</li>
 					</ul>
-				:	<></>}
+					: <></>}
 			</nav>
 		</>
 	)
