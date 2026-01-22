@@ -105,8 +105,8 @@ const UrgentFriends: React.FC = () => {
 	}
 
 	return (
-		<div id="urgentFriendsSection">
-			<h2>Today you should reach out to..</h2>
+		<div id="urgentFriendsSection" className=".homeSection">
+			<h2>Today you should contact..</h2>
 
 			<div id="urgentCards">{MostUrgentFriends}</div>
 		</div>
@@ -114,7 +114,7 @@ const UrgentFriends: React.FC = () => {
 }
 
 const Upcoming: React.FC = () => {
-	return <></>
+	return <div id="upcomingSection" className=".homeSection"></div>
 }
 
 const Home: React.FC = () => {
@@ -128,7 +128,7 @@ const Home: React.FC = () => {
 
 			<div id="homeSections">
 				<UrgentFriends />
-				<Upcoming />
+				{/* <Upcoming /> */}
 			</div>
 		</div>
 	)

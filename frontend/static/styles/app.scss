@@ -1,3 +1,5 @@
+@import "/static/styles/variables.css";
+
 * {
 	margin: 0px;
 	padding: 0px;
@@ -13,8 +15,19 @@ $VIOLET_DARK: #2f0382;
 #root {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
+	justify-content: start;
 	min-height: 100vh;
 	width: 100vw;
 	// background-color: red;
+}
+
+#bodyAndFooter {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	min-height: calc(100vh - $NAVBAR_HEIGHT);
+
+	// background-color: blue;
 }

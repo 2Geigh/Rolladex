@@ -13,7 +13,6 @@ import {
 } from "./contexts/LoginSession"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
 import Settings from "./components/Settings/Settings"
-import "../static/styles/AddFriends.css"
 import type { LoginSessionData } from "./contexts/LoginSession"
 import { useLayoutEffect } from "react"
 import Loading from "./components/Loading/Loading"
@@ -61,30 +60,32 @@ function App() {
 					isLoggedIn={LoginSessionContextValue.isLoggedIn}
 					username={LoginSessionContextValue.user?.username}
 				/>
-				<Routes>
-					<Route path="/login" element={<Login />} />
-					<Route path="/logout" element={<Logout />} />
-					<Route path="/signup" element={<SignUp />} />
+				<div id="bodyAndFooter">
+					<Routes>
+						<Route path="/login" element={<Login />} />
+						<Route path="/logout" element={<Logout />} />
+						<Route path="/signup" element={<SignUp />} />
 
-					<Route element={<ProtectedRoutes />}>
-						<Route path="/" element={<Home />} />
-						<Route path="/home" element={<Home />} />
-						<Route path="/friends" element={<Friends />} />
+						<Route element={<ProtectedRoutes />}>
+							<Route path="/" element={<Home />} />
+							<Route path="/home" element={<Home />} />
+							<Route path="/friends" element={<Friends />} />
+							<Route
+								path="/friends/:friendId"
+								element={<FriendStandalonePage />}
+							/>
+							<Route path="/addfriend" element={<AddFriends />} />
+							<Route path="/profile" element={<Profile />} />
+							<Route path="/settings" element={<Settings />} />
+						</Route>
+
 						<Route
-							path="/friends/:friendId"
-							element={<FriendStandalonePage />}
-						/>
-						<Route path="/addfriend" element={<AddFriends />} />
-						<Route path="/profile" element={<Profile />} />
-						<Route path="/settings" element={<Settings />} />
-					</Route>
-
-					<Route
-						path="*"
-						element={<PageNotFoundWithoutHeaderAndFooter />}
-					></Route>
-				</Routes>
-				<Footer />
+							path="*"
+							element={<PageNotFoundWithoutHeaderAndFooter />}
+						></Route>
+					</Routes>
+					<Footer />
+				</div>
 			</LoginSessionContext.Provider>
 		</>
 	)
