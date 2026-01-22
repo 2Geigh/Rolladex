@@ -445,3 +445,43 @@ $table_max_width: 1200px;
 		0px 0px 10px 0px inset purple,
 		0px 0px 10px 0px $shadow_color;
 }
+
+@media screen and (max-width: 800px) {
+	#friendList {
+		thead {
+			.labels {
+				#created_at {
+					display: none;
+				}
+			}
+		}
+
+		tbody {
+			tr {
+				.created_at {
+					display: none;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 400px) {
+	#friendList {
+		thead {
+			.labels {
+				#birthday {
+					display: none;
+				}
+			}
+		}
+
+		tbody {
+			tr {
+				.birthday {
+					display: none;
+				}
+			}
+		}
+	}
+}
