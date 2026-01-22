@@ -49,10 +49,12 @@ const UrgentFriends: React.FC = () => {
 
 		return (
 			<div className="urgent_friend" key={friend.id}>
-				<img
-					src={String(friend.profile_image_path)}
-					alt={friend.name}
-				/>
+				<a href={`/friends/${friend.id}`}>
+					<img
+						src={String(friend.profile_image_path)}
+						alt={friend.name}
+					/>
+				</a>
 
 				<div className="body">
 					<div className="text">

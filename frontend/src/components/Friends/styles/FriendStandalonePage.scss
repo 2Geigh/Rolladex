@@ -9,24 +9,31 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	justify-content: center;
 	align-items: center;
 
+	width: 100%;
+
+	margin-top: min(5vh, 60px);
+
+	margin-bottom: min(10vh, 50px);
+
 	// background-color: yellow;
 
 	#friendCard {
+		$INTER_SECTION_MARGIN: 1rem;
+
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap;
 
-		padding: 1rem;
 		box-sizing: border-box;
 
 		width: 90%;
-		max-width: 45rem;
+		max-width: 50rem;
 
 		border-radius: $FRIEND_CARD_BORDER_RADIUS;
 
-		box-shadow: 0px 2px 10px 0px lightgray;
+		box-shadow: 0px 2px min(2vw, 10px) 0px lightgray;
 
 		background-color: white;
 		// background-color: crimson;
@@ -36,16 +43,19 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
+			flex-wrap: wrap;
 
-			padding: 1.5rem;
+			margin: calc($INTER_SECTION_MARGIN * 1.5);
+
 			box-sizing: border-box;
 
 			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
 
-			border: 1px solid lightgray;
+			// border: 1px solid lightgray;
 
 			width: 100%;
 			background-color: white;
+			// background-color: red;
 
 			.pfp {
 				$DIMENSION: 12.5rem;
@@ -88,10 +98,12 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				align-items: start;
 				justify-self: stretch;
 
-				padding-left: 1.75rem;
+				$HORIZONTAL_PADDING: min(2vw, 1.75rem);
+				padding-left: $HORIZONTAL_PADDING;
+				padding-right: $HORIZONTAL_PADDING;
 				margin-top: $FRIEND_CARD_FIELD_BORDER_RADIUS;
 
-				// background-color: red;
+				// background-color: orange;
 
 				.name {
 					display: flex;
@@ -219,23 +231,16 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			}
 		}
 
-		.nameAndPhoto:hover {
-			box-shadow: 0px 0px 7.5px 0px lightgray;
-		}
-
 		.card_content {
 			display: flex;
 			flex-direction: row;
-			justify-content: space-between;
+			justify-content: center;
 			align-items: stretch;
-
-			margin: 1.25rem;
-			margin-left: 0;
-			margin-right: 0;
+			flex-wrap: wrap;
 
 			width: 100%;
 
-			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+			margin-top: -($INTER_SECTION_MARGIN / 2);
 
 			// background-color: orange;
 
@@ -246,7 +251,10 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				align-items: center;
 
 				min-width: 12.5rem;
+
 				min-height: 10rem;
+
+				margin: calc($INTER_SECTION_MARGIN/2);
 
 				padding: 1.5rem;
 				box-sizing: border-box;
@@ -256,6 +264,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				border: solid 1px lightgray;
 
 				background-color: white;
+				// background-color: yellow;
 
 				h3 {
 					display: flex;
@@ -271,10 +280,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					// background-color: coral;
 				}
-			}
-
-			.friend_card_content_section:hover {
-				box-shadow: 0px 0px 7.5px 0px lightgray;
 			}
 
 			#lastInteraction {
@@ -336,9 +341,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			}
 
 			#birthday {
-				margin-left: 1.25rem;
-				margin-right: 1.25rem;
-
 				.emoji {
 					display: flex;
 					flex-direction: row;
@@ -408,15 +410,21 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			flex-direction: row;
 			justify-content: space-evenly;
 			align-items: center;
+			flex-wrap: wrap;
 
 			width: 100%;
 			max-width: 40rem;
+
+			margin-top: calc($INTER_SECTION_MARGIN / 2);
+			margin-bottom: calc($INTER_SECTION_MARGIN / 2);
 
 			// background-color: blue;
 
 			button {
 				width: 90%;
 				max-width: 15rem;
+
+				margin: calc($INTER_SECTION_MARGIN / 2);
 
 				box-sizing: border-box;
 			}
