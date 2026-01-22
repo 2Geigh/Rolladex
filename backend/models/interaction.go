@@ -35,7 +35,9 @@ func GetLastInteractionDate(friend_id int, user_id string) (time.Time, error) {
 
 	sqlQuery := `
 					SELECT date
-					FROM Interactions
+					FROM
+						Interactions
+						LEFT JOIN InteractionsAttendees
 					WHERE friend_id = ? AND user_id = ?
 					ORDER BY date DESC
 					LIMIT 1;

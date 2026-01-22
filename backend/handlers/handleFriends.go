@@ -10,7 +10,6 @@ import (
 	"myfriends-backend/util"
 	"net/http"
 	"slices"
-	"sort"
 	"time"
 	"unicode/utf8"
 )
@@ -234,48 +233,6 @@ func addFriend(user_id string, formData AddFriendFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't commit transaction: %w", err)
 	}
 	return http.StatusOK, err
-}
-
-func FriendsUrgent(w http.ResponseWriter, req *http.Request) {
-	// CORS
-	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
-
-	switch req.Method {
-	case http.MethodOptions:
-		w.WriteHeader(http.StatusNoContent)
-		return
-
-	case http.MethodGet:
-
-		user_id, err := validateSession(req)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
-			return
-		}
-
-		urgentFriends, err := getUrgentFriends(user_id)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't get list of urgent friends", http.StatusInternalServerError)
-			return
-		}
-
-		userJson, err := json.Marshal(urgentFriends)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal user data to JSON", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(userJson)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't write user JSON data", http.StatusInternalServerError)
-			return
-		}
-
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
-	}
 }
 
 func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, error) {
@@ -542,117 +499,4 @@ func getFriends(user_id string) ([]models.Friend, error) {
 	}
 
 	return friends, nil
-}
-
-func getUrgentFriends(user_id string) ([]models.Friend, error) {
-	var (
-		friends []models.Friend
-
-		urgentFriends []models.Friend
-		err           error
-	)
-
-	friends, err = getFriends(user_id)
-	if err == sql.ErrNoRows {
-		return friends, nil
-	}
-	if err != nil {
-		return friends, fmt.Errorf("couldn't find user's friends: %w", err)
-	}
-
-	urgentFriends, err = sortByRelationshipUrgency(friends)
-	if err != nil {
-		return urgentFriends, fmt.Errorf("couldn't sort relationships by urgency: %w", err)
-	}
-
-	return urgentFriends, err
-}
-
-func sortByRelationshipUrgency(friends []models.Friend) ([]models.Friend, error) {
-
-	type kv struct {
-		friend       models.Friend
-		urgencyScore float64
-	}
-
-	var (
-		// friendsTemplate            []models.Friend
-		friendsWithUrgencies         []kv
-		friendsSortedByUrgency       []models.Friend
-		urgentFriendsSortedByUrgency []models.Friend
-		err                          error
-	)
-
-	for _, friend := range friends {
-		var (
-			urgency_score float64
-			err           error
-		)
-
-		urgency_score, err = GetUrgencyScore(friend)
-		if err != nil {
-			return friendsSortedByUrgency, fmt.Errorf("couldn't get %s's urgency score: %w", friend.Name, err)
-		}
-
-		pair := kv{
-			friend:       friend,
-			urgencyScore: urgency_score,
-		}
-		friendsWithUrgencies = append(friendsWithUrgencies, pair)
-	}
-
-	sort.Slice(friendsWithUrgencies, func(i int, j int) bool {
-		return friendsWithUrgencies[i].urgencyScore > friendsWithUrgencies[j].urgencyScore
-	})
-
-	for i := 0; i < len(friendsWithUrgencies); i++ {
-		if i >= maxNumberOfUrgentFriends {
-			break
-		}
-		urgentFriendsSortedByUrgency = append(urgentFriendsSortedByUrgency, friendsWithUrgencies[i].friend)
-	}
-
-	return urgentFriendsSortedByUrgency, err
-}
-
-func GetUrgencyScore(friend models.Friend) (float64, error) {
-	var (
-		// daysForMaxUrgency int
-		urgencyScore float64
-		err          error
-	)
-
-	// switch friend.RelationshipTier {
-	// case (1): // "inner clique"
-	// 	daysForMaxUrgency = 8 // weekly
-	// case (2): // "close friends"
-	// 	daysForMaxUrgency = 32 // monthly
-	// case (3): // "ordinary friends"
-	// 	daysForMaxUrgency = 366 // 6-monthly-to-yearly
-	// case (4): // "friends / acquaintances ('I know a guy' kinda friendships)"
-	// 	daysForMaxUrgency = 731 // 2-yearly
-	// default:
-	// 	daysForMaxUrgency = 365 // yearly
-	// }
-
-	// today := time.Now()
-	// lastInteractionDate := friend.LastInteractionDate
-
-	// if lastInteractionDate.Truncate(24 * time.Hour).Equal(today.Truncate(24 * time.Hour)) {
-	// 	// This is checking if the the last interaction data was today
-	// 	// even if the times of day aren't exact
-	// 	// Truncating the times just means rounding down to the nearest 24 hours
-	// 	return 0, err
-	// }
-
-	// if lastInteractionDate.After(today) {
-	// 	return urgencyScore, fmt.Errorf("last interaction/meetup date can't be in the future")
-	// }
-
-	// hoursSinceLastInteraction := today.Sub(friend.LastInteractionDate).Hours()
-	// daysSincLastInteraction := hoursSinceLastInteraction / 24
-	// urgencyScore = daysSincLastInteraction / float64(daysForMaxUrgency)
-	// urgencyScore = math.Min(urgencyScore, 1) // caps at 100% pretty much
-
-	return urgencyScore, err
 }
