@@ -67,7 +67,7 @@ const UrgentFriends: React.FC = () => {
 								<br></br>
 								<div className="emoji">🎂 🎁 🎉</div>
 							</div>
-						:	<div className="under_name last_interaction">
+							: <div className="under_name last_interaction">
 								Last interaction:{" "}
 								<span className="time_ago">
 									{friend.last_interaction ?
@@ -77,7 +77,7 @@ const UrgentFriends: React.FC = () => {
 											) === "Just now"
 										) ?
 											<>Just now</>
-										:	<>
+											: <>
 												{TimeAgo(
 													friend.last_interaction
 														.date,
@@ -85,7 +85,7 @@ const UrgentFriends: React.FC = () => {
 												ago
 											</>
 
-									:	<>Unknown</>}
+										: <>Unknown</>}
 								</span>
 							</div>
 						}
@@ -115,9 +115,9 @@ const UrgentFriends: React.FC = () => {
 	)
 }
 
-const Upcoming: React.FC = () => {
-	return <div id="upcomingSection" className=".homeSection"></div>
-}
+// const Upcoming: React.FC = () => {
+// 	return <div id="upcomingSection" className=".homeSection"></div>
+// }
 
 const Home: React.FC = () => {
 	const loginSessionContext = useLoginSessionContext()
@@ -126,7 +126,7 @@ const Home: React.FC = () => {
 		<div id="homeContent">
 			{loginSessionContext.user ?
 				<h1>Hello, {loginSessionContext.user?.username}</h1>
-			:	<h1>Good afternoon.</h1>}
+				: <h1>Good afternoon.</h1>}
 
 			<div id="homeSections">
 				<UrgentFriends />

@@ -1,14 +1,17 @@
 services:
-  frontend:
-    image: node
-    ports: 
-      - "5000:5173"
-  backend:
-    image: golang
-    ports:
-      - "3000:3001"
-    volumes:
-      - db_data:/var/lib/sqlite
+    backend:
+        build: ./backend
+        ports:
+            - "8080:3001"
+        volumes:
+            - sqlite_data:/app/data # Persists your .db file
+
+    frontend:
+        build: ./frontend
+        ports:
+            - "80:80"
+        depends_on:
+            - backend
 
 volumes:
-  db_data:
+    sqlite_data:
