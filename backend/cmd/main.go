@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/handlers"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/handlers"
 
 	"github.com/inancgumus/screen"
 )

@@ -3,10 +3,10 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"myfriends-backend/logic"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/logic"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"time"
 )
 

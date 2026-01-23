@@ -2,8 +2,8 @@ package logic
 
 import (
 	"fmt"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"time"
 )
 

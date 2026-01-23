@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/logic"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/logic"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"strconv"
 )
 

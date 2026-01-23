@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
-	"myfriends-backend/database"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"strconv"
 	"time"
 )

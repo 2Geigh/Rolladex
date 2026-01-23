@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"myfriends-backend/util"
 	"os"
 	"path/filepath"
+	"rolladex-backend/util"
 	"time"
 )
 
