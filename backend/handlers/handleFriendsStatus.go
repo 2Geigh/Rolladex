@@ -45,49 +45,70 @@ func FriendsStatus(w http.ResponseWriter, req *http.Request) {
 
 		w.WriteHeader(http.StatusOK)
 
-	case http.MethodGet:
-
-		user_id, err := validateSession(req)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
-			return
-		}
-
-		var requestBody struct {
-			Friend_id int `json:"friend_id"`
-		}
-		err = json.NewDecoder(req.Body).Decode(&requestBody)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't unmarshall request body", http.StatusBadRequest)
-			return
-		}
-
-		status, err := getTodaysFriendStatus(requestBody.Friend_id, user_id)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't get friend's status", http.StatusInternalServerError)
-			return
-		}
-
-		statusJson, err := json.Marshal(status)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal status data to JSON", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(statusJson)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't write status JSON data", http.StatusInternalServerError)
-			return
-		}
-
-		w.WriteHeader(http.StatusOK)
-
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 }
+
+// func FriendStandaloneStatus(w http.ResponseWriter, req *http.Request) {
+// 	util.LogHttpRequest(req)
+// 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+
+// 	var (
+// 		path                  string = "/friends/status/"
+// 		uri                   string = req.URL.Path
+// 		isFriendIdPathPresent bool   = len(uri) > len(path)
+// 		isUriRouteValid       bool   = uri[:len(path)] == path
+// 		isUriValid            bool   = isFriendIdPathPresent && isUriRouteValid
+// 	)
+
+// 	if !(isUriValid) {
+// 		util.ReportHttpError(fmt.Errorf("invalid URI format"), w, "invalid URI syntax", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	friendIdStr := uri[len(path):]
+// 	friendId, err := strconv.Atoi(friendIdStr)
+// 	if err != nil {
+// 		util.ReportHttpError(err, w, "couldn't parse friend ID from URI", http.StatusBadRequest)
+// 		return
+// 	}
+
+// 	switch req.Method {
+// 	case http.MethodGet:
+
+// 		user_id, err := validateSession(req)
+// 		if err != nil {
+// 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+// 			return
+// 		}
+
+// 		status, err := getTodaysFriendStatus(friendId, user_id)
+// 		if err != nil {
+// 			util.ReportHttpError(err, w, "couldn't get friend's status", http.StatusInternalServerError)
+// 			return
+// 		}
+
+// 		statusJson, err := json.Marshal(status)
+// 		if err != nil {
+// 			util.ReportHttpError(err, w, "couldn't marshal status data to JSON", http.StatusInternalServerError)
+// 			return
+// 		}
+
+// 		w.Header().Set("Content-Type", "application/json")
+// 		w.WriteHeader(http.StatusOK)
+// 		_, err = w.Write(statusJson)
+// 		if err != nil {
+// 			util.ReportHttpError(err, w, "couldn't write status JSON data", http.StatusInternalServerError)
+// 			return
+// 		}
+
+// 		w.WriteHeader(http.StatusOK)
+
+// 	default:
+// 		w.WriteHeader(http.StatusMethodNotAllowed)
+// 	}
+// }
 
 func updateFriendStatus[F database.SqlId, U database.SqlId](friend_id F, user_id U, action string) error {
 

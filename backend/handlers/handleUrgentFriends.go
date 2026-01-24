@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+type UrgentFriendAndStatus struct {
+	Friend models.Friend `json:"friend"`
+	Status string        `json:"status"`
+}
+
 func UrgentFriends(w http.ResponseWriter, req *http.Request) {
 
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
@@ -59,12 +64,13 @@ func UrgentFriends(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func filterMostUrgentFriends(friends []models.Friend, user_id string) ([]models.Friend, error) {
+func filterMostUrgentFriends(friends []models.Friend, user_id string) ([]UrgentFriendAndStatus, error) {
 	var (
-		mostUrgentFriends []models.Friend
-		mostUrgentFriend  struct {
+		mostUrgentFriendsWithStatus []UrgentFriendAndStatus
+		mostUrgentFriend            struct {
 			friend       models.Friend
 			urgencyScore float64
+			status       string
 		}
 
 		err error
@@ -72,9 +78,14 @@ func filterMostUrgentFriends(friends []models.Friend, user_id string) ([]models.
 
 	today := time.Now()
 	for index, friend := range friends {
+		status, err := getTodaysFriendStatus(friend.ID, user_id)
+		if err != nil {
+			return mostUrgentFriendsWithStatus, fmt.Errorf("couldnt get urgent friend's status: %w", err)
+		}
+
 		isBirthdayToday := friend.BirthdayMonth == int(today.Month()) && friend.BirthdayDay == today.Day()
 		if isBirthdayToday {
-			mostUrgentFriends = append(mostUrgentFriends, friend)
+			mostUrgentFriendsWithStatus = append(mostUrgentFriendsWithStatus, UrgentFriendAndStatus{Friend: friend, Status: status})
 			continue
 		}
 
@@ -82,21 +93,24 @@ func filterMostUrgentFriends(friends []models.Friend, user_id string) ([]models.
 			mostUrgentFriend.friend = friend
 			mostUrgentFriend.urgencyScore, err = logic.GetRelationshipUrgency(int(friend.ID), user_id)
 			if err != nil {
-				return mostUrgentFriends, fmt.Errorf("couldn't get first urgency score: %w", err)
+				return mostUrgentFriendsWithStatus, fmt.Errorf("couldn't get first urgency score: %w", err)
 			}
 			continue
 		}
 
 		urgencyScore, err := logic.GetRelationshipUrgency(int(friend.ID), user_id)
 		if err != nil {
-			return mostUrgentFriends, fmt.Errorf("couldn't get urgency score: %w", err)
+			return mostUrgentFriendsWithStatus, fmt.Errorf("couldn't get urgency score: %w", err)
 		}
 		if urgencyScore > mostUrgentFriend.urgencyScore {
 			mostUrgentFriend.friend = friend
 			mostUrgentFriend.urgencyScore = urgencyScore
+			mostUrgentFriend.status = status
 		}
+
 	}
 
-	mostUrgentFriends = append([]models.Friend{mostUrgentFriend.friend}, mostUrgentFriends...)
-	return mostUrgentFriends, err
+	mostUrgentFriendsWithStatus = append([]UrgentFriendAndStatus{{Friend: mostUrgentFriend.friend, Status: mostUrgentFriend.status}}, mostUrgentFriendsWithStatus...)
+
+	return mostUrgentFriendsWithStatus, err
 }

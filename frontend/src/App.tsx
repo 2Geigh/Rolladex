@@ -34,7 +34,6 @@ function App() {
 	}
 
 	useLayoutEffect(() => {
-		console.log("<App/> useEffect running")
 		setIsLoading(true)
 		GetSessionAndUserData(loginSessionData, setLoginSessionData)
 			.catch((err) => console.error(`session check failed: ${err}`))

@@ -12,7 +12,7 @@ import (
 )
 
 type SqlId interface {
-	int | string
+	int | uint | string
 }
 
 var (
