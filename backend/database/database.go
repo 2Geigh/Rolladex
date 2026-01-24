@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+type SqlId interface {
+	int | string
+}
+
 var (
 	DB         *sql.DB = nil
 	DbFilePath string  = "database/myFriends.db"
