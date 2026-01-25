@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -128,52 +127,4 @@ func updateFriendStatus[F database.SqlId, U database.SqlId](friend_id F, user_id
 		return fmt.Errorf("couldn't complete transaction")
 	}
 	return err
-}
-
-func getTodaysFriendStatus[F database.SqlId, U database.SqlId](friend_id F, user_id U) (string, error) {
-	var (
-		status string
-
-		created_at time.Time
-		action     string
-	)
-
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return status, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-
-	sqlQuery := `
-					SELECT created_at, action
-					FROM UserFriendUpdates
-					WHERE
-						UserFriendUpdates.user_id = ?
-						AND UserFriendUpdates.friend_id = ?
-					ORDER BY created_at DESC
-					LIMIT 1;
-				`
-	stmt, err := tx.Prepare(sqlQuery)
-	if err != nil {
-		return status, fmt.Errorf("couldn't prepare statement: %w", err)
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(user_id, friend_id).Scan(&created_at, &action)
-	if err == sql.ErrNoRows {
-		return status, nil
-	}
-	if err != nil {
-		return status, fmt.Errorf("couldn't execute statement: %w", err)
-	}
-
-	if !(util.DateEqual(created_at, time.Now().UTC())) {
-		return status, nil
-	}
-
-	status = action
-	err = tx.Commit()
-	if err != nil {
-		return status, fmt.Errorf("couldn't complete transaction")
-	}
-	return status, err
 }

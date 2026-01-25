@@ -16,7 +16,7 @@ const UrgentFriends: React.FC = () => {
 	const [mostUrgentFriendsToRender, setMostUrgentFriendsToRender] = useState<Friend[]>([])
 
 	async function getMostUrgentFriends(): Promise<Array<UrgentFriendAndStatus>> {
-		let urgentFriends: Friend[] = []
+		let urgentFriendsAndStatuses: UrgentFriendAndStatus[] = []
 
 		const response = await fetch(`${backend_base_url}/friends/urgent`, {
 			method: "GET",
@@ -27,7 +27,7 @@ const UrgentFriends: React.FC = () => {
 		}
 
 		const data = await response.json()
-		const urgentFriendsAndStatuses = data as UrgentFriendAndStatus[]
+		urgentFriendsAndStatuses = data as UrgentFriendAndStatus[]
 
 		return urgentFriendsAndStatuses
 	}
@@ -175,9 +175,9 @@ const UrgentFriends: React.FC = () => {
 	)
 }
 
-const Upcoming: React.FC = () => {
-	return <div id="upcomingSection" className=".homeSection"></div>
-}
+// const Upcoming: React.FC = () => {
+// 	return <div id="upcomingSection" className=".homeSection"></div>
+// }
 
 const Home: React.FC = () => {
 	const loginSessionContext = useLoginSessionContext()

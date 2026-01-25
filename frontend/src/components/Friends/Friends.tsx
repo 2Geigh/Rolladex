@@ -9,7 +9,7 @@ import {
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import "./styles/Friends.css"
-import { GetZodiac, MonthNumberToString } from "../../util/dates"
+import { GetZodiac, MonthNumberToString, clientTimeZoneOffset } from "../../util/dates"
 import type { JSX } from "react"
 import type { SetURLSearchParams } from "react-router-dom"
 
@@ -112,7 +112,7 @@ const SetFriendsPerPage: React.FC<SetFriendsPerPageProps> = ({
 					value="Go"
 					onClick={setNewPerPage}
 				/>
-			:	<></>}
+				: <></>}
 		</div>
 	)
 }
@@ -202,7 +202,7 @@ const PageNav: React.FC<PageNavProps> = ({
 				<div className="arrow" id="left" onClick={goToPreviousPage}>
 					〈
 				</div>
-			:	<div className="blocked" id="left"></div>}
+				: <div className="blocked" id="left"></div>}
 			<select
 				name="page"
 				id="pageSelect"
@@ -215,7 +215,7 @@ const PageNav: React.FC<PageNavProps> = ({
 				<div className="arrow" id="right" onClick={goToNextPage}>
 					〉
 				</div>
-			:	<div className="blocked" id="right"></div>}
+				: <div className="blocked" id="right"></div>}
 		</div>
 	)
 }
@@ -244,7 +244,7 @@ const Table: React.FC<TableProps> = ({ FriendListItems }) => {
 			<tbody>
 				{FriendListItems && FriendListItems?.length > 0 ?
 					FriendListItems
-				:	<tr id="noFriends">
+					: <tr id="noFriends">
 						<td colSpan={5}>Nobody to be found...</td>
 					</tr>
 				}
@@ -266,7 +266,7 @@ const Friends: React.FC = () => {
 	]
 	const validSortParamLabels = {
 		name: "Name",
-		last_interaction_date: "Last interaction date",
+		last_interaction_date: "Last interaction",
 		relationship_tier: "Relationship",
 		birthday: "Birthday",
 		created_at: "Date added",
@@ -292,14 +292,19 @@ const Friends: React.FC = () => {
 
 		let formatted_interaction_column_text: string = ""
 		if (friend.last_interaction?.date) {
-			const last_interaction_date = new Date(friend.last_interaction.date)
+			let last_interaction_date = new Date(friend.last_interaction.date)
+			console.log(`last_interaction_date: ${last_interaction_date}`)
+			console.log(`clientTimeZoneOffset: ${clientTimeZoneOffset}`)
+			last_interaction_date.setMinutes(last_interaction_date.getMinutes() - clientTimeZoneOffset);
+			console.log(`last_interaction_date LOCAL: ${last_interaction_date}`)
 			formatted_interaction_column_text =
-				last_interaction_date.toLocaleDateString("en-US", {
+				last_interaction_date.toLocaleString("en-US", {
 					year: "numeric",
 					month: "short",
 					day: "2-digit",
 					weekday: "long",
 				})
+
 
 			if (friend.last_interaction.name) {
 				formatted_interaction_column_text = `${friend.last_interaction.name} (${formatted_interaction_column_text})`
@@ -366,7 +371,7 @@ const Friends: React.FC = () => {
 									</span>{" "}
 									<span className="day">{birthday.day}</span>
 								</>
-							:	<>Unknown</>}
+								: <>Unknown</>}
 						</span>
 						<div className="emoji">
 							{
@@ -469,7 +474,7 @@ const Friends: React.FC = () => {
 					className={
 						!FriendListItems?.length ?
 							"noFriends table_footer"
-						:	"table_footer"
+							: "table_footer"
 					}
 				>
 					<div className="subfooter">
@@ -489,7 +494,7 @@ const Friends: React.FC = () => {
 					searchParams={searchParams}
 					setSearchParams={setSearchParams}
 				/>
-			:	<></>}
+				: <></>}
 		</div>
 	)
 }
