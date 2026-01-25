@@ -43,7 +43,13 @@ const UrgentFriends: React.FC = () => {
 				}
 				return toRender
 			})
-			.then((toRender) => { setMostUrgentFriendsToRender(toRender) })
+			.then((toRender) => {
+				if (toRender.length <= 1 && toRender[0].id === 0) {
+					setMostUrgentFriendsToRender([])
+				} else {
+					setMostUrgentFriendsToRender(toRender)
+				}
+			})
 			.catch((err) => { throw new Error(err) })
 			.finally(() => {
 				setIsLoading(false)
