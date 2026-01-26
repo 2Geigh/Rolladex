@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"

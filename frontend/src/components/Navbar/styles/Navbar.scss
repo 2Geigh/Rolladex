@@ -1,17 +1,20 @@
+$NAVBAR_HEIGHT: min(10vh, 3rem);
+
 .navbar {
+
+	$HORIZONTAL_PADDING: min(2vw, 1.5rem);
+
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 
-	padding-left: min(2vw, 1.5rem);
-	padding-right: 1.5rem;
+	padding-left: $HORIZONTAL_PADDING;
+	padding-right: $HORIZONTAL_PADDING;
 	box-sizing: border-box;
 
 	width: 100%;
-
-	height: 8vh;
-	max-height: 3rem;
+	height: $NAVBAR_HEIGHT;
 
 	background-color: #e91d6f;
 
@@ -29,44 +32,128 @@
 		text-decoration: none;
 	}
 
-	.links {
+	#burgerAndMobileNav {
+
 		display: flex;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: center;
-		align-items: center;
+		align-items: end;
 
-		// background-color: yellow;
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding-right: $HORIZONTAL_PADDING;
 
-		list-style-type: none;
+		// background-color: red;
 
-		li {
-			padding: 0.75rem;
-			box-sizing: border-box;
+		#hamburgerIcon {
+			display: flex;
+			flex-direction: row;
+			justify-content: end;
+			align-items: center;
+			object-fit: contain;
 
-			font-size: 1em;
+			height: $NAVBAR_HEIGHT;
+			aspect-ratio: 1 / 1;
 
-			margin-right: 10%;
+			font-size: 1.5rem;
+			font-weight: bold;
 
-			// background-color: green;
-			border-radius: 7.5px;
+			color: white;
+			// background-color: orange;
+		}
+
+		#hamburgerIcon:hover {
+			cursor: pointer;
+		}
+
+		#mobileNav {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: stretch;
+
+			text-align: left;
+
+			margin-right: calc(-1 * $HORIZONTAL_PADDING);
+
+			padding-top: .5rem;
+			padding-left: calc(1 * $HORIZONTAL_PADDING);
+			padding-right: calc(1*$HORIZONTAL_PADDING);
+
+			border-bottom-left-radius: calc(2*5px);
+			// border-bottom-right-radius: 15px;
+
+			background-color: rgb(99, 99, 99);
 
 			a {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
+				margin-bottom: .5rem;
+
+				padding: .5em;
+
+				border: 1px solid white;
+				border-radius: 5px;
+
+
+				text-decoration: none;
+				text-align: center;
 
 				color: white;
-				font-size: 1.2rem;
-				text-decoration: none;
+				// background-color: pink;
+			}
 
-				// background-color: aquamarine;
+			a:hover {
+				background-color: black;
+			}
+
+			a:active {
+				background-color: white;
+				color: black;
 			}
 		}
 	}
-	@media screen and (max-width: 1000px) {
-		.links {
+
+	#desktopNav {
+		display: none;
+	}
+
+	@media screen and (min-width: 500px) {
+		#burgerAndMobileNav {
 			display: none;
+		}
+
+		#desktopNav {
+			display: flex;
+			flex-direction: row;
+			justify-content: end;
+			align-items: center;
+
+			height: 100%;
+
+
+			// background-color: yellow;
+
+			a {
+				margin-left: 1rem;
+
+				padding: .5rem;
+
+				border: 1px solid rgba(255, 255, 255, 0);
+				border-radius: 5px;
+
+				text-decoration: none;
+
+				color: white;
+			}
+
+			a:hover {
+				cursor: pointer;
+
+				border-color: white;
+
+				text-decoration: underline;
+
+			}
 		}
 	}
 }

@@ -1,5 +1,10 @@
 import { parseISO, isValid, differenceInDays } from "date-fns"
 
+export const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
+export const clientTimeZoneOffset = new Date().getTimezoneOffset()
+
+
 export function ValidateDate(dateString: string): boolean {
 	const date = parseISO(dateString)
 	return isValid(date)

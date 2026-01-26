@@ -10,7 +10,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 	// height: 100%;
 	width: 100%;
 
-	padding-top: 5rem;
+	padding-top: min(10vw, 2rem);
 	padding-bottom: 5rem;
 	box-sizing: border-box;
 
@@ -18,7 +18,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 	h2 {
 		font-size: 2rem;
-		margin-bottom: 2.25rem;
+		margin-bottom: min(5vh, 2.25rem);
 	}
 
 	form {
@@ -40,9 +40,10 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 		border-radius: $FORM-BORDER-RADIUS;
 
-		padding: 2rem;
+		padding: min(5vw, 2rem);
+		box-sizing: border-box;
 
-		width: 37.5rem;
+		width: min(90vw, 37.5rem);
 
 		box-shadow: 0px 0px 10px 0px lightgray;
 
@@ -106,6 +107,10 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 				text-align: center;
 
+				max-width: 100%;
+				word-break: normal;
+				overflow-x: hidden;
+
 				color: $QUESTION_COLOUR;
 				// background-color: red;
 			}
@@ -115,6 +120,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 				flex-direction: row;
 				justify-content: center;
 				align-items: stretch;
+				flex-wrap: wrap;
 
 				width: 100%;
 
@@ -174,9 +180,12 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 						background-color: white;
 					}
+
 					#time_unit:hover {
 						cursor: pointer;
 					}
+
+
 				}
 
 				.absolute {
@@ -202,6 +211,9 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 						#time_unit_multiple {
 							margin-left: 0.25rem;
 							margin-right: 0.25rem;
+
+							width: 15vw;
+							max-width: 2.75rem;
 
 							// background-color: rebeccapurple;
 						}
@@ -238,12 +250,13 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 				// background-color: orange;
 
 				.selectionPrompt {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
+					display: inline-block;
+					max-width: 100%;
+					word-break: normal;
+					overflow-x: hidden;
 
-					width: 100%;
+					text-wrap: wrap;
+					text-align: center;
 
 					margin-bottom: 0.75rem;
 
@@ -254,18 +267,20 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 						color: gray;
 						text-decoration-style: dotted;
 					}
+
 					.why:hover {
 						cursor: pointer;
 					}
 				}
 
 				#algorithmExplanation {
-					display: flex;
+					display: inline-block;
 					flex-direction: column;
 					justify-content: center;
 					align-items: center;
 
 					max-width: 30rem;
+					height: auto;
 
 					padding: 1rem;
 					padding-bottom: 0.75rem;
@@ -301,6 +316,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 						background-color: white;
 					}
+
 					.close:hover {
 						cursor: pointer;
 						background-color: rgb(240, 240, 240);
@@ -324,6 +340,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 						flex-direction: row;
 						justify-content: space-between;
 						align-items: center;
+						flex-wrap: wrap;
 
 						width: 100%;
 
@@ -367,14 +384,17 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 								// background-color: magenta;
 							}
+
 							label:hover {
 								border-radius: $INPUT-BORDER-RADIUS;
 								cursor: pointer;
 							}
+
 							label:active {
 								border-radius: $INPUT-BORDER-RADIUS;
 								box-shadow: 0px 0px 5px 0px lightgray inset;
 							}
+
 							.selected {
 								background-color: lightcoral;
 							}
@@ -437,11 +457,15 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 				margin-bottom: 1rem;
 			}
 		}
+
 		#birthday {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
+			flex-wrap: wrap;
+
+			width: 100%;
 
 			padding: $FIELDSET-PADDING;
 			box-sizing: border-box;
@@ -466,6 +490,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 				margin-left: 0.5rem;
 				margin-right: 0.75rem;
 				// margin-bottom: 0.5rem;
+
 
 				font-size: 1rem;
 
@@ -496,6 +521,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 					background-color: white;
 				}
+
 				select:hover {
 					cursor: pointer;
 				}
@@ -512,6 +538,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 					// background-color: orange;
 				}
+
 				#zodiacEmoji:hover {
 					cursor: help;
 				}
@@ -519,6 +546,7 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 		}
 
 		$SUBMIT_COLOUR: lightcoral;
+
 		#Submit {
 			box-sizing: border-box;
 			padding: 1rem;
@@ -536,11 +564,13 @@ $shadow_color: rgba(0, 0, 0, 0.159);
 
 			// background-color: red;
 		}
+
 		#Submit:hover {
 			cursor: pointer;
 			color: white;
 			background-color: $SUBMIT_COLOUR;
 		}
+
 		#Submit:active {
 			color: white;
 			background-color: $SUBMIT_COLOUR;

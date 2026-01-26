@@ -5,11 +5,15 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"myfriends-backend/util"
 	"os"
 	"path/filepath"
+	"rolladex-backend/util"
 	"time"
 )
+
+type SqlId interface {
+	int | uint | string
+}
 
 var (
 	DB         *sql.DB = nil

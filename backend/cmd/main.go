@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/handlers"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/handlers"
 
 	"github.com/inancgumus/screen"
 )
@@ -34,6 +34,7 @@ func main() {
 	http.HandleFunc("/friends", handlers.Friends)
 	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 	http.HandleFunc("/friends/urgent", handlers.UrgentFriends)
+	http.HandleFunc("/friends/status", handlers.FriendsStatus)
 
 	// UX
 	http.HandleFunc("/profile", handlers.Profile)
