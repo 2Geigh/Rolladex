@@ -125,7 +125,7 @@ $table_max_width: 1200px;
 	overflow: hidden;
 
 	background-color: lightgray;
-	// background-color: red;
+	background-color: red;
 
 	th,
 	td {
@@ -237,6 +237,8 @@ $table_max_width: 1200px;
 
 		.name {
 			max-width: 7.5rem;
+			text-wrap: wrap;
+			word-break: break-all;
 		}
 
 		a {
