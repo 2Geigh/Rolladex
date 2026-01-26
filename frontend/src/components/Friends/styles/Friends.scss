@@ -155,6 +155,7 @@ $table_max_width: 1200px;
 		.labels {
 			#name {
 				width: auto;
+				max-width: 10rem;
 			}
 
 			#relationship {
@@ -232,6 +233,10 @@ $table_max_width: 1200px;
 					font-size: 1.33rem;
 				}
 			}
+		}
+
+		.name {
+			max-width: 7.5rem;
 		}
 
 		a {

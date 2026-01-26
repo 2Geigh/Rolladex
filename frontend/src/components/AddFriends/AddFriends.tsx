@@ -123,7 +123,7 @@ const RelationshipTierDescription: React.FC<
 		<p className="relationship_tier_description">
 			{relationship_tier_code ?
 				relationship_tier.description + "."
-			:	"Hover over a relationship type to see its description."}
+				: "Hover over a relationship type to see its description."}
 		</p>
 	)
 }
@@ -197,26 +197,36 @@ const RelationshipTierSelectOptions = ({
 					/>
 
 					<label
+						tabIndex={0}
 						htmlFor={labelFor}
 						onMouseEnter={() => {
 							setLastHoveredRelationshipTier(
 								relationship_tier.code,
 							)
 						}}
+						onClick={() => {
+							setLastHoveredRelationshipTier(
+								relationship_tier.code,
+							)
+						}}
+						onKeyDown={(e) => e.key === 'Enter' ? setLastHoveredRelationshipTier(
+							relationship_tier.code,
+						) : <></>
+						}
 						className={
 							(
 								currentlySelectedRelationshipTier !==
-									undefined &&
+								undefined &&
 								currentlySelectedRelationshipTier ===
-									relationship_tier.code
+								relationship_tier.code
 							) ?
 								"selected"
-							:	""
+								: ""
 						}
 					>
 						{labelInnerHtml}
 					</label>
-				</div>
+				</div >
 			)
 		},
 	)
@@ -269,9 +279,11 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 					with {friendName}&nbsp;
 					<span
 						className="why"
+						tabIndex={0}
 						onClick={() => {
 							setWantsToKnowWhy(!wantsToKnowWhy)
 						}}
+						onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
 					>
 						(why?)
 					</span>
@@ -290,14 +302,16 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						</p>
 						<span
 							className="close"
+							tabIndex={0}
 							onClick={() => {
 								setWantsToKnowWhy(!wantsToKnowWhy)
 							}}
+							onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
 						>
 							Close
 						</span>
 					</div>
-				:	<></>}
+					: <></>}
 				<div className="tiersAndInfo">
 					<RelationshipTierDescription
 						relationship_tier_code={lastHoveredRelationshipTier}
@@ -491,6 +505,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 						Last interaction date
 					</label>
 					<input
+						tabIndex={0}
 						type="date"
 						id="last_interaction_date_absolute"
 						onChange={onChangeAbsoluteDate}
@@ -503,17 +518,18 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 					className={
 						knowsAbsoluteLastInteraction ?
 							"approximate ignored"
-						:	"approximate"
+							: "approximate"
 					}
 				>
 					<span className="inputtedTimeAgo">
 						〜{" "}
 						<input
+							tabIndex={0}
 							name="time_unit_multiple"
 							id="time_unit_multiple"
 							type="number"
 							min={0}
-							max={10000}
+							max={99}
 							onChange={onChangeApproximateDate}
 						/>{" "}
 						<select
@@ -523,7 +539,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 							onChange={onChangeApproximateDate}
 						>
 							<option value="" disabled>
-								Time units
+								Units
 							</option>
 							<option value="hours">Hours</option>
 							<option value="days">Days</option>
@@ -619,7 +635,8 @@ const AddFriends: React.FC = () => {
 							type="text"
 							name="name"
 							required
-							maxLength={64}
+							maxLength={50}
+							tabIndex={0}
 							onChange={(e) => {
 								const inputtedText = e.target.value
 
@@ -685,19 +702,20 @@ const AddFriends: React.FC = () => {
 
 									{formData.relationship_tier_code !==
 										undefined && (
-										<>
-											<Optional
-												formData={formData}
-												setFormData={setFormData}
-												friendName={formData.name}
-											/>
-											<input
-												type="submit"
-												id="Submit"
-												value="Add friend"
-											/>
-										</>
-									)}
+											<>
+												<Optional
+													formData={formData}
+													setFormData={setFormData}
+													friendName={formData.name}
+												/>
+												<input
+													tabIndex={0}
+													type="submit"
+													id="Submit"
+													value="Add friend"
+												/>
+											</>
+										)}
 								</>
 							)}
 						</>

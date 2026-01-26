@@ -8,9 +8,7 @@ type NavbarProps = {
 	username: string | undefined
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, username }) => {
-
-
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
 	function toggleMobileNavVisibiity(event: React.MouseEvent<HTMLDivElement>) {
 		event.preventDefault()
