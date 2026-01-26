@@ -68,7 +68,7 @@ const Login: React.FC = () => {
 
 	return (
 		<>
-			<div className="container">
+			<div id="loginContainer">
 				<form id="loginForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
 						Username{" "}
