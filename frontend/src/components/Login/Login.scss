@@ -1,19 +1,16 @@
+@use "../../../static/styles/variables";
+
 #loginContainer {
-	// background-color: blue;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 
-	min-height: calc(100vh - 4em);
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
-	padding: 0;
-	box-sizing: border-box;
-
-	$background_color: #8c4eff;
+	$background_color: variables.$VIOLET_BACKGROUND;
 	background: $background_color;
-	$VIOLET: #5a05f5;
 	background: linear-gradient(180deg, white 0%, $background_color 100%);
 }
 
@@ -23,9 +20,6 @@
 	align-items: center;
 	flex-direction: column;
 
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	font-size: auto;
-
 	padding: 2em;
 	padding-bottom: 1em;
 	box-sizing: border-box;
@@ -34,9 +28,7 @@
 	color: darkslategrey;
 
 	$shadow_color: rgba(0, 0, 0, 0.283);
-	box-shadow: 1px 1px 20px 1px $shadow_color;
-	-webkit-box-shadow: 1px 1px 20px 1px $shadow_color;
-	-moz-box-shadow: 1px 1px 20px 1px $shadow_color;
+	// box-shadow: 1px 1px 20px 1px $shadow_color;
 
 	max-width: 30em;
 	// height: 50vh;
