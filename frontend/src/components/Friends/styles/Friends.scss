@@ -92,25 +92,20 @@ $table_max_width: 1200px;
 		}
 	}
 
-
 	@media screen and (max-width: 30rem) {
-
 		.subheader {
 			flex-direction: column;
 
 			.sortBy {
-				margin-top: .75rem;
+				margin-top: 0.75rem;
 
 				// background-color: yellow;
 			}
 		}
-
 	}
 }
 
-
 #friendList {
-
 	width: 100%;
 	max-width: $table_max_width;
 
@@ -180,6 +175,9 @@ $table_max_width: 1200px;
 
 	tbody {
 		td {
+			padding-top: 0.5rem;
+			padding-bottom: 0.5rem;
+
 			background-color: white;
 		}
 
@@ -199,7 +197,7 @@ $table_max_width: 1200px;
 			.cell_content {
 				display: flex;
 				flex-direction: row;
-				justify-content: center;
+				justify-content: start;
 				align-items: center;
 				flex-wrap: wrap;
 
@@ -240,13 +238,14 @@ $table_max_width: 1200px;
 		}
 
 		a {
+			text-wrap: wrap;
+			word-break: break-all;
 			text-decoration: none;
 
 			height: 100%;
 			width: 100%;
 		}
 	}
-
 
 	@media screen and (max-width: 50rem) {
 		thead {
@@ -540,7 +539,6 @@ $table_max_width: 1200px;
 		0px 0px 10px 0px inset purple,
 		0px 0px 10px 0px $shadow_color;
 }
-
 
 @media screen and (max-width: 400px) {
 	#friendList {
