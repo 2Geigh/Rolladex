@@ -1,4 +1,4 @@
-$NAVBAR_HEIGHT: min(10vh, 3rem);
+@use "../../../../static/styles/variables";
 
 .navbar {
 	$HORIZONTAL_PADDING: min(2vw, 1.5rem);
@@ -13,7 +13,7 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 	box-sizing: border-box;
 
 	width: 100%;
-	height: $NAVBAR_HEIGHT;
+	height: variables.$NAVBAR_HEIGHT;
 
 	$VIOLET: #5a05f5;
 	background-color: $VIOLET;
@@ -53,7 +53,7 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 			align-items: center;
 			object-fit: contain;
 
-			height: $NAVBAR_HEIGHT;
+			height: variables.$NAVBAR_HEIGHT;
 			aspect-ratio: 1 / 1;
 
 			font-size: 1.5rem;

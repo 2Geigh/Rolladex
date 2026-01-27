@@ -1,16 +1,11 @@
+@use "./variables";
+
 * {
 	margin: 0px;
 	padding: 0px;
 	font-family: "Helvetica", sans-serif;
 	font-size: 16px;
 }
-
-$YELLOW: #fff305;
-$YELLOW_DARK: #bab104;
-$VIOLET: #5a05f5;
-$VIOLET_DARK: #2f0382;
-
-$NAVBAR_HEIGHT: min(10vh, 3rem);
 
 #root {
 	display: flex;
@@ -27,7 +22,7 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 	justify-content: space-between;
 	align-items: center;
 
-	min-height: calc(100vh - $NAVBAR_HEIGHT);
+	min-height: calc(100vh - variables.$NAVBAR_HEIGHT);
 
 	// background-color: blue;
 }

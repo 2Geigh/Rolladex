@@ -1,3 +1,6 @@
+@use "../../../../static/styles/variables";
+@use "sass:math";
+
 $shadow_color: rgba(0, 0, 0, 0.159);
 $FRIEND_CARD_BORDER_RADIUS: 2rem;
 $FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
@@ -10,6 +13,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	align-items: center;
 
 	width: 100%;
+	padding: 0;
 
 	margin-top: min(5vh, 60px);
 
@@ -240,7 +244,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 			width: 100%;
 
-			margin-top: -($INTER_SECTION_MARGIN / 2);
+			margin-top: -(math.div($INTER_SECTION_MARGIN, 2));
 
 			// background-color: orange;
 
@@ -254,7 +258,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				min-height: 10rem;
 
-				margin: calc($INTER_SECTION_MARGIN/2);
+				margin: math.div($INTER_SECTION_MARGIN, 2);
 
 				padding: 1.5rem;
 				box-sizing: border-box;
@@ -479,6 +483,86 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			#editFriend:active {
 				border-color: gray;
 				box-shadow: 0px 0px 10px 0px gray inset;
+			}
+		}
+	}
+
+	#updateLastInteraction {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		position: absolute;
+
+		top: variables.$NAVBAR_HEIGHT;
+		height: calc(90% - variables.$NAVBAR_HEIGHT);
+		width: 100%;
+
+		backdrop-filter: blur(15px);
+		// background-color: red;
+
+		form {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			padding: 4rem;
+			padding-top: 2rem;
+			padding-bottom: 1rem;
+
+			border: 1px solid lightgray;
+
+			background-color: white;
+
+			.cancel {
+				display: flex;
+				flex-direction: row;
+				justify-content: right;
+				align-items: start;
+				position: relative;
+
+				width: 100%;
+
+				padding-left: 6.5rem;
+				padding-right: 0rem;
+
+				margin-top: -1.5rem;
+				margin-bottom: 0.5rem;
+				margin-right: -0rem;
+
+				text-align: right;
+
+				font-size: 25px;
+
+				color: gray;
+				// background-color: red;
+			}
+			.cancel:hover {
+				color: black;
+				cursor: pointer;
+			}
+
+			label {
+				margin-bottom: 1.5rem;
+			}
+
+			#newLastInteractionDate {
+				margin-bottom: 1.5rem;
+
+				padding: 0.5rem;
+
+				font-size: 1.2em;
+			}
+
+			.submit {
+				padding: 0.5rem;
+				padding-left: 2rem;
+				padding-right: 2rem;
+
+				border: none;
+				border-radius: 0;
 			}
 		}
 	}

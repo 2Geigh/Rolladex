@@ -1,12 +1,50 @@
 import { useNavigate, useParams } from "react-router-dom"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import "./styles/FriendStandalonePage.css"
 import type { Interaction } from "../../types/models/Interaction"
 import { GetZodiac, MonthNumberToString, TimeAgo } from "../../util/dates"
 import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+
+type UpdateLastInteractionProps = {
+	friend_id: number
+	friend_name: string
+	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
+}
+const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({ friend_id, friend_name, setIsUpdatingLastInteraction }) => {
+	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault()
+		setIsUpdatingLastInteraction(false)
+
+		const input = document.getElementById("newLastInteractionDate") as HTMLInputElement
+		const new_last_interaction_date = new Date(input.value).toUTCString()
+
+		const response = await fetch(`${backend_base_url}/friends/${friend_id}/interactions`,
+			{
+				method: "PUT",
+				credentials: "include",
+				body: JSON.stringify({ new_last_interaction_date: new_last_interaction_date })
+			})
+		if (!response.ok) {
+			throw new Error(`${response.statusText}: ${response.text}`)
+		}
+	}
+
+	return (
+		<div id="updateLastInteraction">
+			<form onSubmit={onSubmit}>
+				<div className="cancel" onClick={() => { setIsUpdatingLastInteraction(false) }}>×</div>
+				<label htmlFor="newLastInteractionDate">
+					When'd you last interact with {friend_name}?
+				</label>
+				<input id="newLastInteractionDate" name="new_last_interaction_date" type="date" />
+				<input className="submit" type="submit" value="Update" />
+			</form>
+		</div>
+	)
+}
 
 type FriendCardProps = {
 	id: number
@@ -17,6 +55,7 @@ type FriendCardProps = {
 	last_interaction: Interaction | undefined
 	birthday_month: number | undefined
 	birthday_day: number | undefined
+	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
 }
 const FriendCard: React.FC<FriendCardProps> = ({
 	id,
@@ -27,6 +66,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	last_interaction,
 	birthday_day,
 	birthday_month,
+	setIsUpdatingLastInteraction
 }) => {
 	const relationship = GetRelationshipTierInfo(relationship_tier)
 	const lastInteractionDate = last_interaction?.date
@@ -77,7 +117,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							profile_image_path.trim() !== ""
 						) ?
 							profile_image_path
-						:	"not_found"
+							: "not_found"
 					}
 					alt={name}
 					className="pfp"
@@ -119,7 +159,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					<span className="time_ago">
 						{TimeAgo(lastInteractionDate)} ago
 					</span>
-					<button className="update">Update</button>
+					<button onClick={() => { setIsUpdatingLastInteraction(true) }} className="update">Update</button>
 				</div>
 
 				<div className="friend_card_content_section" id="birthday">
@@ -137,7 +177,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 								</span>
 								<span className="day">{birthday_day}</span>
 							</>
-						:	"Unknown"}
+							: "Unknown"}
 					</span>
 					<span className="emoji" title={zodiac.zodiacName}>
 						{zodiac.zodiacEmoji}
@@ -182,6 +222,7 @@ const FriendStandalonePage: React.FC = () => {
 
 	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [friend, setFriend] = useState<Friend | null>(null)
+	const [isUpdatingLastInteraction, setIsUpdatingLastInteraction] = useState<boolean>(false)
 
 	async function getFriend(friendId: number): Promise<Friend> {
 		const response = await fetch(
@@ -213,7 +254,7 @@ const FriendStandalonePage: React.FC = () => {
 			.finally(() => {
 				setIsLoading(false)
 			})
-	}, [])
+	}, [isUpdatingLastInteraction])
 
 	if (isLoading) {
 		return <Loading />
@@ -239,7 +280,15 @@ const FriendStandalonePage: React.FC = () => {
 					last_interaction={friend.last_interaction}
 					birthday_month={friend.birthday_month}
 					birthday_day={friend.birthday_day}
+					setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
 				/>
+				{isUpdatingLastInteraction &&
+					<UpdateLastInteraction
+						friend_id={friendId}
+						friend_name={friend.name}
+						setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
+					/>
+				}
 			</div>
 		</>
 	)
