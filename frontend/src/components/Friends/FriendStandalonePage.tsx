@@ -5,7 +5,7 @@ import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import "./styles/FriendStandalonePage.css"
 import type { Interaction } from "../../types/models/Interaction"
-import { GetZodiac, MonthNumberToString, TimeAgo } from "../../util/dates"
+import { GetMaxDaysInMonth, GetZodiac, MonthNumberToString, TimeAgo } from "../../util/dates"
 import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 
 type UpdateLastInteractionProps = {
@@ -67,6 +67,8 @@ type FriendCardProps = {
 	birthday_month: number | undefined
 	birthday_day: number | undefined
 	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
+	isEdittingFriend: boolean
+	setIsEdittingFriend: React.Dispatch<React.SetStateAction<boolean>>
 }
 const FriendCard: React.FC<FriendCardProps> = ({
 	id,
@@ -77,10 +79,15 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	last_interaction,
 	birthday_day,
 	birthday_month,
-	setIsUpdatingLastInteraction
+	setIsUpdatingLastInteraction,
+	isEdittingFriend,
+	setIsEdittingFriend
 }) => {
 	const relationship = GetRelationshipTierInfo(relationship_tier)
 	const lastInteractionDate = last_interaction?.date
+
+	const [draftBirthdayMonth, setDraftBirthdayMonth] = useState<null | string>(String(birthday_month))
+	const [notes, setNotes] = useState<string>("")
 
 	const navigate = useNavigate()
 
@@ -98,7 +105,36 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	}
 
 	function editFriend() {
-		return
+		setIsEdittingFriend(true)
+	}
+
+	async function finishEdittingFriend() {
+		const nameInput = document.getElementById("nameInput")! as HTMLInputElement
+		const RelationshipSelect = document.getElementById("relationshipSelect") as HTMLSelectElement
+		const birthdayMonthSelect = document.getElementById("birthdayMonthSelect") as HTMLSelectElement
+		const birthdayDaySelect = document.getElementById("birthdayDaySelect") as HTMLSelectElement
+
+		const reqBody = {
+			name: nameInput.value,
+			relationship_tier: RelationshipSelect.value,
+			birthday_month: birthdayMonthSelect.value,
+			birthday_day: birthdayDaySelect.value
+		}
+
+		const response = await fetch(`${backend_base_url}/friends/${id}`,
+			{
+				method: "PUT",
+				credentials: "include",
+				body: JSON.stringify(reqBody)
+			})
+
+		if (!response.ok) {
+			throw new Error(`${response.statusText}: ${response.text}`)
+		}
+
+		setIsEdittingFriend(false)
+
+
 	}
 
 	const zodiac = GetZodiac(birthday_month, birthday_day)
@@ -118,6 +154,29 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 	const relationship_health_percentage = Math.round(relationship_health * 100)
 
+	const maxDays = GetMaxDaysInMonth(draftBirthdayMonth)
+
+	const DayOptions = Array.from(Array(maxDays).keys()).map((i: number) => {
+		return (
+			<option value={i + 1}>{i + 1}</option>
+		)
+	})
+
+	useEffect(() => {
+		const runTimes = 1
+		let count = 0
+		const interval = setInterval(() => {
+			console.log(notes)
+
+			count += 1
+			if (count >= runTimes) {
+				clearInterval(interval)
+			}
+
+		}, 250)
+		return () => clearInterval(interval)
+	}, [notes])
+
 	return (
 		<div id="friendCard">
 			<div className="nameAndPhoto">
@@ -135,14 +194,32 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				/>
 
 				<div id="nameAndRelationship">
-					<h2 className="name">{name}</h2>
+					{isEdittingFriend ? <input id="nameInput" className="name" type="text" defaultValue={name} maxLength={35} /> : <h2 className="name">{name}</h2>}
 					<span className="relationship">
-						<span className="relationship_tier">
-							<span className="emoji">{relationship.emoji}</span>
-							<span className="relationship_name">
-								{relationship.name}
+						{isEdittingFriend ?
+							<>
+								<select id="relationshipSelect" className="relationship_tier" defaultValue={relationship_tier} >
+									<option value={1}>
+										<span className="relationship_name">{GetRelationshipTierInfo(1).name}</span>{" "}<span className="emoji">{GetRelationshipTierInfo(1).emoji}</span>
+									</option>
+									<option value={2}>
+										<span className="relationship_name">{GetRelationshipTierInfo(2).name}</span>{" "}<span className="emoji">{GetRelationshipTierInfo(2).emoji}</span>
+									</option>
+									<option value={3}>
+										<span className="relationship_name">{GetRelationshipTierInfo(3).name}</span>{" "}<span className="emoji">{GetRelationshipTierInfo(3).emoji}</span>
+									</option>
+									<option value={4}>
+										<span className="relationship_name">{GetRelationshipTierInfo(4).name}</span>{" "}<span className="emoji">{GetRelationshipTierInfo(4).emoji}</span>
+									</option>
+
+								</select>
+							</>
+							:
+							<span className="relationship_tier">
+								<span className="emoji">{relationship.emoji}</span>
+								<span className="relationship_name">{relationship.name}</span>
 							</span>
-						</span>
+						}
 						<span className="relationship_health">
 							Relationship status:{" "}
 							<span
@@ -176,19 +253,47 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				<div className="friend_card_content_section" id="birthday">
 					<h3>Birthday</h3>
 					<span className="birthday_date">
-						{(
-							birthday_day &&
-							birthday_day > 0 &&
-							birthday_month &&
-							birthday_month > 0
-						) ?
+						{isEdittingFriend ?
 							<>
-								<span className="month">
-									{MonthNumberToString(birthday_month)}
-								</span>
-								<span className="day">{birthday_day}</span>
+								<select
+									className="month"
+									id="birthdayMonthSelect"
+									defaultValue={birthday_month}
+									onChange={(e) => setDraftBirthdayMonth(e.target.value)}
+								>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+
+								<select className="day" id="birthdayDaySelect" defaultValue={birthday_day}>{DayOptions}</select>
 							</>
-							: "Unknown"}
+							:
+							<>
+								{(
+									birthday_day &&
+									birthday_day > 0 &&
+									birthday_month &&
+									birthday_month > 0
+								) ?
+									<>
+										<span className="month">
+											{MonthNumberToString(birthday_month)}
+										</span>
+										<span className="day">{birthday_day}</span>
+									</>
+									: "Unknown"}
+							</>
+						}
 					</span>
 					<span className="emoji" title={zodiac.zodiacName}>
 						{zodiac.zodiacEmoji}
@@ -201,14 +306,25 @@ const FriendCard: React.FC<FriendCardProps> = ({
 						name="notes"
 						id="notes"
 						maxLength={999}
+						onChange={() => {
+							const notesTextArea = document.getElementById("notes")! as HTMLTextAreaElement
+							setNotes(notesTextArea.value)
+						}}
+						value={notes}
 					></textarea>
 				</div>
 			</div>
 
 			<div className="buttons">
-				<button id="editFriend" onClick={editFriend}>
-					Edit friend
-				</button>
+				{isEdittingFriend ?
+					<button id="saveButton" className="edit_friend" onClick={finishEdittingFriend}>
+						Save
+					</button>
+					:
+					<button className="edit_friend" onClick={editFriend}>
+						Edit friend
+					</button>
+				}
 
 				<button
 					id="deleteFriend"
@@ -223,7 +339,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					Delete friend
 				</button>
 			</div>
-		</div>
+		</div >
 	)
 }
 
@@ -234,6 +350,7 @@ const FriendStandalonePage: React.FC = () => {
 	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [friend, setFriend] = useState<Friend | null>(null)
 	const [isUpdatingLastInteraction, setIsUpdatingLastInteraction] = useState<boolean>(false)
+	const [isEdittingFriend, setIsEdittingFriend] = useState<boolean>(false)
 
 	async function getFriend(friendId: number): Promise<Friend> {
 		const response = await fetch(
@@ -255,6 +372,7 @@ const FriendStandalonePage: React.FC = () => {
 	}
 
 	useEffect(() => {
+		console.log(`isEdittingFriend: ${isEdittingFriend}`)
 		getFriend(friendId)
 			.then((fetchedFriend) => {
 				setFriend(fetchedFriend)
@@ -265,7 +383,7 @@ const FriendStandalonePage: React.FC = () => {
 			.finally(() => {
 				setIsLoading(false)
 			})
-	}, [isUpdatingLastInteraction, friendId])
+	}, [isUpdatingLastInteraction, isEdittingFriend, friendId])
 
 	if (isLoading) {
 		return <Loading />
@@ -292,6 +410,8 @@ const FriendStandalonePage: React.FC = () => {
 					birthday_month={friend.birthday_month}
 					birthday_day={friend.birthday_day}
 					setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
+					isEdittingFriend={isEdittingFriend}
+					setIsEdittingFriend={setIsEdittingFriend}
 				/>
 				{isUpdatingLastInteraction &&
 					<UpdateLastInteraction

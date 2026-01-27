@@ -4,7 +4,6 @@ export const clientTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
 export const clientTimeZoneOffset = new Date().getTimezoneOffset()
 
-
 export function ValidateDate(dateString: string): boolean {
 	const date = parseISO(dateString)
 	return isValid(date)
@@ -122,9 +121,16 @@ export function GetZodiac(
 	return {}
 }
 
-export function MonthNumberToString(month_number: number | undefined): string {
+export function MonthNumberToString(
+	month_number: number | undefined | null,
+): string {
 	if (!month_number) {
 		return "Unknown"
+	}
+
+	const month_index = month_number - 1
+	if (month_index < 0 || month_index > 11) {
+		return "Undefined"
 	}
 
 	const month_names = [
@@ -141,11 +147,22 @@ export function MonthNumberToString(month_number: number | undefined): string {
 		"November",
 		"December",
 	]
-	const month_index = month_number - 1
-
-	if (month_index < 0 || month_index > 11) {
-		throw new Error("Some month")
-	}
 
 	return month_names[month_index]
+}
+
+export function GetMaxDaysInMonth(month: string | null) {
+	if (!month) {
+		return 31
+	}
+
+	if (month === "00") {
+		return 31
+	}
+
+	if (month === "02") return 29
+
+	if (["04", "06", "09", "11"].includes(month)) return 30
+
+	return 31
 }

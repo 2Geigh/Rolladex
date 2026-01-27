@@ -6,7 +6,7 @@ import {
 import "./styles/AddFriends.css"
 import { backend_base_url } from "../../util/url"
 import { useNavigate } from "react-router-dom"
-import { GetZodiac } from "../../util/dates"
+import { GetMaxDaysInMonth, GetZodiac } from "../../util/dates"
 
 type OptionalProps = {
 	formData: FormData
@@ -21,18 +21,7 @@ const Optional: React.FC<OptionalProps> = ({
 	const [month, setMonth] = useState<string | null>(null)
 	const [day, setDay] = useState<string | null>(null)
 
-	function getMaxDaysInMonth(month: string | null) {
-		if (!month) {
-			return 31
-		}
-
-		if (month === "02") return 29
-
-		if (["04", "06", "09", "11"].includes(month)) return 30
-
-		return 31
-	}
-	const maxDays = getMaxDaysInMonth(month)
+	const maxDays = GetMaxDaysInMonth(month)
 
 	return (
 		<div id="optional">
