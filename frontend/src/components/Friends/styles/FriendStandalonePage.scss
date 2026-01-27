@@ -2,8 +2,8 @@
 @use "sass:math";
 
 $shadow_color: rgba(0, 0, 0, 0.159);
-$FRIEND_CARD_BORDER_RADIUS: 2rem;
-$FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
+$FRIEND_CARD_BORDER_RADIUS: 0rem;
+$FRIEND_CARD_FIELD_BORDER_RADIUS: 0;
 $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 #friendStandalonePageContent {
@@ -13,13 +13,15 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	align-items: center;
 
 	width: 100%;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	padding: 0;
 
-	margin-top: min(5vh, 60px);
-
-	margin-bottom: min(10vh, 50px);
-
-	// background-color: yellow;
+	background-color: white;
+	background: linear-gradient(
+		180deg,
+		white 0%,
+		variables.$VIOLET_BACKGROUND 100%
+	);
 
 	#friendCard {
 		$INTER_SECTION_MARGIN: 1rem;
@@ -30,14 +32,13 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 		align-items: center;
 		flex-wrap: wrap;
 
+		margin-bottom: 20vh;
 		box-sizing: border-box;
 
 		width: 90%;
 		max-width: 50rem;
 
 		border-radius: $FRIEND_CARD_BORDER_RADIUS;
-
-		box-shadow: 0px 2px min(2vw, 10px) 0px lightgray;
 
 		background-color: white;
 		// background-color: crimson;
@@ -58,6 +59,10 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			// border: 1px solid lightgray;
 
 			width: 100%;
+
+			text-wrap: wrap;
+			word-break: break-all;
+
 			background-color: white;
 			// background-color: red;
 
@@ -263,9 +268,10 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				padding: 1.5rem;
 				box-sizing: border-box;
 
-				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-
 				border: solid 1px lightgray;
+				border: none;
+				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+				box-shadow: 0px 0px 5px 0px lightgray;
 
 				background-color: white;
 				// background-color: yellow;
