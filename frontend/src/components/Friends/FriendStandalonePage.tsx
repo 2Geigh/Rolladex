@@ -39,7 +39,13 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({ friend_id
 				<label htmlFor="newLastInteractionDate">
 					When'd you last interact with {friend_name}?
 				</label>
-				<input id="newLastInteractionDate" name="new_last_interaction_date" type="date" />
+				<input
+					required
+					id="newLastInteractionDate"
+					name="new_last_interaction_date"
+					max={new Date().toISOString().split("T")[0]}
+					type="date"
+					defaultValue={new Date().toISOString().split("T")[0]} />
 				<input className="submit" type="submit" value="Update" />
 			</form>
 		</div>

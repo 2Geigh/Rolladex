@@ -471,23 +471,6 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		}
 	}
 
-	function formatDate(date: Date) {
-		const year = date.getFullYear()
-		const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-indexed
-		const day = String(date.getDate()).padStart(2, "0")
-
-		return `${year}-${month}-${day}`
-	}
-
-	function addOneDay(date: Date) {
-		const nextDay = new Date(date)
-		nextDay.setDate(nextDay.getDate() + 1)
-		return nextDay
-	}
-
-	const today = new Date()
-	const tomorrow = addOneDay(today)
-
 	return (
 		<div className="section" id="lastInteraction">
 			<span className="question">
@@ -510,7 +493,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 						id="last_interaction_date_absolute"
 						onChange={onChangeAbsoluteDate}
 						min="1900-01-01"
-						max={formatDate(tomorrow)}
+						max={new Date().toISOString().split("T")[0]}
 					/>
 				</div>
 				<span className="or">or</span>
