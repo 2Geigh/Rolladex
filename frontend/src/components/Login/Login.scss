@@ -9,9 +9,7 @@
 	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
-	$background_color: variables.$VIOLET_BACKGROUND;
-	background: $background_color;
-	background: linear-gradient(180deg, white 0%, $background_color 100%);
+	background-color: variables.$VIOLET;
 }
 
 #loginForm {
@@ -59,4 +57,12 @@
 
 #toSignup {
 	margin-top: 2.5em;
+
+	color: white;
+
+	a {
+		font-weight: bold;
+
+		color: variables.$YELLOW;
+	}
 }
