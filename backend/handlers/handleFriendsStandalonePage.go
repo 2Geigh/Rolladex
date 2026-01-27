@@ -11,6 +11,7 @@ import (
 	"rolladex-backend/models"
 	"rolladex-backend/util"
 	"strconv"
+	"time"
 )
 
 func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
@@ -99,8 +100,11 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		birthdayDay      sql.NullInt64
 		profileImagePath sql.NullString
 		relationshipTier sql.NullInt64
-		lastInteraction  sql.NullTime
-		lastMeetup       sql.NullTime
+
+		lastInteractionId       int
+		lastInteractionDate     time.Time
+		lastInteractionLocation sql.NullString
+		lastInteractionName     sql.NullString
 	)
 
 	tx, err := database.DB.Begin()
@@ -111,31 +115,16 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 
 	stmt, err := tx.Prepare(`
 	SELECT
-		f.id AS friend_id,
-		f.name,
-		f.birthday_month,
-		f.birthday_day,
-		i.filepath AS profile_image_path,
-		r.relationship_tier,
-		-- Last interaction (any type)
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-		) AS last_interaction_date,
-		-- Last meetup date (specifically type = 'meetup')
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-				AND inter.interaction_type = 'meetup'
-		) AS last_meetup_date
-	FROM Relationships r
-	JOIN Friends f ON f.id = r.friend_id
-	LEFT JOIN Images i ON i.id = f.profile_image_id
-	WHERE f.id = ?
+		Friends.id AS friend_id,
+		Friends.name as friend_name,
+		Friends.birthday_month as birthday_month,
+		Friends.birthday_day as birthday_day,
+		Images.filepath AS profile_image_path,
+		Relationships.relationship_tier as relationship_tier
+	FROM Relationships
+		LEFT JOIN Friends ON Friends.id = Relationships.friend_id
+		LEFT JOIN Images ON Images.id = Friends.profile_image_id
+	WHERE Friends.id = ?;
     `)
 	if err != nil {
 		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
@@ -150,8 +139,35 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		&birthdayDay,
 		&profileImagePath,
 		&relationshipTier,
-		&lastInteraction,
-		&lastMeetup,
+	)
+	if err != nil {
+		return friend, fmt.Errorf("couldn't scan row: %w", err)
+	}
+
+	stmt, err = tx.Prepare(`
+		SELECT
+			Interactions.id as interaction_id,
+			Interactions.date as interaction_date,
+			Interactions.location as interaction_location,
+			Interactions.name as interaction_name
+		FROM
+			InteractionsAttendees
+			LEFT JOIN Interactions ON InteractionsAttendees.interaction_id = Interactions.id
+		WHERE InteractionsAttendees.friend_id = ?
+		ORDER BY date DESC
+		LIMIT 1;
+    `)
+	if err != nil {
+		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+
+	resultRow = stmt.QueryRow(friend_id)
+	err = resultRow.Scan(
+		&lastInteractionId,
+		&lastInteractionDate,
+		&lastInteractionLocation,
+		&lastInteractionName,
 	)
 	if err != nil {
 		return friend, fmt.Errorf("couldn't scan row: %w", err)
@@ -160,6 +176,10 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	friend = models.Friend{
 		ID:   uint(friend_id),
 		Name: name,
+		LastInteraction: models.Interaction{
+			ID:   uint(lastInteractionId),
+			Date: lastInteractionDate,
+		},
 	}
 
 	if birthdayMonth.Valid {
@@ -174,11 +194,11 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	if relationshipTier.Valid {
 		friend.RelationshipTier = uint(relationshipTier.Int64)
 	}
-	if lastInteraction.Valid {
-		friend.LastInteraction.Date = lastInteraction.Time
+	if lastInteractionLocation.Valid {
+		friend.LastInteraction.Location = lastInteractionLocation.String
 	}
-	if lastMeetup.Valid {
-		friend.LastMeetup.Date = lastMeetup.Time
+	if lastInteractionName.Valid {
+		friend.LastInteraction.Name = lastInteractionName.String
 	}
 
 	friend.RelationshipHealth, err = logic.GetRelationshipHealth(friend_id, user_id)

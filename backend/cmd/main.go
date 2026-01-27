@@ -35,6 +35,7 @@ func main() {
 	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 	http.HandleFunc("/friends/urgent", handlers.UrgentFriends)
 	http.HandleFunc("/friends/status", handlers.FriendsStatus)
+	http.HandleFunc("/friends/interactions", handlers.FriendsInteractions)
 
 	// UX
 	http.HandleFunc("/profile", handlers.Profile)

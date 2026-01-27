@@ -16,20 +16,25 @@ type UpdateLastInteractionProps = {
 const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({ friend_id, friend_name, setIsUpdatingLastInteraction }) => {
 	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault()
-		setIsUpdatingLastInteraction(false)
 
 		const input = document.getElementById("newLastInteractionDate") as HTMLInputElement
-		const new_last_interaction_date = new Date(input.value).toUTCString()
+		const new_last_interaction_date = new Date(input.value).toISOString()
+		console.log(new_last_interaction_date)
 
-		const response = await fetch(`${backend_base_url}/friends/${friend_id}/interactions`,
+		const response = await fetch(`${backend_base_url}/friends/interactions`,
 			{
 				method: "PUT",
 				credentials: "include",
-				body: JSON.stringify({ new_last_interaction_date: new_last_interaction_date })
+				body: JSON.stringify({
+					friend_id: friend_id,
+					new_last_interaction_date: new_last_interaction_date
+				})
 			})
 		if (!response.ok) {
 			throw new Error(`${response.statusText}: ${response.text}`)
 		}
+
+		setIsUpdatingLastInteraction(false)
 	}
 
 	return (
@@ -260,7 +265,7 @@ const FriendStandalonePage: React.FC = () => {
 			.finally(() => {
 				setIsLoading(false)
 			})
-	}, [isUpdatingLastInteraction])
+	}, [isUpdatingLastInteraction, friendId])
 
 	if (isLoading) {
 		return <Loading />
