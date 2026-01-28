@@ -1,7 +1,6 @@
-$NAVBAR_HEIGHT: min(10vh, 3rem);
+@use "../../../../static/styles/variables";
 
 .navbar {
-
 	$HORIZONTAL_PADDING: min(2vw, 1.5rem);
 
 	display: flex;
@@ -13,10 +12,11 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 	padding-right: $HORIZONTAL_PADDING;
 	box-sizing: border-box;
 
-	width: 100%;
-	height: $NAVBAR_HEIGHT;
+	// width: 100%;
+	height: variables.$NAVBAR_HEIGHT;
 
-	background-color: #e91d6f;
+	$VIOLET: #5a05f5;
+	background-color: $VIOLET;
 
 	.logo {
 		display: flex;
@@ -33,16 +33,16 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 	}
 
 	#burgerAndMobileNav {
-
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		align-items: end;
+		align-items: flex-end;
 
 		position: absolute;
 		top: 0;
 		right: 0;
 		padding-right: $HORIZONTAL_PADDING;
+		box-sizing: border-box;
 
 		// background-color: red;
 
@@ -53,7 +53,7 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 			align-items: center;
 			object-fit: contain;
 
-			height: $NAVBAR_HEIGHT;
+			height: variables.$NAVBAR_HEIGHT;
 			aspect-ratio: 1 / 1;
 
 			font-size: 1.5rem;
@@ -76,24 +76,25 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 			text-align: left;
 
 			margin-right: calc(-1 * $HORIZONTAL_PADDING);
+			margin-left: calc(1 * $HORIZONTAL_PADDING);
 
-			padding-top: .5rem;
+			padding-top: 0.5rem;
 			padding-left: calc(1 * $HORIZONTAL_PADDING);
-			padding-right: calc(1*$HORIZONTAL_PADDING);
+			padding-right: calc(1 * $HORIZONTAL_PADDING);
+			box-sizing: border-box;
 
-			border-bottom-left-radius: calc(2*5px);
+			border-bottom-left-radius: calc(2 * 5px);
 			// border-bottom-right-radius: 15px;
 
 			background-color: rgb(99, 99, 99);
 
 			a {
-				margin-bottom: .5rem;
+				margin-bottom: 0.5rem;
 
-				padding: .5em;
+				padding: 0.5em;
 
 				border: 1px solid white;
 				border-radius: 5px;
-
 
 				text-decoration: none;
 				text-align: center;
@@ -130,13 +131,12 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 
 			height: 100%;
 
-
 			// background-color: yellow;
 
 			a {
 				margin-left: 1rem;
 
-				padding: .5rem;
+				padding: 0.5rem;
 
 				border: 1px solid rgba(255, 255, 255, 0);
 				border-radius: 5px;
@@ -152,7 +152,6 @@ $NAVBAR_HEIGHT: min(10vh, 3rem);
 				border-color: white;
 
 				text-decoration: underline;
-
 			}
 		}
 	}

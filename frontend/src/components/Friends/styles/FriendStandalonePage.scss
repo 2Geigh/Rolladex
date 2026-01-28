@@ -1,6 +1,9 @@
+@use "../../../../static/styles/variables";
+@use "sass:math";
+
 $shadow_color: rgba(0, 0, 0, 0.159);
-$FRIEND_CARD_BORDER_RADIUS: 2rem;
-$FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
+$FRIEND_CARD_BORDER_RADIUS: 0rem;
+$FRIEND_CARD_FIELD_BORDER_RADIUS: 0;
 $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 #friendStandalonePageContent {
@@ -10,12 +13,13 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	align-items: center;
 
 	width: 100%;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
+	padding: 0;
 
-	margin-top: min(5vh, 60px);
-
-	margin-bottom: min(10vh, 50px);
-
-	// background-color: yellow;
+	background-color: white;
+	background: linear-gradient(180deg,
+			white 0%,
+			variables.$VIOLET_BACKGROUND 100%);
 
 	#friendCard {
 		$INTER_SECTION_MARGIN: 1rem;
@@ -32,8 +36,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 		max-width: 50rem;
 
 		border-radius: $FRIEND_CARD_BORDER_RADIUS;
-
-		box-shadow: 0px 2px min(2vw, 10px) 0px lightgray;
 
 		background-color: white;
 		// background-color: crimson;
@@ -54,6 +56,10 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			// border: 1px solid lightgray;
 
 			width: 100%;
+
+			text-wrap: wrap;
+			word-break: break-all;
+
 			background-color: white;
 			// background-color: red;
 
@@ -240,7 +246,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 			width: 100%;
 
-			margin-top: -($INTER_SECTION_MARGIN / 2);
+			margin-top: -(math.div($INTER_SECTION_MARGIN, 2));
 
 			// background-color: orange;
 
@@ -254,14 +260,15 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				min-height: 10rem;
 
-				margin: calc($INTER_SECTION_MARGIN/2);
+				margin: math.div($INTER_SECTION_MARGIN, 2);
 
 				padding: 1.5rem;
 				box-sizing: border-box;
 
-				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-
 				border: solid 1px lightgray;
+				border: none;
+				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+				box-shadow: 0px 0px 5px 0px lightgray;
 
 				background-color: white;
 				// background-color: yellow;
@@ -330,11 +337,13 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 					color: gray;
 					background-color: white;
 				}
+
 				.update:hover {
 					cursor: pointer;
 					box-shadow: 0px 0px 5px 0px lightgray;
 					background-color: rgb(231, 231, 231);
 				}
+
 				.update:active {
 					box-shadow: 0px 0px 3px 0px gray inset;
 				}
@@ -351,6 +360,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					font-size: 2rem;
 				}
+
 				.emoji:hover {
 					cursor: help;
 				}
@@ -402,8 +412,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				}
 			}
 		}
-		.card_content:hover {
-		}
 
 		.buttons {
 			display: flex;
@@ -441,6 +449,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				background-color: white;
 			}
+
 			#deleteFriend:hover {
 				cursor: pointer;
 
@@ -451,12 +460,13 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: white;
 				background-color: red;
 			}
+
 			#deleteFriend:active {
 				border-color: crimson;
 				box-shadow: 0px 0px 10px 0px crimson inset;
 			}
 
-			#editFriend {
+			.edit_friend {
 				padding: 1rem;
 				padding-left: 3rem;
 				padding-right: 3rem;
@@ -468,7 +478,8 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				background-color: white;
 			}
-			#editFriend:hover {
+
+			.edit_friend:hover {
 				cursor: pointer;
 
 				box-shadow: 0px 0px 10px 0px lightgray;
@@ -476,9 +487,105 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: rgb(98, 98, 98);
 				background-color: lightgray;
 			}
-			#editFriend:active {
+
+			.edit_friend:active {
 				border-color: gray;
 				box-shadow: 0px 0px 10px 0px gray inset;
+			}
+
+			#saveButton {
+				border-color: rgb(12, 193, 12);
+				background-color: rgb(192, 255, 192);
+			}
+
+			#saveButton:hover {
+				color: white;
+				background-color: rgb(12, 193, 12);
+			}
+
+			#saveButton:active {
+				font-weight: bold;
+			}
+		}
+	}
+
+	#updateLastInteraction {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		position: absolute;
+
+		top: variables.$NAVBAR_HEIGHT;
+		height: calc(90% - variables.$NAVBAR_HEIGHT);
+		width: 100%;
+
+		backdrop-filter: blur(15px);
+		// background-color: red;
+
+		form {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			padding: 4rem;
+			padding-top: 2rem;
+			padding-bottom: 1rem;
+
+			border: 1px solid lightgray;
+
+			background-color: white;
+
+			.cancel {
+				display: flex;
+				flex-direction: row;
+				justify-content: right;
+				align-items: start;
+				position: relative;
+
+				width: 100%;
+
+				padding-left: 6.5rem;
+				padding-right: 0rem;
+
+				margin-top: -1.5rem;
+				margin-bottom: 0.5rem;
+				margin-right: -0rem;
+
+				text-align: right;
+
+				font-size: 25px;
+
+				color: gray;
+				// background-color: red;
+			}
+
+			.cancel:hover {
+				color: black;
+				cursor: pointer;
+			}
+
+			label {
+				margin-bottom: 1.5rem;
+			}
+
+			#newLastInteractionDate {
+				margin-bottom: 1.5rem;
+
+				padding: 0.5rem;
+
+				font-size: 1.2em;
+			}
+
+			.submit {
+				padding: 0.5rem;
+				padding-left: 2rem;
+				padding-right: 2rem;
+
+				border: none;
+				border-radius: 0;
 			}
 		}
 	}

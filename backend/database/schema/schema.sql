@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS "Friends" (
 	"birthday_month" INTEGER,
 	"birthday_day" INTEGER,
 	"profile_image_id" INTEGER,
+	"notes" TEXT,
 	"created_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	"updated_at" DATETIME DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id"),

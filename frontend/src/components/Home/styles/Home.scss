@@ -1,15 +1,23 @@
+@use "../../../../static/styles/variables";
+
 #homeContent {
 	display: flex;
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
 
-	min-height: 50vh;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
 	padding-top: min(5.5vh, 30px);
+	box-sizing: border-box;
 
-	// background-color: green;
+	background-color: green;
+	background: linear-gradient(
+		180deg,
+		white 0%,
+		variables.$VIOLET_BACKGROUND 100%
+	);
 
 	h1 {
 		font-size: 2rem;

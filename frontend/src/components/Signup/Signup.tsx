@@ -44,7 +44,7 @@ const SignUp = () => {
 
 	return (
 		<>
-			<div className="container">
+			<div id="signupContainer">
 				<form id="signupForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
 						Username{" "}
@@ -56,7 +56,7 @@ const SignUp = () => {
 						<input required name="password" type="password"></input>
 					</label>
 
-					<div className="agreements">
+					<div id="agreements">
 						<input
 							required
 							type="checkbox"
@@ -75,6 +75,10 @@ const SignUp = () => {
 						value="Sign Up"
 					></input>
 				</form>
+
+				<span id="toLogin">
+					Already have an account? <a href="/login">Login now!</a>
+				</span>
 			</div>
 		</>
 	)
