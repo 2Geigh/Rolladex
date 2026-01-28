@@ -114,11 +114,17 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		const birthdayMonthSelect = document.getElementById("birthdayMonthSelect") as HTMLSelectElement
 		const birthdayDaySelect = document.getElementById("birthdayDaySelect") as HTMLSelectElement
 
+		if (nameInput.value.length < 1) {
+			alert("Name required")
+			return
+		}
+
 		const reqBody = {
+			id: id,
 			name: nameInput.value,
-			relationship_tier: RelationshipSelect.value,
-			birthday_month: birthdayMonthSelect.value,
-			birthday_day: birthdayDaySelect.value
+			relationship_tier: parseInt(RelationshipSelect.value),
+			birthday_month: parseInt(birthdayMonthSelect.value),
+			birthday_day: parseInt(birthdayDaySelect.value)
 		}
 
 		const response = await fetch(`${backend_base_url}/friends/${id}`,
@@ -194,7 +200,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				/>
 
 				<div id="nameAndRelationship">
-					{isEdittingFriend ? <input id="nameInput" className="name" type="text" defaultValue={name} maxLength={35} /> : <h2 className="name">{name}</h2>}
+					{isEdittingFriend ? <input id="nameInput" className="name" type="text" defaultValue={name} minLength={1} maxLength={35} /> : <h2 className="name">{name}</h2>}
 					<span className="relationship">
 						{isEdittingFriend ?
 							<>
@@ -317,9 +323,16 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 			<div className="buttons">
 				{isEdittingFriend ?
-					<button id="saveButton" className="edit_friend" onClick={finishEdittingFriend}>
-						Save
-					</button>
+					<>
+						<button className="edit_friend" onClick={() => {
+							setIsEdittingFriend(false)
+						}}>
+							Cancel
+						</button>
+						<button id="saveButton" className="edit_friend" onClick={finishEdittingFriend}>
+							Save
+						</button>
+					</>
 					:
 					<button className="edit_friend" onClick={editFriend}>
 						Edit friend

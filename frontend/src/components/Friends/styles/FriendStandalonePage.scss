@@ -17,11 +17,9 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	padding: 0;
 
 	background-color: white;
-	background: linear-gradient(
-		180deg,
-		white 0%,
-		variables.$VIOLET_BACKGROUND 100%
-	);
+	background: linear-gradient(180deg,
+			white 0%,
+			variables.$VIOLET_BACKGROUND 100%);
 
 	#friendCard {
 		$INTER_SECTION_MARGIN: 1rem;
@@ -32,7 +30,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 		align-items: center;
 		flex-wrap: wrap;
 
-		margin-bottom: 20vh;
 		box-sizing: border-box;
 
 		width: 90%;
@@ -340,11 +337,13 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 					color: gray;
 					background-color: white;
 				}
+
 				.update:hover {
 					cursor: pointer;
 					box-shadow: 0px 0px 5px 0px lightgray;
 					background-color: rgb(231, 231, 231);
 				}
+
 				.update:active {
 					box-shadow: 0px 0px 3px 0px gray inset;
 				}
@@ -361,6 +360,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					font-size: 2rem;
 				}
+
 				.emoji:hover {
 					cursor: help;
 				}
@@ -412,8 +412,8 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				}
 			}
 		}
-		.card_content:hover {
-		}
+
+		.card_content:hover {}
 
 		.buttons {
 			display: flex;
@@ -451,6 +451,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				background-color: white;
 			}
+
 			#deleteFriend:hover {
 				cursor: pointer;
 
@@ -461,6 +462,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: white;
 				background-color: red;
 			}
+
 			#deleteFriend:active {
 				border-color: crimson;
 				box-shadow: 0px 0px 10px 0px crimson inset;
@@ -478,6 +480,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				background-color: white;
 			}
+
 			.edit_friend:hover {
 				cursor: pointer;
 
@@ -486,18 +489,22 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: rgb(98, 98, 98);
 				background-color: lightgray;
 			}
+
 			.edit_friend:active {
 				border-color: gray;
 				box-shadow: 0px 0px 10px 0px gray inset;
 			}
+
 			#saveButton {
 				border-color: rgb(12, 193, 12);
 				background-color: rgb(192, 255, 192);
 			}
+
 			#saveButton:hover {
 				color: white;
 				background-color: rgb(12, 193, 12);
 			}
+
 			#saveButton:active {
 				font-weight: bold;
 			}
@@ -556,6 +563,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: gray;
 				// background-color: red;
 			}
+
 			.cancel:hover {
 				color: black;
 				cursor: pointer;

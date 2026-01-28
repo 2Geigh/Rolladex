@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"rolladex-backend/database"
@@ -70,6 +71,40 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't write friend JSON data", http.StatusInternalServerError)
 			return
 		}
+
+	case http.MethodPut:
+		user_id, err := validateSession(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		reqBody, err := io.ReadAll(req.Body)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't read request body", http.StatusBadRequest)
+			return
+		}
+
+		var updateData struct {
+			ID               int    `json:"id"`
+			Name             string `json:"name"`
+			RelationshipTier int    `json:"relationship_tier"`
+			BirthdayMonth    int    `json:"birthday_month"`
+			BirthdayDay      int    `json:"birthday_day"`
+		}
+		err = json.Unmarshal(reqBody, &updateData)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't marshal friend data to JSON", http.StatusInternalServerError)
+			return
+		}
+
+		statusCode, err := updateFriend(updateData, user_id)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't update friend", statusCode)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
 
 	case http.MethodDelete:
 		_, err := validateSession(req)
@@ -210,6 +245,66 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
 	}
 	return friend, err
+}
+
+func updateFriend[U database.SqlId](updateData struct {
+	ID               int    `json:"id"`
+	Name             string `json:"name"`
+	RelationshipTier int    `json:"relationship_tier"`
+	BirthdayMonth    int    `json:"birthday_month"`
+	BirthdayDay      int    `json:"birthday_day"`
+}, user_id U) (int, error) {
+	var (
+		statusCode = http.StatusOK
+		err        error
+	)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(`
+								UPDATE Friends
+								SET
+									name = ?,
+									birthday_month = ?,
+									birthday_day = ?
+								WHERE Friends.id = ?;
+									
+							`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(updateData.Name, updateData.BirthdayMonth, updateData.BirthdayDay, updateData.ID)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	stmt, err = tx.Prepare(`
+								UPDATE Relationships
+								SET
+									relationship_tier = ?
+								WHERE
+									Relationships.friend_id = ?
+									AND Relationships.user_id = ?;
+							`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(updateData.RelationshipTier, updateData.ID, user_id)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't commit transaction: %w", err)
+	}
+	return statusCode, err
 }
 
 func deleteFriend(friend_id int) error {
