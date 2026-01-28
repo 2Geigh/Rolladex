@@ -135,6 +135,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		birthdayDay      sql.NullInt64
 		profileImagePath sql.NullString
 		relationshipTier sql.NullInt64
+		notes            sql.NullString
 
 		lastInteractionId       int
 		lastInteractionDate     time.Time
@@ -155,7 +156,8 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		Friends.birthday_month as birthday_month,
 		Friends.birthday_day as birthday_day,
 		Images.filepath AS profile_image_path,
-		Relationships.relationship_tier as relationship_tier
+		Relationships.relationship_tier as relationship_tier,
+		Friends.notes as notes
 	FROM Relationships
 		LEFT JOIN Friends ON Friends.id = Relationships.friend_id
 		LEFT JOIN Images ON Images.id = Friends.profile_image_id
@@ -174,6 +176,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		&birthdayDay,
 		&profileImagePath,
 		&relationshipTier,
+		&notes,
 	)
 	if err != nil {
 		return friend, fmt.Errorf("couldn't scan row: %w", err)
@@ -228,6 +231,9 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	}
 	if relationshipTier.Valid {
 		friend.RelationshipTier = uint(relationshipTier.Int64)
+	}
+	if notes.Valid {
+		friend.Notes = notes.String
 	}
 	if lastInteractionLocation.Valid {
 		friend.LastInteraction.Location = lastInteractionLocation.String

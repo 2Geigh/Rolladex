@@ -35,7 +35,7 @@ const UrgentFriends: React.FC = () => {
 	useEffect(() => {
 		getMostUrgentFriends()
 			.then((urgentFriends) => {
-				let toRender: Friend[] = []
+				const toRender: Friend[] = []
 				for (let friendAndStatus of urgentFriends) {
 					if (friendAndStatus.status.trim() === "" || friendAndStatus.status === null || friendAndStatus.status === undefined) {
 						toRender.push(friendAndStatus.friend)

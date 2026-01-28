@@ -19,7 +19,6 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({ friend_id
 
 		const input = document.getElementById("newLastInteractionDate") as HTMLInputElement
 		const new_last_interaction_date = new Date(input.value).toISOString()
-		console.log(new_last_interaction_date)
 
 		const response = await fetch(`${backend_base_url}/friends/interactions`,
 			{
@@ -66,6 +65,7 @@ type FriendCardProps = {
 	last_interaction: Interaction | undefined
 	birthday_month: number | undefined
 	birthday_day: number | undefined
+	notes: string | undefined
 	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
 	isEdittingFriend: boolean
 	setIsEdittingFriend: React.Dispatch<React.SetStateAction<boolean>>
@@ -79,6 +79,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	last_interaction,
 	birthday_day,
 	birthday_month,
+	notes,
 	setIsUpdatingLastInteraction,
 	isEdittingFriend,
 	setIsEdittingFriend
@@ -87,7 +88,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	const lastInteractionDate = last_interaction?.date
 
 	const [draftBirthdayMonth, setDraftBirthdayMonth] = useState<null | string>(String(birthday_month))
-	const [notes, setNotes] = useState<string>("")
+	const [notesState, setNotesState] = useState<string>("")
+	const [isMounted, setIsMounted] = useState<boolean>(false)
 
 	const navigate = useNavigate()
 
@@ -168,20 +170,43 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		)
 	})
 
+	async function updateNotes(noteString: string) {
+		const response = await fetch(`${backend_base_url}/friends/notes`,
+			{
+				method: "PUT",
+				credentials: "include",
+				body: JSON.stringify({
+					id: id,
+					notes: noteString
+				})
+			})
+
+		if (!(response.ok)) {
+			throw new Error(`${response.statusText}: ${response.text}`)
+		} else {
+			console.log("Notes updated")
+		}
+	}
+
 	useEffect(() => {
-		const runTimes = 1
-		let count = 0
-		const interval = setInterval(() => {
-			console.log(notes)
+		if (!isMounted) {
+			setIsMounted(true)
+		} else {
+			const runTimes = 1
+			let count = 0
+			const interval = setInterval(() => {
+				updateNotes(notesState)
 
-			count += 1
-			if (count >= runTimes) {
-				clearInterval(interval)
-			}
+				count += 1
+				if (count >= runTimes) {
+					clearInterval(interval)
+				}
 
-		}, 250)
-		return () => clearInterval(interval)
-	}, [notes])
+			}, 250)
+			return () => clearInterval(interval)
+		}
+
+	}, [notesState])
 
 	return (
 		<div id="friendCard">
@@ -314,9 +339,9 @@ const FriendCard: React.FC<FriendCardProps> = ({
 						maxLength={999}
 						onChange={() => {
 							const notesTextArea = document.getElementById("notes")! as HTMLTextAreaElement
-							setNotes(notesTextArea.value)
+							setNotesState(notesTextArea.value)
 						}}
-						value={notes}
+						defaultValue={notes}
 					></textarea>
 				</div>
 			</div>
@@ -324,13 +349,13 @@ const FriendCard: React.FC<FriendCardProps> = ({
 			<div className="buttons">
 				{isEdittingFriend ?
 					<>
+						<button id="saveButton" className="edit_friend" onClick={finishEdittingFriend}>
+							Save
+						</button>
 						<button className="edit_friend" onClick={() => {
 							setIsEdittingFriend(false)
 						}}>
 							Cancel
-						</button>
-						<button id="saveButton" className="edit_friend" onClick={finishEdittingFriend}>
-							Save
 						</button>
 					</>
 					:
@@ -385,7 +410,6 @@ const FriendStandalonePage: React.FC = () => {
 	}
 
 	useEffect(() => {
-		console.log(`isEdittingFriend: ${isEdittingFriend}`)
 		getFriend(friendId)
 			.then((fetchedFriend) => {
 				setFriend(fetchedFriend)
@@ -422,6 +446,7 @@ const FriendStandalonePage: React.FC = () => {
 					last_interaction={friend.last_interaction}
 					birthday_month={friend.birthday_month}
 					birthday_day={friend.birthday_day}
+					notes={friend.notes}
 					setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
 					isEdittingFriend={isEdittingFriend}
 					setIsEdittingFriend={setIsEdittingFriend}

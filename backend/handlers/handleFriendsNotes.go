@@ -7,10 +7,9 @@ import (
 	"net/http"
 	"rolladex-backend/database"
 	"rolladex-backend/util"
-	"time"
 )
 
-func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
+func FriendsNotes(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 
@@ -20,7 +19,7 @@ func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
 		return
 
 	case http.MethodPut:
-		user_id, err := validateSession(req)
+		_, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
 			return
@@ -33,8 +32,8 @@ func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
 		}
 
 		var requestBody struct {
-			Friend_id              int       `json:"friend_id"`
-			NewLastInteractionDate time.Time `json:"new_last_interaction_date"`
+			FriendId int    `json:"id"`
+			Notes    string `json:"notes"`
 		}
 		err = json.Unmarshal(reqBody, &requestBody)
 		if err != nil {
@@ -42,7 +41,7 @@ func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		err = updateLastInteractionWithFriend(requestBody.Friend_id, user_id, requestBody.NewLastInteractionDate)
+		err = updateFriendNotes(requestBody.FriendId, requestBody.Notes)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't update last interaction with friend", http.StatusInternalServerError)
 			return
@@ -57,7 +56,7 @@ func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func updateLastInteractionWithFriend[F database.SqlId, U database.SqlId](friend_id F, user_id U, new_last_interaction_date time.Time) error {
+func updateFriendNotes[F database.SqlId](friend_id F, notes string) error {
 
 	tx, err := database.DB.Begin()
 	if err != nil {
@@ -66,34 +65,16 @@ func updateLastInteractionWithFriend[F database.SqlId, U database.SqlId](friend_
 	defer tx.Rollback()
 
 	sqlQuery := `
-					INSERT INTO Interactions
-						(date, user_id) VALUES (?, ?);
+					UPDATE Friends
+					SET notes = ?
+					WHERE Friends.id = ?;
 				`
 	stmt, err := tx.Prepare(sqlQuery)
 	if err != nil {
 		return fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
-	result, err := stmt.Exec(new_last_interaction_date, user_id)
-	if err != nil {
-		return fmt.Errorf("couldn't execute statement: %w", err)
-	}
-	interaction_id, err := result.LastInsertId()
-	if err != nil {
-		return fmt.Errorf("couldn't get id of inserted interaction: %w", err)
-	}
-
-	sqlQuery = `
-				INSERT INTO InteractionsAttendees
-					(interaction_id, friend_id)
-					VALUES (?,?);
-				`
-	stmt, err = tx.Prepare(sqlQuery)
-	if err != nil {
-		return fmt.Errorf("couldn't prepare statement: %w", err)
-	}
-	defer stmt.Close()
-	_, err = stmt.Exec(interaction_id, friend_id)
+	_, err = stmt.Exec(notes, friend_id)
 	if err != nil {
 		return fmt.Errorf("couldn't execute statement: %w", err)
 	}
