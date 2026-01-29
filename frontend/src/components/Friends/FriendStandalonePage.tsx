@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom"
-import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
+import { GetRelationshipTierInfo, MAX_NAME_LENGTH, type Friend } from "../../types/models/Friend"
 import React, { useEffect, useState } from "react"
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
@@ -225,7 +225,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				/>
 
 				<div id="nameAndRelationship">
-					{isEdittingFriend ? <input id="nameInput" className="name" type="text" defaultValue={name} minLength={1} maxLength={35} /> : <h2 className="name">{name}</h2>}
+					{isEdittingFriend ? <input id="nameInput" className="name" type="text" defaultValue={name} minLength={1} maxLength={MAX_NAME_LENGTH} /> : <h2 className="name">{name}</h2>}
 					<span className="relationship">
 						{isEdittingFriend ?
 							<>

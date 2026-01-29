@@ -17,9 +17,11 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	padding: 0;
 
 	background-color: white;
-	background: linear-gradient(180deg,
-			white 0%,
-			variables.$VIOLET_BACKGROUND 100%);
+	background: linear-gradient(
+		180deg,
+		white 0%,
+		variables.$VIOLET_BACKGROUND 100%
+	);
 
 	#friendCard {
 		$INTER_SECTION_MARGIN: 1rem;
@@ -131,6 +133,16 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					// background-color: yellow;
 				}
+				#nameInput {
+					padding-top: 0.5rem;
+					padding-left: 0.25rem;
+					padding-right: 0.25rem;
+					box-sizing: border-box;
+
+					border: 2px solid lightgray;
+
+					margin-bottom: 1rem;
+				}
 
 				.relationship {
 					display: flex;
@@ -232,6 +244,17 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 							font-weight: normal;
 						}
+					}
+
+					#relationshipSelect {
+						padding: 0.25rem;
+						box-sizing: border-box;
+
+						margin-bottom: 0.5rem;
+
+						border: 2px solid lightgray;
+
+						background-color: white;
 					}
 				}
 			}
@@ -385,6 +408,18 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 						margin-left: 0.5rem;
 
 						font-size: inherit;
+					}
+
+					#birthdayMonthSelect,
+					#birthdayDaySelect {
+						padding: 0.5rem;
+						padding-top: 0.25rem;
+						padding-bottom: 0.25rem;
+						box-sizing: border-box;
+
+						border: 2px solid lightgray;
+
+						background-color: white;
 					}
 				}
 			}

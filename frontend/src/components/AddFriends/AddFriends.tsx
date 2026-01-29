@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import {
 	DefaultRelationshipTiers,
 	GetRelationshipTierInfo,
+	MAX_NAME_LENGTH,
 } from "../../types/models/Friend"
 import "./styles/AddFriends.css"
 import { backend_base_url } from "../../util/url"
@@ -607,7 +608,7 @@ const AddFriends: React.FC = () => {
 							type="text"
 							name="name"
 							required
-							maxLength={50}
+							maxLength={MAX_NAME_LENGTH}
 							tabIndex={0}
 							onChange={(e) => {
 								const inputtedText = e.target.value

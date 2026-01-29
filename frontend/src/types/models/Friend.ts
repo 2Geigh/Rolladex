@@ -1,6 +1,7 @@
 import type { Interaction } from "./Interaction"
 
 export const MAX_NUMBER_OF_FRIENDS = 150
+export const MAX_NAME_LENGTH = 50
 
 export type Friend = {
 	id: number
