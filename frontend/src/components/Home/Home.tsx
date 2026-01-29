@@ -181,7 +181,103 @@ const UrgentFriends: React.FC = () => {
 }
 
 const Upcoming: React.FC = () => {
-	return <div id="upcomingSection" className="homeSection">Something goes here</div>
+	return (
+		<div id="upcomingSection" className="homeSection">
+			<h2>Upcoming....</h2>
+
+			<div id="calendar">
+				<div className="column">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+
+						</div>
+
+						<div className="emoji">
+							🫥
+						</div>
+					</div>
+				</div>
+
+				<div className="column selected">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+							<img className="icon" src="" alt="OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" />
+							<img className="icon" src="" alt="AASDAF" />
+							<img className="icon" src="" alt="AASDAF" />
+						</div>
+
+						<div className="emoji">
+							🎂
+						</div>
+					</div>
+				</div>
+
+				<div className="column">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+
+						</div>
+
+						<div className="emoji">
+							🫥
+						</div>
+					</div>
+				</div>
+				<div className="column">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+
+						</div>
+
+						<div className="emoji">
+							🫥
+						</div>
+					</div>
+				</div>
+				<div className="column">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+
+						</div>
+
+						<div className="emoji">
+							🫥
+						</div>
+					</div>
+				</div>
+				<div className="column">
+					<div className="day_header">
+						31
+					</div>
+					<div className="body">
+						<div className="icons">
+
+						</div>
+
+						<div className="emoji">
+							🫥
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	)
+
 }
 
 const Home: React.FC = () => {

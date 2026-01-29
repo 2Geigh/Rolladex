@@ -43,14 +43,6 @@
 
 			// border: 1px solid black;
 			// background-color: orange;
-		}
-
-		#urgentFriendsSection {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-
-			// background-color: yellow;
 
 			h2 {
 				margin-bottom: 1.25rem;
@@ -60,6 +52,14 @@
 				font-size: 1.5rem;
 				font-weight: normal;
 			}
+		}
+
+		#urgentFriendsSection {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+
+			// background-color: yellow;
 
 			#urgentCards {
 				display: flex;
@@ -269,7 +269,133 @@
 		}
 
 		#upcomingSection {
-			// background-color: greenyellow;
+			background-color: greenyellow;
+
+			$COLUMN_BORDER_WIDTH: 3px;
+
+			#calendar {
+				display: flex;
+				flex-direction: row;
+				justify-content: stretch;
+				align-items: stretch;
+
+				width: 100%;
+				max-width: 47.5rem;
+				height: 20rem;
+
+				background-color: turquoise;
+
+				.column {
+					display: flex;
+					flex-direction: column;
+					justify-content: stretch;
+					align-items: center;
+
+					width: 100%;
+
+					border: 1px solid black;
+					border: none;
+					box-sizing: border-box;
+
+					background-color: cyan;
+
+					.day_header {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+
+						width: 100%;
+						height: 25%;
+						max-height: 2.5em;
+
+						background-color: variables.$LIGHT_GRAY;
+						// background-color: orange;
+					}
+
+					.body {
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						align-items: center;
+
+						width: 100%;
+						height: 100%;
+
+						background-color: white;
+
+						.icons {
+							display: flex;
+							flex-direction: column;
+							justify-content: space-evenly;
+							align-items: center;
+							overflow: hidden;
+							word-break: break-all;
+
+							height: 100%;
+
+							padding-top: 0.5rem;
+							padding-bottom: 0.5rem;
+							box-sizing: border-box;
+
+							// background-color: red;
+
+							.icon {
+								display: flex;
+								align-items: center;
+								overflow: hidden;
+
+								width: 50%;
+								aspect-ratio: 1 / 1;
+
+								box-sizing: border-box;
+
+								text-align: center;
+
+								border: 2px solid blue;
+								border: none;
+								border-radius: 100%;
+
+								background-color: variables.$LIGHT_GRAY;
+							}
+						}
+
+						.emoji {
+							display: flex;
+							justify-content: center;
+							align-items: center;
+
+							width: 100%;
+							height: 1.5em;
+
+							padding-bottom: 0.25rem;
+
+							font-size: 1.5em;
+
+							// background-color: red;
+						}
+					}
+				}
+				.column:hover {
+					box-sizing: content-box;
+
+					border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
+
+					cursor: pointer;
+				}
+
+				.selected {
+					box-sizing: border-box;
+
+					border: $COLUMN_BORDER_WIDTH solid variables.$VIOLET;
+
+					.day_header {
+						background-color: variables.$YELLOW;
+					}
+				}
+				.selected:hover {
+					cursor: auto;
+				}
+			}
 		}
 	}
 }
