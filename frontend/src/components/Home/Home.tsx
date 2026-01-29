@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useLoginSessionContext } from "../../contexts/LoginSession"
 import "./styles/Home.css"
-import type { Friend } from "../../types/models/Friend"
+import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
 import type { JSX } from "react"
 import { TimeAgo } from "../../util/dates"
@@ -118,9 +118,14 @@ const UrgentFriends: React.FC = () => {
 
 				<div className="body">
 					<div className="text">
-						<a href={`/friends/${friend.id}`} className="name">
-							{friend.name}
-						</a>
+						<span className="name_and_relationship_tier">
+							<a href={`/friends/${friend.id}`} className="name">
+								{friend.name}
+							</a>
+							<div className="relationship_icon">
+								{GetRelationshipTierInfo(friend.relationship_tier).emoji}
+							</div>
+						</span>
 						{isBirthdayToday ?
 							<div className="under_name birthday">
 								Today's {friend.name}'s birthday!
@@ -167,17 +172,17 @@ const UrgentFriends: React.FC = () => {
 	}
 
 	return (
-		<div id="urgentFriendsSection" className=".homeSection">
-			<h2>Today you should contact..</h2>
+		<div id="urgentFriendsSection" className="homeSection">
+			<h2>Today — Chuesday, Novembruary 32<sup>nd</sup></h2>
 
 			<div id="urgentCards">{MostUrgentFriends}</div>
 		</div>
 	)
 }
 
-// const Upcoming: React.FC = () => {
-// 	return <div id="upcomingSection" className=".homeSection"></div>
-// }
+const Upcoming: React.FC = () => {
+	return <div id="upcomingSection" className="homeSection">Something goes here</div>
+}
 
 const Home: React.FC = () => {
 	const loginSessionContext = useLoginSessionContext()
@@ -185,12 +190,12 @@ const Home: React.FC = () => {
 	return (
 		<div id="homeContent">
 			{loginSessionContext.user ?
-				<h1>Hello, {loginSessionContext.user?.username}</h1>
+				<h1>Hello, {loginSessionContext.user?.username}.</h1>
 				: <h1>Good afternoon.</h1>}
 
 			<div id="homeSections">
 				<UrgentFriends />
-				{/* <Upcoming /> */}
+				<Upcoming />
 			</div>
 		</div>
 	)
