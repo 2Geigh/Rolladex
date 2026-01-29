@@ -1,50 +1,48 @@
-.content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+@use "../../../static/styles/variables";
 
-    // background-color: red;
+#NotFoundContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 
-    .top {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+	height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
+	width: 100%;
 
-        #error-code {
+	color: white;
+	background-color: variables.$VIOLET;
 
-            font-size: 3em;
-            font-family: "Comic Sans MS", cursive, sans-serif;
+	.top {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
 
-            // background-color: ;
-        }
+		#error-code {
+			font-size: 3em;
+			font-family: "Comic Sans MS", cursive, sans-serif;
 
-        #cuteness {
-            border-radius: 1em;
-        }
-    }
+			// background-color: ;
+		}
 
-    
-    
-    #go-home {
+		#cuteness {
+			border-radius: 1em;
+		}
+	}
 
-        margin-top: 2em;
+	#go-home {
+		margin-top: 2em;
 
-        padding: 1em 3.5em 1em 3.5em;
+		padding: 1em 3.5em 1em 3.5em;
 
-        background-color: magenta;
-        color: rgb(62, 0, 62);
-        border-radius: 0.75em;
-        text-decoration: none;
-        
-    }
-    #go-home:hover {
-        background-color: purple;
-        color: white;
-    }
-    #go-home:active {
-        background-color: rgb(91, 0, 91);
-    }
-
+		background-color: variables.$YELLOW;
+		color: rgb(62, 0, 62);
+		border-radius: 0.75em;
+		text-decoration: none;
+	}
+	#go-home:hover {
+		background-color: variables.$YELLOW_DARK;
+	}
+	#go-home:active {
+		background-color: rgb(91, 0, 91);
+	}
 }
-
