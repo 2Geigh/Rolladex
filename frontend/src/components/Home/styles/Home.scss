@@ -297,6 +297,8 @@
 					border: none;
 					box-sizing: border-box;
 
+					user-select: none;
+
 					background-color: cyan;
 
 					.day_header {
@@ -355,6 +357,8 @@
 								border: none;
 								border-radius: 100%;
 
+								user-select: none;
+
 								background-color: variables.$LIGHT_GRAY;
 							}
 						}
@@ -370,6 +374,8 @@
 							padding-bottom: 0.25rem;
 
 							font-size: 1.5em;
+
+							user-select: none;
 
 							// background-color: red;
 						}
