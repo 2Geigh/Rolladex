@@ -181,99 +181,48 @@ const UrgentFriends: React.FC = () => {
 }
 
 const Upcoming: React.FC = () => {
+	const CalendarColumns = Array.from(Array(6).keys()).map((i) => {
+		const date = new Date()
+		date.setDate(date.getDate() + i);
+
+		function onClickColumn(e: React.MouseEvent<HTMLDivElement>) {
+			e.preventDefault()
+
+			const allColumns = document.getElementsByClassName("column")
+			for (let column of allColumns) {
+				column.classList.remove("selected")
+			}
+
+			const selectedColumn = e.currentTarget
+			selectedColumn.classList.add("selected")
+		}
+
+		return (<>
+			<div className={i === 0 ? "column selected" : "column"} key={i} onClickCapture={onClickColumn}>
+				<div className="day_header">
+					{date.getDate()}
+				</div>
+				<div className="body">
+					<div className="icons">
+						<img className="icon" src="" alt="OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" />
+						<img className="icon" src="" alt="AASDAF" />
+						<img className="icon" src="" alt="AASDAF" />
+					</div>
+
+					<div className="emoji">
+						🫥🎂
+					</div>
+				</div>
+			</div>
+		</>)
+	})
+
 	return (
 		<div id="upcomingSection" className="homeSection">
 			<h2>Upcoming....</h2>
 
 			<div id="calendar">
-				<div className="column">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-
-						</div>
-
-						<div className="emoji">
-							🫥
-						</div>
-					</div>
-				</div>
-
-				<div className="column selected">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-							<img className="icon" src="" alt="OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" />
-							<img className="icon" src="" alt="AASDAF" />
-							<img className="icon" src="" alt="AASDAF" />
-						</div>
-
-						<div className="emoji">
-							🎂
-						</div>
-					</div>
-				</div>
-
-				<div className="column">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-
-						</div>
-
-						<div className="emoji">
-							🫥
-						</div>
-					</div>
-				</div>
-				<div className="column">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-
-						</div>
-
-						<div className="emoji">
-							🫥
-						</div>
-					</div>
-				</div>
-				<div className="column">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-
-						</div>
-
-						<div className="emoji">
-							🫥
-						</div>
-					</div>
-				</div>
-				<div className="column">
-					<div className="day_header">
-						31
-					</div>
-					<div className="body">
-						<div className="icons">
-
-						</div>
-
-						<div className="emoji">
-							🫥
-						</div>
-					</div>
-				</div>
+				{CalendarColumns}
 			</div>
 		</div>
 	)

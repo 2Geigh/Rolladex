@@ -124,6 +124,7 @@
 							color: gray;
 							background-color: variables.$LIGHT_GRAY;
 						}
+
 						@media screen and (max-width: 400px) {
 							img {
 								display: none;
@@ -211,6 +212,7 @@
 									margin-left: 0.33rem;
 								}
 							}
+
 							.birthday {
 								flex-direction: column;
 
@@ -242,6 +244,7 @@
 								color: white;
 								background-color: variables.$DARK_GRAY;
 							}
+
 							button:hover {
 								cursor: pointer;
 								background-color: gray;
@@ -254,11 +257,13 @@
 
 								background-color: variables.$VIOLET;
 							}
+
 							.mark_completed:hover {
 								background-color: variables.$VIOLET_DARK;
 							}
 						}
 					}
+
 					@media screen and (max-width: 400px) {
 						.body {
 							padding-left: 0;
@@ -381,6 +386,7 @@
 						}
 					}
 				}
+
 				.column:hover {
 					box-sizing: content-box;
 
@@ -398,7 +404,10 @@
 						background-color: variables.$YELLOW;
 					}
 				}
+
 				.selected:hover {
+					border-color: variables.$VIOLET_DARK;
+
 					cursor: auto;
 				}
 			}
