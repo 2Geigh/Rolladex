@@ -15,8 +15,7 @@
 	// width: 100%;
 	height: variables.$NAVBAR_HEIGHT;
 
-	$VIOLET: #5a05f5;
-	background-color: $VIOLET;
+	background-color: variables.$VIOLET;
 
 	.logo {
 		display: flex;
