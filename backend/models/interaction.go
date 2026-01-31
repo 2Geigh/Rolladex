@@ -27,7 +27,7 @@ type InteractionAttendee struct {
 	UpdatedAt     time.Time `json:"updated_at"`
 }
 
-func GetLastInteractionDate(friend_id int, user_id string) (time.Time, error) {
+func GetLastInteractionDate[F database.SqlId, U database.SqlId](friend_id F, user_id U) (time.Time, error) {
 	var (
 		lastInteractionDate time.Time
 		err                 error
@@ -59,7 +59,7 @@ func GetLastInteractionDate(friend_id int, user_id string) (time.Time, error) {
 	return lastInteractionDate, err
 }
 
-func GetDaysSinceLastInteraction(friend_id int, user_id string) (float64, error) {
+func GetDaysSinceLastInteraction[F database.SqlId, U database.SqlId](friend_id F, user_id U) (float64, error) {
 	var (
 		daysSinceLastInteractionDate float64
 
