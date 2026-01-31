@@ -17,6 +17,7 @@ type Friend struct {
 	ProfileImagePath   string      `json:"profile_image_path"`
 	RelationshipTier   uint        `json:"relationship_tier"`
 	RelationshipHealth float64     `json:"relationship_health"`
+	Urgency            float64     `json:"urgency"`
 	Notes              string      `json:"notes"`
 	CreatedAt          time.Time   `json:"created_at"`
 	UpdatedAt          time.Time   `json:"updated_at"`
