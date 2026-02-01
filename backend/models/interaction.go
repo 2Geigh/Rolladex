@@ -10,21 +10,12 @@ import (
 type Interaction struct {
 	ID              uint      `json:"id"`
 	Date            time.Time `json:"date"`
-	FriendID        uint      `json:"friend_id"`
-	InteractionType string    `json:"interaction_type"`
 	Attendees       []Friend  `json:"attendees"`
+	InteractionType string    `json:"interaction_type"`
 	Name            string    `json:"name"`
 	Location        string    `json:"location"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
-}
-
-type InteractionAttendee struct {
-	ID            uint      `json:"id"`
-	IntearctionID uint      `json:"interaction_id"`
-	FriendID      uint      `json:"friend_id"`
-	CreatedAt     time.Time `json:"created_at"`
-	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 func GetLastInteractionDate[F database.SqlId, U database.SqlId](friend_id F, user_id U) (time.Time, error) {

@@ -94,7 +94,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 		}
 		err = json.Unmarshal(reqBody, &updateData)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal friend data to JSON", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "couldn't unmarshal friend JSON data", http.StatusInternalServerError)
 			return
 		}
 
