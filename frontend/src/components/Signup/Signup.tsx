@@ -45,6 +45,7 @@ const SignUp = () => {
 	return (
 		<>
 			<div id="signupContainer">
+				<h1>join Rolladex</h1>
 				<form id="signupForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
 						Username{" "}

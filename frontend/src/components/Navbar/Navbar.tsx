@@ -9,7 +9,6 @@ type NavbarProps = {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
-
 	function toggleMobileNavVisibiity(event: React.MouseEvent<HTMLDivElement>) {
 		event.preventDefault()
 
@@ -35,20 +34,22 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
 	return (
 		<>
-			<nav className="navbar">
-				<a href={!isLoggedIn ? "/" : "/home"} className="logo">
-					Rolladex
-				</a>
-
-				{isLoggedIn &&
+			{isLoggedIn && (
+				<nav className="navbar">
+					<a href="/home" className="logo">
+						Rolladex
+					</a>
 
 					<>
 						<div id="burgerAndMobileNav">
-							<div id="hamburgerIcon" onClick={toggleMobileNavVisibiity}>☰</div>
+							<div
+								id="hamburgerIcon"
+								onClick={toggleMobileNavVisibiity}
+							>
+								☰
+							</div>
 							<nav id="mobileNav">
-								<a href="/home">
-									Home
-								</a>
+								<a href="/home">Home</a>
 								<a href="/friends?sortby=default&page=1&perpage=default">
 									Network
 								</a>
@@ -61,8 +62,9 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 							</a>
 							<a href="/logout">Logout</a>
 						</nav>
-					</>}
-			</nav>
+					</>
+				</nav>
+			)}
 		</>
 	)
 }
