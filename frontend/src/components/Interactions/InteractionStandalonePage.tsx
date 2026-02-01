@@ -189,7 +189,7 @@ const InteractionStandalonePage: React.FC = () => {
 
 	return (
 		<>
-			<div id="friendStandalonePageContent">
+			<div id="interactionStandalonePageContent">
 				<InteractionCard
 					id={interaction.id}
 					date={interaction.date}
