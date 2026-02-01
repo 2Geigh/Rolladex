@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/util"
 )
 
 func Logout(w http.ResponseWriter, req *http.Request) {

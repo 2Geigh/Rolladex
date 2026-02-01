@@ -1,15 +1,25 @@
+@use "../../../../static/styles/variables";
+
 .footer {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 
-	justify-self: stretch;
-
-	height: 4em;
+	height: variables.$NAVBAR_HEIGHT;
+	width: 100%;
 
 	padding: 0px;
 	margin: 0px;
+	box-sizing: border-box;
 
+	text-align: center;
+
+	color: white;
 	background-color: none;
+	background-color: variables.$FOOTER_DARK_GRAY;
+
+	a {
+		color: variables.$YELLOW;
+	}
 }

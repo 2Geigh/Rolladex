@@ -1,6 +1,9 @@
+@use "../../../../static/styles/variables";
+@use "sass:math";
+
 $shadow_color: rgba(0, 0, 0, 0.159);
-$FRIEND_CARD_BORDER_RADIUS: 2rem;
-$FRIEND_CARD_FIELD_BORDER_RADIUS: 1rem;
+$FRIEND_CARD_BORDER_RADIUS: 0rem;
+$FRIEND_CARD_FIELD_BORDER_RADIUS: 0;
 $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 #friendStandalonePageContent {
@@ -9,24 +12,27 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 	justify-content: center;
 	align-items: center;
 
-	// background-color: yellow;
+	width: 100%;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
+	padding: 0;
+
+	background-color: variables.$VIOLET_BACKGROUND;
 
 	#friendCard {
+		$INTER_SECTION_MARGIN: 1rem;
+
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
 		flex-wrap: wrap;
 
-		padding: 1rem;
 		box-sizing: border-box;
 
 		width: 90%;
-		max-width: 45rem;
+		max-width: 50rem;
 
 		border-radius: $FRIEND_CARD_BORDER_RADIUS;
-
-		box-shadow: 0px 2px 10px 0px lightgray;
 
 		background-color: white;
 		// background-color: crimson;
@@ -36,16 +42,23 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
+			flex-wrap: wrap;
 
-			padding: 1.5rem;
+			margin: calc($INTER_SECTION_MARGIN * 1.5);
+
 			box-sizing: border-box;
 
 			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
 
-			border: 1px solid lightgray;
+			// border: 1px solid lightgray;
 
 			width: 100%;
+
+			text-wrap: wrap;
+			word-break: break-all;
+
 			background-color: white;
+			// background-color: red;
 
 			.pfp {
 				$DIMENSION: 12.5rem;
@@ -88,10 +101,12 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				align-items: start;
 				justify-self: stretch;
 
-				padding-left: 1.75rem;
+				$HORIZONTAL_PADDING: min(2vw, 1.75rem);
+				padding-left: $HORIZONTAL_PADDING;
+				padding-right: $HORIZONTAL_PADDING;
 				margin-top: $FRIEND_CARD_FIELD_BORDER_RADIUS;
 
-				// background-color: red;
+				// background-color: orange;
 
 				.name {
 					display: flex;
@@ -112,6 +127,16 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 					text-wrap: wrap;
 
 					// background-color: yellow;
+				}
+				#nameInput {
+					padding-top: 0.5rem;
+					padding-left: 0.25rem;
+					padding-right: 0.25rem;
+					box-sizing: border-box;
+
+					border: 2px solid lightgray;
+
+					margin-bottom: 1rem;
 				}
 
 				.relationship {
@@ -215,27 +240,31 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 							font-weight: normal;
 						}
 					}
+
+					#relationshipSelect {
+						padding: 0.25rem;
+						box-sizing: border-box;
+
+						margin-bottom: 0.5rem;
+
+						border: 2px solid lightgray;
+
+						background-color: white;
+					}
 				}
 			}
-		}
-
-		.nameAndPhoto:hover {
-			box-shadow: 0px 0px 7.5px 0px lightgray;
 		}
 
 		.card_content {
 			display: flex;
 			flex-direction: row;
-			justify-content: space-between;
+			justify-content: center;
 			align-items: stretch;
-
-			margin: 1.25rem;
-			margin-left: 0;
-			margin-right: 0;
+			flex-wrap: wrap;
 
 			width: 100%;
 
-			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+			margin-top: -(math.div($INTER_SECTION_MARGIN, 2));
 
 			// background-color: orange;
 
@@ -246,16 +275,21 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				align-items: center;
 
 				min-width: 12.5rem;
+
 				min-height: 10rem;
+
+				margin: math.div($INTER_SECTION_MARGIN, 2);
 
 				padding: 1.5rem;
 				box-sizing: border-box;
 
-				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-
 				border: solid 1px lightgray;
+				border: none;
+				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
+				box-shadow: 0px 0px 5px 0px lightgray;
 
 				background-color: white;
+				// background-color: yellow;
 
 				h3 {
 					display: flex;
@@ -271,10 +305,6 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					// background-color: coral;
 				}
-			}
-
-			.friend_card_content_section:hover {
-				box-shadow: 0px 0px 7.5px 0px lightgray;
 			}
 
 			#lastInteraction {
@@ -325,20 +355,19 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 					color: gray;
 					background-color: white;
 				}
+
 				.update:hover {
 					cursor: pointer;
 					box-shadow: 0px 0px 5px 0px lightgray;
 					background-color: rgb(231, 231, 231);
 				}
+
 				.update:active {
 					box-shadow: 0px 0px 3px 0px gray inset;
 				}
 			}
 
 			#birthday {
-				margin-left: 1.25rem;
-				margin-right: 1.25rem;
-
 				.emoji {
 					display: flex;
 					flex-direction: row;
@@ -349,6 +378,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 					font-size: 2rem;
 				}
+
 				.emoji:hover {
 					cursor: help;
 				}
@@ -373,6 +403,18 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 						margin-left: 0.5rem;
 
 						font-size: inherit;
+					}
+
+					#birthdayMonthSelect,
+					#birthdayDaySelect {
+						padding: 0.5rem;
+						padding-top: 0.25rem;
+						padding-bottom: 0.25rem;
+						box-sizing: border-box;
+
+						border: 2px solid lightgray;
+
+						background-color: white;
 					}
 				}
 			}
@@ -400,23 +442,28 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				}
 			}
 		}
-		.card_content:hover {
-		}
 
 		.buttons {
 			display: flex;
 			flex-direction: row;
 			justify-content: space-evenly;
 			align-items: center;
+			flex-wrap: wrap;
 
 			width: 100%;
 			max-width: 40rem;
+
+			margin-top: calc($INTER_SECTION_MARGIN / 2);
+			margin-bottom: calc($INTER_SECTION_MARGIN / 2);
 
 			// background-color: blue;
 
 			button {
 				width: 90%;
 				max-width: 15rem;
+
+				margin: calc($INTER_SECTION_MARGIN / 2);
+				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
 
 				box-sizing: border-box;
 			}
@@ -426,29 +473,30 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				padding-left: 3rem;
 				padding-right: 3rem;
 
-				border: 2px solid red;
-				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
+				border: 2px solid variables.$DELETE_RED;
 
-				color: red;
+				color: variables.$DELETE_RED;
 
 				background-color: white;
 			}
+
 			#deleteFriend:hover {
 				cursor: pointer;
 
 				font-weight: bold;
 
-				box-shadow: 0px 0px 10px 0px red;
+				box-shadow: 0px 0px 10px 0px variables.$DELETE_RED;
 
 				color: white;
-				background-color: red;
+				background-color: variables.$DELETE_RED;
 			}
+
 			#deleteFriend:active {
 				border-color: crimson;
 				box-shadow: 0px 0px 10px 0px crimson inset;
 			}
 
-			#editFriend {
+			.edit_friend {
 				padding: 1rem;
 				padding-left: 3rem;
 				padding-right: 3rem;
@@ -460,7 +508,8 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				background-color: white;
 			}
-			#editFriend:hover {
+
+			.edit_friend:hover {
 				cursor: pointer;
 
 				box-shadow: 0px 0px 10px 0px lightgray;
@@ -468,9 +517,105 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				color: rgb(98, 98, 98);
 				background-color: lightgray;
 			}
-			#editFriend:active {
+
+			.edit_friend:active {
 				border-color: gray;
 				box-shadow: 0px 0px 10px 0px gray inset;
+			}
+
+			#saveButton {
+				border-color: rgb(12, 193, 12);
+				background-color: rgb(192, 255, 192);
+			}
+
+			#saveButton:hover {
+				color: white;
+				background-color: rgb(12, 193, 12);
+			}
+
+			#saveButton:active {
+				font-weight: bold;
+			}
+		}
+	}
+
+	#updateLastInteraction {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		position: absolute;
+
+		top: variables.$NAVBAR_HEIGHT;
+		height: calc(90% - variables.$NAVBAR_HEIGHT);
+		width: 100%;
+
+		backdrop-filter: blur(15px);
+		// background-color: red;
+
+		form {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			padding: 4rem;
+			padding-top: 2rem;
+			padding-bottom: 1rem;
+
+			border: 1px solid lightgray;
+
+			background-color: white;
+
+			.cancel {
+				display: flex;
+				flex-direction: row;
+				justify-content: right;
+				align-items: start;
+				position: relative;
+
+				width: 100%;
+
+				padding-left: 6.5rem;
+				padding-right: 0rem;
+
+				margin-top: -1.5rem;
+				margin-bottom: 0.5rem;
+				margin-right: -0rem;
+
+				text-align: right;
+
+				font-size: 25px;
+
+				color: gray;
+				// background-color: red;
+			}
+
+			.cancel:hover {
+				color: black;
+				cursor: pointer;
+			}
+
+			label {
+				margin-bottom: 1.5rem;
+			}
+
+			#newLastInteractionDate {
+				margin-bottom: 1.5rem;
+
+				padding: 0.5rem;
+
+				font-size: 1.2em;
+			}
+
+			.submit {
+				padding: 0.5rem;
+				padding-left: 2rem;
+				padding-right: 2rem;
+
+				border: none;
+				border-radius: 0;
 			}
 		}
 	}

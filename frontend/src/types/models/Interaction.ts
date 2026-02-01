@@ -1,14 +1,10 @@
 import type { Friend } from "./Friend"
-import type { User } from "./User"
 
 export type Interaction = {
 	id: number
 	date: Date
-	user_id: User["id"]
-	friend_id: Friend["id"]
-
+	attendees: Array<Friend>
 	interaction_type?: string
-	attendees?: Array<Friend>
 	name?: string
 	location?: string
 	created_at?: Date

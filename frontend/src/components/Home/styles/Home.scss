@@ -1,473 +1,414 @@
-$NAVBAR_HEIGHT: 4em;
-$FOOTER_HEIGHT: 4em;
+@use "../../../../static/styles/variables";
 
-$BORDER-RADIUS: 20px;
-
-$SHADOW_COLOR: rgba(0, 0, 0, 0.312);
-
-.content {
+#homeContent {
 	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: baseline;
+	flex-direction: column;
+	justify-content: start;
+	align-items: center;
 
-	padding-top: 1em;
-	min-height: 80vh;
-
-	// background-color: red;
-}
-
-#home {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: baseline;
-
-	position: absolute;
-	top: $NAVBAR_HEIGHT;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
-	min-height: calc(100% - $FOOTER_HEIGHT - 20px);
-	padding-top: calc($NAVBAR_HEIGHT);
-	// background-color: lightyellow;
-	.section {
+
+	padding-top: min(5.5vh, 30px);
+	box-sizing: border-box;
+
+	background-color: variables.$VIOLET_BACKGROUND;
+
+	h1 {
+		font-size: 2rem;
+
+		margin-bottom: min(3vh, 20px);
+	}
+
+	#homeSections {
 		display: flex;
-		flex-direction: column;
-		justify-content: baseline;
-		align-items: center;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: stretch;
+		flex-wrap: wrap;
 
-		max-width: 1000px;
-		width: 40%;
-		min-width: 300px;
+		width: 100%;
 
-		max-height: none;
-		min-height: 80%;
-
-		margin: 1em;
-		padding-left: 1em;
-		padding-right: 1em;
-	}
-
-	hr {
-		margin-top: 0em;
-		margin-bottom: 1.75em;
-
-		width: 75%;
-		color: lightgray;
-	}
-
-	#ToContactSection {
-		// background-color: pink;
-
-		#nobody {
+		.homeSection {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 
-			margin-bottom: 2.5em;
-
-			.text {
-				font-size: 2em;
-				font-weight: 100;
-			}
-
-			.emoji {
-				font-size: 3em;
-			}
-
-			// background-color: red;
-		}
-
-		.toAddFriend {
-			font-size: 1.25em;
-		}
-
-		.mostUrgentContact {
-			// background-color: lightcoral;
-
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-
+			min-width: 500px;
 			width: 100%;
+			max-width: 49vw;
 
-			.prompt {
-				font-size: 1.5em;
+			height: 100%;
 
-				margin-bottom: 1em;
+			// border: 1px solid black;
+			// background-color: orange;
 
-				background: none;
+			h2 {
+				margin-bottom: 1.25rem;
+
+				text-align: center;
+
+				font-size: 1.5rem;
+				font-weight: normal;
 			}
+		}
 
-			.contactCard {
+		#urgentFriendsSection {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+
+			// background-color: yellow;
+
+			#urgentCards {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
+				justify-content: center;
+				align-items: stretch;
 
 				width: 100%;
-				max-width: 45em;
 
-				padding: 2em;
-				// padding-top: 2em;
+				// background-color: bisque;
 
-				background-color: white;
-				border: 0px solid none;
-				border-radius: $BORDER-RADIUS;
-				box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
-				-webkit-box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
-				-moz-box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
-
-				img {
+				.urgent_friend {
 					display: flex;
 					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-					flex-shrink: none;
+					align-items: stretch;
 
-					$WIDTH: 150px;
-					$HEIGHT: 150px;
-					min-width: $WIDTH;
-					width: $WIDTH;
-					min-height: $HEIGHT;
-					height: $HEIGHT;
-
-					margin-right: 1.75em;
-
-					border-radius: $BORDER-RADIUS;
-
-					font-family: cursive;
-
-					background-color: lightgrey;
-				}
-
-				.text {
-					display: flex;
-					flex-direction: column;
-					justify-content: space-between;
-					align-items: baseline;
-					// background-color: greenyellow;
 					width: 100%;
+					max-width: 47.5rem;
 
-					.heading {
+					margin-left: auto;
+					margin-right: auto;
+					margin-bottom: min(22.5px, max(3vh, 1rem));
+
+					padding: 1rem;
+					box-sizing: border-box;
+
+					overflow: hidden;
+
+					background-color: white;
+					// background-color: pink;
+
+					a {
 						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
-						align-items: center;
-						width: 100%;
-						flex-wrap: wrap;
+						align-self: stretch;
 
-						// background-color: brown;
+						text-decoration: none;
 
-						font-size: 2em;
-
-						.name {
+						img {
 							display: flex;
 							flex-direction: row;
 							justify-content: center;
 							align-items: center;
-							font-size: 1em;
+							align-self: stretch;
 
-							flex-wrap: wrap;
-							max-width: 50%;
+							padding: 1rem;
+							box-sizing: border-box;
 
-							font-weight: bold;
+							$DIMENSION: 8rem;
+							height: $DIMENSION;
+							width: $DIMENSION;
+							aspect-ratio: 1 / 1;
 
-							padding-top: 0.25em;
+							text-align: center;
+							text-wrap: wrap;
+							overflow: hidden;
+							word-break: normal;
 
-							// background-color: violet;
+							text-decoration: none;
+
+							font-family: cursive;
+
+							color: gray;
+							background-color: variables.$LIGHT_GRAY;
 						}
 
-						.friendship_tier {
-							// background-color: burlywood;
-
-							font-size: 0.75em;
-							font-variant: small-caps;
-							text-wrap: nowrap;
-
-							font-weight: normal;
+						@media screen and (max-width: 400px) {
+							img {
+								display: none;
+								// background-color: red;
+							}
 						}
 					}
 
 					.body {
 						display: flex;
-						flex-direction: row;
+						flex-direction: column;
+						justify-content: start;
+						align-items: stretch;
+
+						width: 100%;
+						overflow-wrap: break-word;
+
+						padding-left: 0.75rem;
+
+						// background-color: violet;
+
+						.text {
+							display: flex;
+							flex-direction: column;
+							justify-content: space-between;
+
+							width: 100%;
+							height: 100%;
+
+							text-wrap: wrap;
+							word-wrap: break-word;
+							overflow-wrap: break-word;
+							word-break: break-all;
+
+							// background-color: teal;
+
+							.name_and_relationship_tier {
+								display: flex;
+								flex-direction: row;
+								justify-content: space-between;
+								align-items: start;
+
+								// background-color: orange;
+
+								.name {
+									text-decoration: none;
+
+									font-size: 1.33rem;
+									font-weight: bold;
+
+									color: black;
+									// background-color: magenta;
+								}
+
+								.relationship_icon {
+									display: flex;
+									flex-direction: column;
+									justify-content: start;
+									align-items: end;
+
+									margin-top: -0.33rem;
+									margin-left: 0.75rem;
+
+									font-size: 1.5em;
+
+									user-select: none;
+
+									// background-color: red;
+								}
+							}
+
+							.under_name {
+								display: inline-flex;
+								flex-direction: row;
+								justify-content: center;
+								align-items: center;
+
+								text-align: center;
+
+								height: 100%;
+
+								// background-color: yellow;
+
+								.time_ago {
+									margin-left: 0.33rem;
+								}
+							}
+
+							.birthday {
+								flex-direction: column;
+
+								.emoji {
+									margin-top: 0.5rem;
+								}
+							}
+						}
+
+						.buttons {
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: center;
+
+							width: 100%;
+
+							margin-top: 0.66rem;
+
+							// background-color: red;
+
+							button {
+								padding: 0.25rem;
+								padding-left: 0.75rem;
+								padding-right: 0.75rem;
+
+								border: none;
+
+								color: white;
+								background-color: variables.$DARK_GRAY;
+							}
+
+							button:hover {
+								cursor: pointer;
+								background-color: gray;
+							}
+
+							.mark_completed {
+								width: 100%;
+
+								margin-left: 0.5rem;
+
+								background-color: variables.$VIOLET;
+							}
+
+							.mark_completed:hover {
+								background-color: variables.$VIOLET_DARK;
+							}
+						}
+					}
+
+					@media screen and (max-width: 400px) {
+						.body {
+							padding-left: 0;
+						}
+					}
+				}
+			}
+		}
+
+		#upcomingSection {
+			// background-color: greenyellow;
+
+			$COLUMN_BORDER_WIDTH: 3px;
+
+			#calendar {
+				display: flex;
+				flex-direction: row;
+				justify-content: stretch;
+				align-items: stretch;
+
+				width: 100%;
+				max-width: 47.5rem;
+				height: 20rem;
+
+				background-color: turquoise;
+
+				.column {
+					display: flex;
+					flex-direction: column;
+					justify-content: stretch;
+					align-items: center;
+
+					width: 100%;
+
+					border: 1px solid black;
+					border: none;
+					box-sizing: border-box;
+
+					user-select: none;
+
+					background-color: cyan;
+
+					.day_header {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+
+						width: 100%;
+						height: 25%;
+						max-height: 2.5em;
+
+						background-color: variables.$LIGHT_GRAY;
+						// background-color: orange;
+					}
+
+					.body {
+						display: flex;
+						flex-direction: column;
 						justify-content: space-between;
 						align-items: center;
 
 						width: 100%;
-						// background-color: gainsboro;
-						.dayssincelastcontact {
-							display: inline-flex;
+						height: 100%;
+
+						background-color: white;
+
+						.icons {
+							display: flex;
 							flex-direction: column;
+							justify-content: space-evenly;
+							align-items: center;
+							overflow: hidden;
+							word-break: break-all;
 
-							font-size: 1.25em;
+							height: 100%;
 
-							.timespan {
-								font-size: 1.5em;
-								font-weight: normal;
-								// background-color: orange;
-							}
+							padding-top: 0.5rem;
+							padding-bottom: 0.5rem;
+							box-sizing: border-box;
 
-							.ago {
-								font-size: 1em;
-								font-weight: lighter;
-								// background-color: fuchsia;
+							// background-color: red;
+
+							.icon {
+								display: flex;
+								align-items: center;
+								overflow: hidden;
+
+								width: 50%;
+								aspect-ratio: 1 / 1;
+
+								box-sizing: border-box;
+
+								text-align: center;
+
+								border: 2px solid blue;
+								border: none;
+								border-radius: 100%;
+
+								user-select: none;
+
+								background-color: variables.$LIGHT_GRAY;
 							}
 						}
 
-						.contact {
+						.emoji {
 							display: flex;
 							justify-content: center;
 							align-items: center;
 
-							width: 50%;
+							width: 100%;
+							height: 1.5em;
 
-							border-radius: $BORDER-RADIUS;
-							border: none;
+							padding-bottom: 0.25rem;
 
-							padding: 1em;
-							font-size: 1em;
+							font-size: 1.5em;
+
+							user-select: none;
+
+							// background-color: red;
 						}
 					}
 				}
-			}
-		}
 
-		.contactCard,
-		.lessUrgent {
-			display: flex;
-			flex-direction: row;
+				.column:hover {
+					box-sizing: content-box;
 
-			width: 60%;
-			max-width: 45em;
+					border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
 
-			padding: 1em;
-			// padding-top: 2em;
-			margin-bottom: 2em;
+					cursor: pointer;
+				}
 
-			background-color: white;
-			border: 0px solid none;
-			border-radius: $BORDER-RADIUS;
-			box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
-			-webkit-box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
-			-moz-box-shadow: 0px 0px 20px 0px $SHADOW_COLOR;
+				.selected {
+					box-sizing: border-box;
 
-			img {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
-				flex-shrink: none;
+					border: $COLUMN_BORDER_WIDTH solid variables.$VIOLET;
 
-				$DIMENSIONS: 100px;
-				$WIDTH: $DIMENSIONS;
-				$HEIGHT: $DIMENSIONS;
-				min-width: $WIDTH;
-				min-height: $HEIGHT;
-
-				margin-right: 1.5em;
-
-				border-radius: $BORDER-RADIUS;
-
-				font-family: cursive;
-				text-align: center;
-
-				background-color: lightgrey;
-			}
-
-			.text {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				align-items: baseline;
-				// background-color: greenyellow;
-				width: 100%;
-
-				.heading {
-					display: flex;
-					flex-direction: row;
-					justify-content: space-between;
-					align-items: center;
-					width: 100%;
-					flex-wrap: wrap;
-
-					// background-color: brown;
-
-					font-size: 1.75em;
-
-					.name {
-						display: flex;
-						flex-direction: row;
-						justify-content: center;
-						align-items: center;
-						font-size: 1em;
-
-						flex-wrap: wrap;
-						max-width: 50%;
-
-						font-weight: bolder;
-
-						padding-top: 0.25em;
-
-						// background-color: violet;
-					}
-
-					.friendship_tier {
-						// background-color: burlywood;
-
-						font-size: 0.8em;
-						font-variant: small-caps;
-						text-wrap: nowrap;
-
-						font-weight: normal;
+					.day_header {
+						background-color: variables.$YELLOW;
 					}
 				}
 
-				.body {
-					display: flex;
-					flex-direction: row;
-					justify-content: space-between;
-					align-items: center;
-
-					width: 100%;
-					// background-color: gainsboro;
-					.dayssincelastcontact {
-						display: inline-flex;
-						flex-direction: column;
-
-						font-size: 1.25em;
-
-						.timespan {
-							font-size: 1.2em;
-							font-weight: normal;
-							// background-color: orange;
-						}
-
-						.ago {
-							font-size: 1em;
-							font-weight: lighter;
-							// background-color: fuchsia;
-						}
-					}
-
-					.contact {
-						display: flex;
-						justify-content: center;
-						align-items: center;
-
-						width: 40%;
-
-						border-radius: $BORDER-RADIUS;
-						border: none;
-
-						padding: 1em;
-						font-size: 1em;
-					}
+				.selected:hover {
+					border-color: variables.$VIOLET_DARK;
 				}
 			}
 		}
-	}
-
-	#ActivitySection {
-		background-color: orange;
-		.title {
-			font-size: 1.5em;
-		}
-
-		// .react-calendar {
-		// 	display: flex;
-		// 	flex-direction: column;
-		// 	justify-content: center;
-		// 	align-items: center;
-
-		// 	background-color: red;
-
-		// 	.react-calendar__navigation {
-		// 		display: flex;
-		// 		flex-direction: row;
-		// 		justify-content: space-between;
-		// 		align-items: center;
-
-		// 		background-color: blue;
-		// 		width: 100%;
-		// 		padding-top: 0.25rem;
-		// 		padding-bottom: 0.25rem;
-
-		// 		.react-calendar__navigation__label {
-		// 			display: flex;
-		// 			flex-direction: row;
-		// 			justify-content: center;
-		// 			align-items: center;
-
-		// 			background-color: greenyellow;
-
-		// 			padding-left: 2.5rem;
-		// 			padding-right: 2.5rem;
-		// 			padding-top: 0.5rem;
-		// 			padding-bottom: 0.5rem;
-		// 			text-wrap: nowrap;
-
-		// 			width: 100%;
-		// 			height: 100%;
-
-		// 			border: none;
-		// 		}
-
-		// 		.react-calendar__navigation__arrow {
-		// 			background-color: red;
-
-		// 			width: 2.5rem;
-		// 			height: 2rem;
-
-		// 			border: none;
-		// 		}
-		// 	}
-
-		// 	.react-calendar__month-view__weekdays {
-		// 		display: flex;
-		// 		flex-direction: row;
-		// 		justify-content: space-evenly;
-		// 		align-items: center;
-		// 		padding-top: 0.25rem;
-		// 		padding-bottom: 0.25rem;
-
-		// 		background-color: white;
-
-		// 		.react-calendar__month-view__weekdays__weekday {
-		// 			display: flex;
-		// 			flex-direction: row;
-		// 			justify-content: center;
-		// 			align-items: center;
-
-		// 			height: 100%;
-
-		// 			padding-top: 0.5rem;
-		// 			padding-bottom: 0.5rem;
-
-		// 			border-radius: 0.33rem;
-
-		// 			background-color: white;
-		// 		}
-
-		// 		.react-calendar__month-view__weekdays__weekday--current {
-		// 			// background-color: rgb(237, 237, 237);
-		// 		}
-		// 	}
-
-		// 	.react-calendar__month-view__days {
-		// 		background-color: magenta;
-
-		// 		.react-calendar__month-view__days__day {
-		// 			display: flex;
-		// 			flex-direction: column;
-		// 			justify-content: center;
-		// 			align-items: center;
-
-		// 			min-height: 4rem;
-
-		// 			background-color: pink;
-		// 		}
-		// 	}
-		// }
 	}
 }
