@@ -17,7 +17,9 @@ func Home(w http.ResponseWriter, req *http.Request) {
 	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
 
 	switch req.Method {
+
 	case http.MethodGet:
+
 		user_id, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
@@ -29,7 +31,6 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't get upcoming urgent friends data", http.StatusInternalServerError)
 			return
 		}
-		fmt.Println(urgentFriendsForTodayAndNextFiveDays)
 
 		urgentFriendsForTodayAndNextFiveDaysJson, err := json.Marshal(urgentFriendsForTodayAndNextFiveDays)
 		if err != nil {
@@ -75,17 +76,11 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 
 func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Friend, error) {
 	var (
-		friends       []models.Friend
-		urgentFriends []models.Friend
+		friends       []models.Friend = []models.Friend{}
+		urgentFriends []models.Friend = []models.Friend{}
 
 		err error
 	)
-
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return urgentFriends, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
 
 	sqlQuery := `
 					SELECT
@@ -100,7 +95,7 @@ func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Fri
 					LEFT JOIN Images on Images.id = Friends.profile_image_id
 					WHERE Relationships.user_id = ?;
 	`
-	stmt, err := tx.Prepare(sqlQuery)
+	stmt, err := database.DB.Prepare(sqlQuery)
 	if err != nil {
 		return urgentFriends, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
@@ -142,14 +137,20 @@ func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Fri
 			friend.RelationshipTier = uint(RelationshipTier.Int64)
 		}
 
-		// Get days since last interaction
+		friends = append(friends, friend)
+	}
+
+	for _, friend := range friends {
+		var (
+			urgencyScore float64
+		)
+
 		daysSinceLastInteraction, err := models.GetDaysSinceLastInteraction(friend.ID, user_id)
 		if err != nil {
 			return urgentFriends, fmt.Errorf("couldn't get days since last interaction with %s: %w", friend.Name, err)
 		}
 
-		var urgencyScore float64
-		switch RelationshipTier.Int64 {
+		switch friend.RelationshipTier {
 		case 1: // inner clique
 			urgencyScore = daysSinceLastInteraction / 3
 		case 2: // close friends
@@ -163,8 +164,6 @@ func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Fri
 		}
 
 		friend.Urgency = urgencyScore
-
-		friends = append(friends, friend)
 	}
 
 	sort.Slice(friends, func(i, j int) bool {
@@ -185,11 +184,6 @@ func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Fri
 			urgentFriends = append(urgentFriends, friend)
 			continue
 		}
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return urgentFriends, fmt.Errorf("couldn't complete transaction: %w", err)
 	}
 
 	return urgentFriends, err

@@ -42,17 +42,11 @@ func GetLastInteractionDate[F database.SqlId, U database.SqlId](friend_id F, use
 					ORDER BY date DESC
 					LIMIT 1;
 					`
-	stmt, err := database.DB.Prepare(sqlQuery)
-	if err != nil {
-		return lastInteractionDate, fmt.Errorf("couldn't prepare statement: %w", err)
-	}
-	defer stmt.Close()
 
-	err = stmt.QueryRow(friend_id, user_id).Scan(&lastInteractionDate)
+	err = database.DB.QueryRow(sqlQuery, friend_id, user_id).Scan(&lastInteractionDate)
 	if err == sql.ErrNoRows {
 		return lastInteractionDate, nil
-	}
-	if err != nil {
+	} else if err != nil {
 		return lastInteractionDate, fmt.Errorf("couldn't scan last interaction date to local variable: %w", err)
 	}
 

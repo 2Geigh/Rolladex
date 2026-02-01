@@ -73,12 +73,7 @@ func validateSession(req *http.Request) (string, error) {
 	}
 	sessionToken = sessionCookie.Value
 
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return user_id, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-	stmt, err := tx.Prepare(`
+	stmt, err := database.DB.Prepare(`
 		SELECT u.id
 		FROM Sessions s
 		JOIN Users u ON s.user_id = u.id
@@ -92,7 +87,6 @@ func validateSession(req *http.Request) (string, error) {
 	if err != nil {
 		return user_id, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}
-	tx.Commit()
 
 	return user_id, err
 }

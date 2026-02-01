@@ -1,7 +1,7 @@
 package test
 
 import (
-	"myfriends-backend/models"
+	"rolladex-backend/models"
 	"testing"
 	"unicode/utf8"
 )
