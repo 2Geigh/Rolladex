@@ -69,24 +69,35 @@ const Login: React.FC = () => {
 	return (
 		<>
 			<div id="loginContainer">
-				<h1>Rolladex</h1>
-				<form id="loginForm" onSubmit={handleSubmit}>
-					<label htmlFor="username">
-						Username{" "}
-						<input required name="username" type="text"></input>
-					</label>
+				<div id="loginContent">
+					<h1>Rolladex</h1>
+					<form id="loginForm" onSubmit={handleSubmit}>
+						<label htmlFor="username">
+							Username{" "}
+							<input required name="username" type="text"></input>
+						</label>
 
-					<label htmlFor="password">
-						Password{" "}
-						<input required name="password" type="password"></input>
-					</label>
+						<label htmlFor="password">
+							Password{" "}
+							<input
+								required
+								name="password"
+								type="password"
+							></input>
+						</label>
 
-					<input id="loginButton" type="submit" value="Login"></input>
-				</form>
+						<input
+							id="loginButton"
+							type="submit"
+							value="Login"
+						></input>
+					</form>
 
-				<span id="toSignup">
-					Don't have an account? <a href="/signup">Register now!</a>
-				</span>
+					<span id="toSignup">
+						Don't have an account?{" "}
+						<a href="/signup">Register now!</a>
+					</span>
+				</div>
 			</div>
 		</>
 	)

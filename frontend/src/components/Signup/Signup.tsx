@@ -45,41 +45,47 @@ const SignUp = () => {
 	return (
 		<>
 			<div id="signupContainer">
-				<h1>join Rolladex</h1>
-				<form id="signupForm" onSubmit={handleSubmit}>
-					<label htmlFor="username">
-						Username{" "}
-						<input required name="username" type="text"></input>
-					</label>
-
-					<label htmlFor="password">
-						Password{" "}
-						<input required name="password" type="password"></input>
-					</label>
-
-					<div id="agreements">
-						<input
-							required
-							type="checkbox"
-							id="tos-agree"
-							name="tos-agree"
-						></input>
-						<label htmlFor="tos-agree">
-							I have read and agree to the{" "}
-							<a href="terms_of_service">terms of service</a>
+				<div id="signupContent">
+					<h1>join Rolladex</h1>
+					<form id="signupForm" onSubmit={handleSubmit}>
+						<label htmlFor="username">
+							Username{" "}
+							<input required name="username" type="text"></input>
 						</label>
-					</div>
 
-					<input
-						id="loginButton"
-						type="submit"
-						value="Sign Up"
-					></input>
-				</form>
+						<label htmlFor="password">
+							Password{" "}
+							<input
+								required
+								name="password"
+								type="password"
+							></input>
+						</label>
 
-				<span id="toLogin">
-					Already have an account? <a href="/login">Login now!</a>
-				</span>
+						<div id="agreements">
+							<input
+								required
+								type="checkbox"
+								id="tos-agree"
+								name="tos-agree"
+							></input>
+							<label htmlFor="tos-agree">
+								I have read and agree to the{" "}
+								<a href="terms_of_service">terms of service</a>
+							</label>
+						</div>
+
+						<input
+							id="loginButton"
+							type="submit"
+							value="Sign Up"
+						></input>
+					</form>
+
+					<span id="toLogin">
+						Already have an account? <a href="/login">Login now!</a>
+					</span>
+				</div>
 			</div>
 		</>
 	)

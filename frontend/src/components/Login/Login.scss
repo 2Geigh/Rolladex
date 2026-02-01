@@ -6,69 +6,85 @@
 	justify-content: center;
 	align-items: center;
 
-	min-height: calc(100vh - 1 * variables.$NAVBAR_HEIGHT);
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
 	background-color: variables.$VIOLET;
+}
+
+#loginContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 
 	h1 {
-		font-size: 2.25rem;
-		margin-bottom: 1.5rem;
-		color: white;
-	}
-}
+		display: flex;
+		justify-content: center;
+		align-items: center;
 
-#loginForm {
-	display: flex;
-	justify-content: space-evenly;
-	align-items: center;
-	flex-direction: column;
-
-	padding: 2em;
-	padding-bottom: 1em;
-	box-sizing: border-box;
-
-	background-color: white;
-	color: darkslategrey;
-
-	$shadow_color: rgba(0, 0, 0, 0.283);
-	// box-shadow: 1px 1px 20px 1px $shadow_color;
-
-	max-width: 30em;
-	// height: 50vh;
-
-	input {
-		box-sizing: border-box;
-		margin-bottom: 1.25em;
-		margin-top: 0.25em;
-		padding: 0.35em;
 		width: 100%;
 
-		border: 2px solid lightgray;
-		border-radius: 0.1em;
-		// border-color: gray;
+		font-size: 2.25rem;
+		padding-top: 0.75rem;
+		padding-bottom: 0.75rem;
+		margin-bottom: -0.25rem;
+		color: white;
+		background-color: variables.$FOOTER_DARK_GRAY;
 	}
 
-	#loginButton {
-		margin-top: 1.25em;
-		margin-bottom: 0.7em;
+	#loginForm {
+		display: flex;
+		justify-content: space-evenly;
+		align-items: center;
+		flex-direction: column;
 
-		padding: 0.5em;
+		padding: 2em;
+		padding-bottom: 1em;
+		box-sizing: border-box;
 
-		max-width: 11em;
+		background-color: white;
+		color: darkslategrey;
 
-		font-size: 95%;
+		$shadow_color: rgba(0, 0, 0, 0.283);
+		// box-shadow: 1px 1px 20px 1px $shadow_color;
+
+		max-width: 30em;
+		// height: 50vh;
+
+		input {
+			box-sizing: border-box;
+			margin-bottom: 1.25em;
+			margin-top: 0.25em;
+			padding: 0.35em;
+			width: 100%;
+
+			border: 2px solid lightgray;
+			border-radius: 0.1em;
+			// border-color: gray;
+		}
+
+		#loginButton {
+			margin-top: 1.25em;
+			margin-bottom: 0.7em;
+
+			padding: 0.5em;
+
+			max-width: 11em;
+
+			font-size: 95%;
+		}
 	}
-}
 
-#toSignup {
-	margin-top: 2.5em;
+	#toSignup {
+		margin-top: 2.5em;
 
-	color: white;
+		color: white;
 
-	a {
-		font-weight: bold;
+		a {
+			font-weight: bold;
 
-		color: variables.$YELLOW;
+			color: variables.$YELLOW;
+		}
 	}
 }

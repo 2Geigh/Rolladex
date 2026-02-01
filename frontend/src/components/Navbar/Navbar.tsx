@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
 	return (
 		<>
-			{isLoggedIn && (
+			{isLoggedIn ?
 				<nav className="navbar">
 					<a href="/home" className="logo">
 						Rolladex
@@ -64,7 +64,10 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 						</nav>
 					</>
 				</nav>
-			)}
+			:	<>
+					<nav className="navbar"></nav>
+				</>
+			}
 		</>
 	)
 }
