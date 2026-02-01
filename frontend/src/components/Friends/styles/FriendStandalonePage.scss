@@ -463,6 +463,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				max-width: 15rem;
 
 				margin: calc($INTER_SECTION_MARGIN / 2);
+				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
 
 				box-sizing: border-box;
 			}
@@ -472,10 +473,9 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 				padding-left: 3rem;
 				padding-right: 3rem;
 
-				border: 2px solid red;
-				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
+				border: 2px solid variables.$DELETE_RED;
 
-				color: red;
+				color: variables.$DELETE_RED;
 
 				background-color: white;
 			}
@@ -485,10 +485,10 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				font-weight: bold;
 
-				box-shadow: 0px 0px 10px 0px red;
+				box-shadow: 0px 0px 10px 0px variables.$DELETE_RED;
 
 				color: white;
-				background-color: red;
+				background-color: variables.$DELETE_RED;
 			}
 
 			#deleteFriend:active {

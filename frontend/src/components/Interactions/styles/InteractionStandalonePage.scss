@@ -1,622 +1,185 @@
 @use "../../../../static/styles/variables";
 @use "sass:math";
 
-$shadow_color: rgba(0, 0, 0, 0.159);
-$FRIEND_CARD_BORDER_RADIUS: 0rem;
-$FRIEND_CARD_FIELD_BORDER_RADIUS: 0;
-$FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
-
-#friendStandalonePageContent {
+#interactionCard {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 
-	width: 100%;
-	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
-	padding: 0;
+	padding: 1.5rem;
+	box-sizing: border-box;
 
-	background-color: variables.$VIOLET_BACKGROUND;
+	background-color: white;
 
-	#friendCard {
-		$INTER_SECTION_MARGIN: 1rem;
-
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		flex-wrap: wrap;
-
-		box-sizing: border-box;
-
-		width: 90%;
-		max-width: 50rem;
-
-		border-radius: $FRIEND_CARD_BORDER_RADIUS;
-
-		background-color: white;
-		// background-color: crimson;
-
-		.nameAndPhoto {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: center;
-			flex-wrap: wrap;
-
-			margin: calc($INTER_SECTION_MARGIN * 1.5);
-
-			box-sizing: border-box;
-
-			border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-
-			// border: 1px solid lightgray;
-
-			width: 100%;
-
-			text-wrap: wrap;
-			word-break: break-all;
-
-			background-color: white;
-			// background-color: red;
-
-			.pfp {
-				$DIMENSION: 12.5rem;
-
-				display: inline-flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-
-				min-height: $DIMENSION;
-				height: 100%;
-				min-height: $DIMENSION;
-
-				min-width: $DIMENSION;
-				width: 100%;
-				max-width: $DIMENSION;
-
-				border-radius: 100%;
-
-				box-shadow: 0px 0px 0px 0px gray;
-
-				object-fit: cover;
-
-				font-size: 2rem;
-				font-weight: 100;
-				font-family:
-					"Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
-					sans-serif;
-
-				text-align: center;
-
-				color: white;
-				background-color: black;
-			}
-
-			#nameAndRelationship {
-				display: flex;
-				flex-direction: column;
-				justify-content: start;
-				align-items: start;
-				justify-self: stretch;
-
-				$HORIZONTAL_PADDING: min(2vw, 1.75rem);
-				padding-left: $HORIZONTAL_PADDING;
-				padding-right: $HORIZONTAL_PADDING;
-				margin-top: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-
-				// background-color: orange;
-
-				.name {
-					display: flex;
-					flex-direction: row;
-					justify-content: start;
-					align-items: center;
-					flex-wrap: wrap;
-
-					font-size: 1.75rem;
-					font-weight: 600;
-
-					width: 100%;
-					max-width: 20rem;
-
-					padding-bottom: 0.5rem;
-					box-sizing: border-box;
-
-					text-wrap: wrap;
-
-					// background-color: yellow;
-				}
-				#nameInput {
-					padding-top: 0.5rem;
-					padding-left: 0.25rem;
-					padding-right: 0.25rem;
-					box-sizing: border-box;
-
-					border: 2px solid lightgray;
-
-					margin-bottom: 1rem;
-				}
-
-				.relationship {
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: center;
-
-					height: 100%;
-					width: 100%;
-
-					font-weight: 300;
-
-					// background-color: teal;
-
-					.relationship_tier {
-						display: flex;
-						flex-direction: row-reverse;
-						justify-content: start;
-						align-items: center;
-
-						width: 100%;
-
-						font-size: 1.25rem;
-						font-weight: inherit;
-
-						// background-color: yellowgreen;
-
-						.emoji,
-						.relationship_name {
-							font-size: inherit;
-						}
-
-						.emoji {
-							display: flex;
-							flex-direction: row;
-							justify-content: center;
-							align-items: center;
-
-							// background-color: pink;
-
-							min-width: 2.1rem;
-							width: 100%;
-							max-width: 2.1rem;
-
-							margin-left: 0.4rem;
-
-							margin-bottom: 0.15rem;
-
-							// min-height: 2.15rem;
-							// height: 100%;
-							// max-height: 2.15rem;
-
-							border-radius: 100%;
-						}
-
-						.relationship_name {
-							display: flex;
-							flex-direction: row;
-							justify-content: start;
-							align-items: center;
-
-							// margin-left: 0.51rem;
-
-							height: 100%;
-
-							font-weight: inherit;
-
-							// background-color: aquamarine;
-						}
-					}
-
-					.relationship_health {
-						display: flex;
-						flex-direction: row;
-						justify-content: start;
-						align-items: center;
-
-						width: 100%;
-
-						font-size: 1rem;
-
-						margin-top: 0.5rem;
-						// padding-left: 2.6rem;
-
-						box-sizing: border-box;
-
-						font-weight: 200;
-
-						// background-color: azure;
-
-						.health {
-							margin-left: 0.5rem;
-
-							font-size: inherit;
-
-							text-decoration: underline;
-
-							color: rgb(177, 226, 103);
-
-							font-weight: normal;
-						}
-					}
-
-					#relationshipSelect {
-						padding: 0.25rem;
-						box-sizing: border-box;
-
-						margin-bottom: 0.5rem;
-
-						border: 2px solid lightgray;
-
-						background-color: white;
-					}
-				}
-			}
-		}
-
-		.card_content {
-			display: flex;
-			flex-direction: row;
-			justify-content: center;
-			align-items: stretch;
-			flex-wrap: wrap;
-
-			width: 100%;
-
-			margin-top: -(math.div($INTER_SECTION_MARGIN, 2));
-
-			// background-color: orange;
-
-			.friend_card_content_section {
-				display: flex;
-				flex-direction: column;
-				justify-content: space-between;
-				align-items: center;
-
-				min-width: 12.5rem;
-
-				min-height: 10rem;
-
-				margin: math.div($INTER_SECTION_MARGIN, 2);
-
-				padding: 1.5rem;
-				box-sizing: border-box;
-
-				border: solid 1px lightgray;
-				border: none;
-				border-radius: $FRIEND_CARD_FIELD_BORDER_RADIUS;
-				box-shadow: 0px 0px 5px 0px lightgray;
-
-				background-color: white;
-				// background-color: yellow;
-
-				h3 {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-
-					width: 100%;
-
-					margin-bottom: 1em;
-
-					font-weight: lighter;
-
-					// background-color: coral;
-				}
-			}
-
-			#lastInteraction {
-				// background-color: violet;
-
-				.time_ago {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-
-					width: 100%;
-
-					font-size: 1.25rem;
-
-					// background-color: aquamarine;
-
-					.number_of_time_units {
-						// font-weight: bold;
-						font-size: inherit;
-					}
-
-					.time_unit {
-						margin-left: 0.25em;
-						margin-right: 0.25em;
-
-						// font-weight: bold;
-						font-size: inherit;
-					}
-
-					.ago {
-						font-size: inherit;
-					}
-				}
-
-				.update {
-					padding: 0.5em;
-					padding-left: 2em;
-					padding-right: 2em;
-					box-sizing: border-box;
-
-					margin-top: 1.75rem;
-					margin-bottom: -0.5rem;
-
-					border: 2px solid lightgray;
-					border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
-
-					color: gray;
-					background-color: white;
-				}
-
-				.update:hover {
-					cursor: pointer;
-					box-shadow: 0px 0px 5px 0px lightgray;
-					background-color: rgb(231, 231, 231);
-				}
-
-				.update:active {
-					box-shadow: 0px 0px 3px 0px gray inset;
-				}
-			}
-
-			#birthday {
-				.emoji {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-
-					margin-bottom: -0.1em;
-
-					font-size: 2rem;
-				}
-
-				.emoji:hover {
-					cursor: help;
-				}
-
-				.birthday_date {
-					display: flex;
-					flex-direction: row;
-					justify-content: center;
-					align-items: center;
-
-					width: 100%;
-
-					margin-bottom: 0.5em;
-
-					font-size: 1.25rem;
-
-					.month {
-						font-size: inherit;
-					}
-
-					.day {
-						margin-left: 0.5rem;
-
-						font-size: inherit;
-					}
-
-					#birthdayMonthSelect,
-					#birthdayDaySelect {
-						padding: 0.5rem;
-						padding-top: 0.25rem;
-						padding-bottom: 0.25rem;
-						box-sizing: border-box;
-
-						border: 2px solid lightgray;
-
-						background-color: white;
-					}
-				}
-			}
-
-			#notesSection {
-				#notes {
-					min-height: 4em;
-					height: 100%;
-
-					text-wrap: wrap;
-
-					width: 100%;
-
-					padding: 0.175rem;
-					padding-left: 0.25rem;
-					padding-right: 0.25rem;
-
-					border: 2px solid lightgray;
-					border-radius: calc($FRIEND_CARD_BUTTON_BORDER_RADIUS / 2);
-
-					resize: none;
-
-					color: rgb(65, 65, 65);
-					// background-color: blue;
-				}
-			}
-		}
-
-		.buttons {
-			display: flex;
-			flex-direction: row;
-			justify-content: space-evenly;
-			align-items: center;
-			flex-wrap: wrap;
-
-			width: 100%;
-			max-width: 40rem;
-
-			margin-top: calc($INTER_SECTION_MARGIN / 2);
-			margin-bottom: calc($INTER_SECTION_MARGIN / 2);
-
-			// background-color: blue;
-
-			button {
-				width: 90%;
-				max-width: 15rem;
-
-				margin: calc($INTER_SECTION_MARGIN / 2);
-
-				box-sizing: border-box;
-			}
-
-			#deleteFriend {
-				padding: 1rem;
-				padding-left: 3rem;
-				padding-right: 3rem;
-
-				border: 2px solid red;
-				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
-
-				color: red;
-
-				background-color: white;
-			}
-
-			#deleteFriend:hover {
-				cursor: pointer;
-
-				font-weight: bold;
-
-				box-shadow: 0px 0px 10px 0px red;
-
-				color: white;
-				background-color: red;
-			}
-
-			#deleteFriend:active {
-				border-color: crimson;
-				box-shadow: 0px 0px 10px 0px crimson inset;
-			}
-
-			.edit_friend {
-				padding: 1rem;
-				padding-left: 3rem;
-				padding-right: 3rem;
-
-				border: 2px solid rgb(168, 168, 168);
-				border-radius: $FRIEND_CARD_BUTTON_BORDER_RADIUS;
-
-				color: gray;
-
-				background-color: white;
-			}
-
-			.edit_friend:hover {
-				cursor: pointer;
-
-				box-shadow: 0px 0px 10px 0px lightgray;
-
-				color: rgb(98, 98, 98);
-				background-color: lightgray;
-			}
-
-			.edit_friend:active {
-				border-color: gray;
-				box-shadow: 0px 0px 10px 0px gray inset;
-			}
-
-			#saveButton {
-				border-color: rgb(12, 193, 12);
-				background-color: rgb(192, 255, 192);
-			}
-
-			#saveButton:hover {
-				color: white;
-				background-color: rgb(12, 193, 12);
-			}
-
-			#saveButton:active {
-				font-weight: bold;
-			}
-		}
-	}
-
-	#updateLastInteraction {
+	.name_and_subtitle {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		flex-wrap: wrap;
 
-		position: absolute;
-
-		top: variables.$NAVBAR_HEIGHT;
-		height: calc(90% - variables.$NAVBAR_HEIGHT);
 		width: 100%;
 
-		backdrop-filter: blur(15px);
-		// background-color: red;
+		font-size: 1.5rem;
 
-		form {
+		// background-color: orange;
+
+		.name {
 			display: flex;
-			flex-direction: column;
-			justify-content: center;
+			flex-direction: row;
+			justify-content: flex-start;
 			align-items: center;
 
-			padding: 4rem;
-			padding-top: 2rem;
-			padding-bottom: 1rem;
+			width: 100%;
 
-			border: 1px solid lightgray;
+			margin-bottom: 0.5em;
 
-			background-color: white;
+			font-size: inherit;
 
-			.cancel {
-				display: flex;
-				flex-direction: row;
-				justify-content: right;
-				align-items: start;
-				position: relative;
+			// background-color: red;
 
-				width: 100%;
+			h1,
+			.time_ago {
+				font-size: inherit;
+				font-weight: bold;
+			}
 
-				padding-left: 6.5rem;
-				padding-right: 0rem;
+			.time_ago {
+				margin-left: 0.5rem;
 
-				margin-top: -1.5rem;
-				margin-bottom: 0.5rem;
-				margin-right: -0rem;
-
-				text-align: right;
-
-				font-size: 25px;
+				font-size: 0.9em;
 
 				color: gray;
-				// background-color: red;
 			}
+		}
 
-			.cancel:hover {
-				color: black;
-				cursor: pointer;
+		.date {
+			width: 100%;
+
+			margin-bottom: 0.75em;
+
+			// background-color: yellow;
+
+			.emoji {
+				display: inline-flex;
+				width: auto;
+				margin-right: 0.66rem;
 			}
+		}
 
-			label {
-				margin-bottom: 1.5rem;
+		.location {
+			width: 100%;
+			// background-color: gold;
+
+			.emoji {
+				margin-right: 0.66rem;
 			}
+		}
+	}
 
-			#newLastInteractionDate {
-				margin-bottom: 1.5rem;
+	.attendees {
+		margin-top: 1.75rem;
+		margin-bottom: 1.75rem;
 
-				padding: 0.5rem;
+		width: 100%;
 
-				font-size: 1.2em;
+		h2 {
+			margin-bottom: 0.5rem;
+
+			font-size: 1.25rem;
+		}
+
+		.attendee_list {
+			margin-left: 1rem;
+
+			// background-color: orange;
+			.attendee {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+
+				margin-bottom: 0.5rem;
+
+				text-wrap: wrap;
+				word-break: break-all;
+
+				// background-color: yellow;
+
+				.emoji {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+
+					width: 1.75rem;
+					aspect-ratio: 1 / 1;
+
+					margin-right: 0.25rem;
+
+					// background-color: yellowgreen;
+				}
+
+				.name {
+					padding: 0.5rem;
+
+					border-radius: 5px;
+
+					text-decoration: none;
+
+					color: black;
+					// background-color: orangered;
+				}
+				.name:hover {
+					background-color: rgb(234, 234, 234);
+				}
 			}
+		}
+	}
 
-			.submit {
-				padding: 0.5rem;
-				padding-left: 2rem;
-				padding-right: 2rem;
+	.buttons {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: center;
 
-				border: none;
-				border-radius: 0;
-			}
+		width: 100%;
+
+		// background-color: red;
+
+		button {
+			width: 100%;
+			height: 2rem;
+
+			border-radius: 5px;
+
+			border: none;
+		}
+		button:hover {
+			cursor: pointer;
+		}
+
+		.edit {
+			border-bottom-left-radius: 0px;
+
+			color: black;
+			background-color: lightgray;
+		}
+		.edit:hover {
+			color: white;
+			background-color: rgb(171, 171, 171);
+		}
+
+		.delete {
+			margin-left: 1rem;
+
+			border-bottom-right-radius: 0px;
+
+			color: white;
+			background-color: variables.$DELETE_RED;
+		}
+		.delete:hover {
+			background-color: red;
 		}
 	}
 }

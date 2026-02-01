@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom"
-import { type Friend } from "../../types/models/Friend"
+import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import React, { useEffect, useState, type SetStateAction } from "react"
 import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import type { Interaction } from "../../types/models/Interaction"
 import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import "./styles/InteractionStandalonePage.css"
+import { TimeAgo } from "../../util/dates"
 
 type FriendCardProps = {
 	id: number
@@ -84,7 +86,51 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 		setIsEdittingInteraction(false)
 	}
 
-	return <div id="interactionCard"></div>
+	const AttendeeList = attendees.map((attendee) => (
+		<>
+			<span className="attendee" key={attendee.name}>
+				<div className="emoji">
+					{GetRelationshipTierInfo(attendee.relationship_tier).emoji}
+				</div>
+				<a href={`/friends/${attendee.id}`} className="name">
+					{attendee.name}
+				</a>
+			</span>
+		</>
+	))
+
+	return (
+		<div id="interactionCard">
+			<div className="name_and_subtitle">
+				<div className="name">
+					<h1>{name ? name : "Unnamed Interaction"}</h1>
+					<span className="time_ago">
+						(
+						{TimeAgo(date) === "Just now" ?
+							"Just now"
+						:	`${TimeAgo(date)} ago`}
+						)
+					</span>
+				</div>
+				<div className="date">
+					<span className="emoji">📅</span>Wednesday, Septembruary 19,
+					2025
+				</div>
+				<div className="location">
+					<span className="emoji">📍</span>
+					{location ? location : "Unspecified"}
+				</div>
+			</div>
+			<div className="attendees">
+				<h2>Attendees</h2>
+				<div className="attendee_list">{AttendeeList}</div>
+			</div>
+			<div className="buttons">
+				<button className="edit">Edit</button>
+				<button className="delete">Delete</button>
+			</div>
+		</div>
+	)
 }
 
 const InteractionStandalonePage: React.FC = () => {
