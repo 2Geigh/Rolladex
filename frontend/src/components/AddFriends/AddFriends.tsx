@@ -2,11 +2,12 @@ import React, { useState } from "react"
 import {
 	DefaultRelationshipTiers,
 	GetRelationshipTierInfo,
+	MAX_NAME_LENGTH,
 } from "../../types/models/Friend"
 import "./styles/AddFriends.css"
 import { backend_base_url } from "../../util/url"
 import { useNavigate } from "react-router-dom"
-import { GetZodiac } from "../../util/dates"
+import { GetMaxDaysInMonth, GetZodiac } from "../../util/dates"
 
 type OptionalProps = {
 	formData: FormData
@@ -21,18 +22,7 @@ const Optional: React.FC<OptionalProps> = ({
 	const [month, setMonth] = useState<string | null>(null)
 	const [day, setDay] = useState<string | null>(null)
 
-	function getMaxDaysInMonth(month: string | null) {
-		if (!month) {
-			return 31
-		}
-
-		if (month === "02") return 29
-
-		if (["04", "06", "09", "11"].includes(month)) return 30
-
-		return 31
-	}
-	const maxDays = getMaxDaysInMonth(month)
+	const maxDays = GetMaxDaysInMonth(month)
 
 	return (
 		<div id="optional">
@@ -123,7 +113,7 @@ const RelationshipTierDescription: React.FC<
 		<p className="relationship_tier_description">
 			{relationship_tier_code ?
 				relationship_tier.description + "."
-			:	"Hover over a relationship type to see its description."}
+				: "Hover over a relationship type to see its description."}
 		</p>
 	)
 }
@@ -197,26 +187,36 @@ const RelationshipTierSelectOptions = ({
 					/>
 
 					<label
+						tabIndex={0}
 						htmlFor={labelFor}
 						onMouseEnter={() => {
 							setLastHoveredRelationshipTier(
 								relationship_tier.code,
 							)
 						}}
+						onClick={() => {
+							setLastHoveredRelationshipTier(
+								relationship_tier.code,
+							)
+						}}
+						onKeyDown={(e) => e.key === 'Enter' ? setLastHoveredRelationshipTier(
+							relationship_tier.code,
+						) : <></>
+						}
 						className={
 							(
 								currentlySelectedRelationshipTier !==
-									undefined &&
+								undefined &&
 								currentlySelectedRelationshipTier ===
-									relationship_tier.code
+								relationship_tier.code
 							) ?
 								"selected"
-							:	""
+								: ""
 						}
 					>
 						{labelInnerHtml}
 					</label>
-				</div>
+				</div >
 			)
 		},
 	)
@@ -269,9 +269,11 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 					with {friendName}&nbsp;
 					<span
 						className="why"
+						tabIndex={0}
 						onClick={() => {
 							setWantsToKnowWhy(!wantsToKnowWhy)
 						}}
+						onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
 					>
 						(why?)
 					</span>
@@ -290,14 +292,16 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						</p>
 						<span
 							className="close"
+							tabIndex={0}
 							onClick={() => {
 								setWantsToKnowWhy(!wantsToKnowWhy)
 							}}
+							onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
 						>
 							Close
 						</span>
 					</div>
-				:	<></>}
+					: <></>}
 				<div className="tiersAndInfo">
 					<RelationshipTierDescription
 						relationship_tier_code={lastHoveredRelationshipTier}
@@ -457,23 +461,6 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		}
 	}
 
-	function formatDate(date: Date) {
-		const year = date.getFullYear()
-		const month = String(date.getMonth() + 1).padStart(2, "0") // Months are 0-indexed
-		const day = String(date.getDate()).padStart(2, "0")
-
-		return `${year}-${month}-${day}`
-	}
-
-	function addOneDay(date: Date) {
-		const nextDay = new Date(date)
-		nextDay.setDate(nextDay.getDate() + 1)
-		return nextDay
-	}
-
-	const today = new Date()
-	const tomorrow = addOneDay(today)
-
 	return (
 		<div className="section" id="lastInteraction">
 			<span className="question">
@@ -491,11 +478,12 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 						Last interaction date
 					</label>
 					<input
+						tabIndex={0}
 						type="date"
 						id="last_interaction_date_absolute"
 						onChange={onChangeAbsoluteDate}
 						min="1900-01-01"
-						max={formatDate(tomorrow)}
+						max={new Date().toISOString().split("T")[0]}
 					/>
 				</div>
 				<span className="or">or</span>
@@ -503,17 +491,18 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 					className={
 						knowsAbsoluteLastInteraction ?
 							"approximate ignored"
-						:	"approximate"
+							: "approximate"
 					}
 				>
 					<span className="inputtedTimeAgo">
 						〜{" "}
 						<input
+							tabIndex={0}
 							name="time_unit_multiple"
 							id="time_unit_multiple"
 							type="number"
 							min={0}
-							max={10000}
+							max={99}
 							onChange={onChangeApproximateDate}
 						/>{" "}
 						<select
@@ -523,7 +512,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 							onChange={onChangeApproximateDate}
 						>
 							<option value="" disabled>
-								Time units
+								Units
 							</option>
 							<option value="hours">Hours</option>
 							<option value="days">Days</option>
@@ -619,7 +608,8 @@ const AddFriends: React.FC = () => {
 							type="text"
 							name="name"
 							required
-							maxLength={64}
+							maxLength={MAX_NAME_LENGTH}
+							tabIndex={0}
 							onChange={(e) => {
 								const inputtedText = e.target.value
 
@@ -685,19 +675,20 @@ const AddFriends: React.FC = () => {
 
 									{formData.relationship_tier_code !==
 										undefined && (
-										<>
-											<Optional
-												formData={formData}
-												setFormData={setFormData}
-												friendName={formData.name}
-											/>
-											<input
-												type="submit"
-												id="Submit"
-												value="Add friend"
-											/>
-										</>
-									)}
+											<>
+												<Optional
+													formData={formData}
+													setFormData={setFormData}
+													friendName={formData.name}
+												/>
+												<input
+													tabIndex={0}
+													type="submit"
+													id="Submit"
+													value="Add friend"
+												/>
+											</>
+										)}
 								</>
 							)}
 						</>

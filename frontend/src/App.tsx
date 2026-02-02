@@ -21,6 +21,7 @@ import AddFriends from "./components/AddFriends/AddFriends"
 import Footer from "./components/Footer/Footer"
 import "../static/styles/app.css"
 import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import InteractionStandalonePage from "./components/Interactions/InteractionStandalonePage"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -34,7 +35,6 @@ function App() {
 	}
 
 	useLayoutEffect(() => {
-		console.log("<App/> useEffect running")
 		setIsLoading(true)
 		GetSessionAndUserData(loginSessionData, setLoginSessionData)
 			.catch((err) => console.error(`session check failed: ${err}`))
@@ -73,6 +73,10 @@ function App() {
 							<Route
 								path="/friends/:friendId"
 								element={<FriendStandalonePage />}
+							/>
+							<Route
+								path="/interactions/:interactionId"
+								element={<InteractionStandalonePage />}
 							/>
 							<Route path="/addfriend" element={<AddFriends />} />
 							<Route path="/profile" element={<Profile />} />

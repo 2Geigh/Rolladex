@@ -1,6 +1,7 @@
 import type { Interaction } from "./Interaction"
 
 export const MAX_NUMBER_OF_FRIENDS = 150
+export const MAX_NAME_LENGTH = 50
 
 export type Friend = {
 	id: number
@@ -12,6 +13,7 @@ export type Friend = {
 	profile_image_path?: string
 	relationship_tier: number
 	relationship_health: number
+	notes?: string
 	created_at?: Date
 	updated_at?: Date
 }

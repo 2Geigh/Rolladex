@@ -1,7 +1,7 @@
 package test
 
 import (
-	"myfriends-backend/util"
+	"rolladex-backend/util"
 	"testing"
 )
 

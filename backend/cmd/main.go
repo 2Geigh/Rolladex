@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/handlers"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/handlers"
 
 	"github.com/inancgumus/screen"
 )
@@ -34,6 +34,10 @@ func main() {
 	http.HandleFunc("/friends", handlers.Friends)
 	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
 	http.HandleFunc("/friends/urgent", handlers.UrgentFriends)
+	http.HandleFunc("/friends/status", handlers.FriendsStatus)
+	http.HandleFunc("/friends/interactions", handlers.FriendsInteractions)
+	http.HandleFunc("/friends/notes", handlers.FriendsNotes)
+	http.HandleFunc("/interactions/", handlers.InteractionStandalonePage)
 
 	// UX
 	http.HandleFunc("/profile", handlers.Profile)
@@ -43,7 +47,7 @@ func main() {
 	http.HandleFunc("/404", handlers.PageNotFound)
 
 	// Database
-	err := database.InitializeDB(database.DbFilePath)
+	err := database.InitializeDB()
 	if err != nil {
 		log.Fatal(fmt.Errorf("couldn't initialize database: %w", err))
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers

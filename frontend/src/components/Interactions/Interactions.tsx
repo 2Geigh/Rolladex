@@ -257,7 +257,7 @@ const Table: React.FC<TableProps> = ({ FriendListItems }) => {
 	)
 }
 
-const Friends: React.FC = () => {
+const Interactions: React.FC = () => {
 	const [friends, setFriends] = useState<Array<Friend>>([])
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -297,9 +297,12 @@ const Friends: React.FC = () => {
 		let formatted_interaction_column_text: string = ""
 		if (friend.last_interaction?.date) {
 			let last_interaction_date = new Date(friend.last_interaction.date)
+			console.log(`last_interaction_date: ${last_interaction_date}`)
+			console.log(`clientTimeZoneOffset: ${clientTimeZoneOffset}`)
 			last_interaction_date.setMinutes(
 				last_interaction_date.getMinutes() - clientTimeZoneOffset,
 			)
+			console.log(`last_interaction_date LOCAL: ${last_interaction_date}`)
 			formatted_interaction_column_text =
 				last_interaction_date.toLocaleString("en-US", {
 					year: "numeric",
@@ -501,4 +504,4 @@ const Friends: React.FC = () => {
 	)
 }
 
-export default Friends
+export default Interactions

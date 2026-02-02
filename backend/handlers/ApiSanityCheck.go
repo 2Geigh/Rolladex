@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/util"
 )
 
 func ApiSanityCheck(w http.ResponseWriter, req *http.Request) {

@@ -4,13 +4,15 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
-	"myfriends-backend/database"
-	"myfriends-backend/logic"
-	"myfriends-backend/models"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/database"
+	"rolladex-backend/logic"
+	"rolladex-backend/models"
+	"rolladex-backend/util"
 	"strconv"
+	"time"
 )
 
 func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
@@ -70,6 +72,40 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
+	case http.MethodPut:
+		user_id, err := validateSession(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		reqBody, err := io.ReadAll(req.Body)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't read request body", http.StatusBadRequest)
+			return
+		}
+
+		var updateData struct {
+			ID               int    `json:"id"`
+			Name             string `json:"name"`
+			RelationshipTier int    `json:"relationship_tier"`
+			BirthdayMonth    int    `json:"birthday_month"`
+			BirthdayDay      int    `json:"birthday_day"`
+		}
+		err = json.Unmarshal(reqBody, &updateData)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't unmarshal friend JSON data", http.StatusInternalServerError)
+			return
+		}
+
+		statusCode, err := updateFriend(updateData, user_id)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't update friend", statusCode)
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+
 	case http.MethodDelete:
 		_, err := validateSession(req)
 		if err != nil {
@@ -99,8 +135,12 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		birthdayDay      sql.NullInt64
 		profileImagePath sql.NullString
 		relationshipTier sql.NullInt64
-		lastInteraction  sql.NullTime
-		lastMeetup       sql.NullTime
+		notes            sql.NullString
+
+		lastInteractionId       int
+		lastInteractionDate     time.Time
+		lastInteractionLocation sql.NullString
+		lastInteractionName     sql.NullString
 	)
 
 	tx, err := database.DB.Begin()
@@ -111,31 +151,17 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 
 	stmt, err := tx.Prepare(`
 	SELECT
-		f.id AS friend_id,
-		f.name,
-		f.birthday_month,
-		f.birthday_day,
-		i.filepath AS profile_image_path,
-		r.relationship_tier,
-		-- Last interaction (any type)
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-		) AS last_interaction_date,
-		-- Last meetup date (specifically type = 'meetup')
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-				AND inter.interaction_type = 'meetup'
-		) AS last_meetup_date
-	FROM Relationships r
-	JOIN Friends f ON f.id = r.friend_id
-	LEFT JOIN Images i ON i.id = f.profile_image_id
-	WHERE f.id = ?
+		Friends.id AS friend_id,
+		Friends.name as friend_name,
+		Friends.birthday_month as birthday_month,
+		Friends.birthday_day as birthday_day,
+		Images.filepath AS profile_image_path,
+		Relationships.relationship_tier as relationship_tier,
+		Friends.notes as notes
+	FROM Relationships
+		LEFT JOIN Friends ON Friends.id = Relationships.friend_id
+		LEFT JOIN Images ON Images.id = Friends.profile_image_id
+	WHERE Friends.id = ?;
     `)
 	if err != nil {
 		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
@@ -150,8 +176,36 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		&birthdayDay,
 		&profileImagePath,
 		&relationshipTier,
-		&lastInteraction,
-		&lastMeetup,
+		&notes,
+	)
+	if err != nil {
+		return friend, fmt.Errorf("couldn't scan row: %w", err)
+	}
+
+	stmt, err = tx.Prepare(`
+		SELECT
+			Interactions.id as interaction_id,
+			Interactions.date as interaction_date,
+			Interactions.location as interaction_location,
+			Interactions.name as interaction_name
+		FROM
+			InteractionsAttendees
+			LEFT JOIN Interactions ON InteractionsAttendees.interaction_id = Interactions.id
+		WHERE InteractionsAttendees.friend_id = ?
+		ORDER BY date DESC
+		LIMIT 1;
+    `)
+	if err != nil {
+		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+
+	resultRow = stmt.QueryRow(friend_id)
+	err = resultRow.Scan(
+		&lastInteractionId,
+		&lastInteractionDate,
+		&lastInteractionLocation,
+		&lastInteractionName,
 	)
 	if err != nil {
 		return friend, fmt.Errorf("couldn't scan row: %w", err)
@@ -160,6 +214,10 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	friend = models.Friend{
 		ID:   uint(friend_id),
 		Name: name,
+		LastInteraction: models.Interaction{
+			ID:   uint(lastInteractionId),
+			Date: lastInteractionDate,
+		},
 	}
 
 	if birthdayMonth.Valid {
@@ -174,11 +232,14 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	if relationshipTier.Valid {
 		friend.RelationshipTier = uint(relationshipTier.Int64)
 	}
-	if lastInteraction.Valid {
-		friend.LastInteraction.Date = lastInteraction.Time
+	if notes.Valid {
+		friend.Notes = notes.String
 	}
-	if lastMeetup.Valid {
-		friend.LastMeetup.Date = lastMeetup.Time
+	if lastInteractionLocation.Valid {
+		friend.LastInteraction.Location = lastInteractionLocation.String
+	}
+	if lastInteractionName.Valid {
+		friend.LastInteraction.Name = lastInteractionName.String
 	}
 
 	friend.RelationshipHealth, err = logic.GetRelationshipHealth(friend_id, user_id)
@@ -190,6 +251,66 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
 	}
 	return friend, err
+}
+
+func updateFriend[U database.SqlId](updateData struct {
+	ID               int    `json:"id"`
+	Name             string `json:"name"`
+	RelationshipTier int    `json:"relationship_tier"`
+	BirthdayMonth    int    `json:"birthday_month"`
+	BirthdayDay      int    `json:"birthday_day"`
+}, user_id U) (int, error) {
+	var (
+		statusCode = http.StatusOK
+		err        error
+	)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(`
+								UPDATE Friends
+								SET
+									name = ?,
+									birthday_month = ?,
+									birthday_day = ?
+								WHERE Friends.id = ?;
+									
+							`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(updateData.Name, updateData.BirthdayMonth, updateData.BirthdayDay, updateData.ID)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	stmt, err = tx.Prepare(`
+								UPDATE Relationships
+								SET
+									relationship_tier = ?
+								WHERE
+									Relationships.friend_id = ?
+									AND Relationships.user_id = ?;
+							`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(updateData.RelationshipTier, updateData.ID, user_id)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("couldn't commit transaction: %w", err)
+	}
+	return statusCode, err
 }
 
 func deleteFriend(friend_id int) error {

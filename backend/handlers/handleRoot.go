@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"fmt"
-	"myfriends-backend/util"
 	"net/http"
+	"rolladex-backend/util"
 	"time"
 )
 

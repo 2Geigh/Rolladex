@@ -1,15 +1,18 @@
+@use "../../../../static/styles/variables";
+
 #homeContent {
 	display: flex;
 	flex-direction: column;
 	justify-content: start;
 	align-items: center;
 
-	min-height: 50vh;
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
 	padding-top: min(5.5vh, 30px);
+	box-sizing: border-box;
 
-	// background-color: green;
+	background-color: variables.$VIOLET_BACKGROUND;
 
 	h1 {
 		font-size: 2rem;
@@ -26,12 +29,6 @@
 
 		width: 100%;
 
-		padding-left: min(5vw, 20px);
-		padding-right: min(5vw, 20px);
-		box-sizing: border-box;
-
-		// background-color: orange;
-
 		.homeSection {
 			display: flex;
 			flex-direction: column;
@@ -39,12 +36,13 @@
 			align-items: center;
 
 			min-width: 500px;
-			width: 50vw;
-			height: 100%;
-		}
+			width: 100%;
+			max-width: 49vw;
 
-		#urgentFriendsSection {
-			// background-color: yellow;
+			height: 100%;
+
+			// border: 1px solid black;
+			// background-color: orange;
 
 			h2 {
 				margin-bottom: 1.25rem;
@@ -54,36 +52,49 @@
 				font-size: 1.5rem;
 				font-weight: normal;
 			}
+		}
+
+		#urgentFriendsSection {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+
+			// background-color: yellow;
 
 			#urgentCards {
 				display: flex;
 				flex-direction: column;
-				justify-content: start;
-				align-content: center;
+				justify-content: center;
+				align-items: stretch;
+
+				width: 100%;
 
 				// background-color: bisque;
 
 				.urgent_friend {
 					display: flex;
 					flex-direction: row;
-					justify-content: center;
 					align-items: stretch;
 
 					width: 100%;
+					max-width: 47.5rem;
 
+					margin-left: auto;
+					margin-right: auto;
 					margin-bottom: min(22.5px, max(3vh, 1rem));
 
 					padding: 1rem;
 					box-sizing: border-box;
 
-					box-shadow: 0px 0px min(2vw, 5px) 0px rgb(174, 174, 174);
-					border-radius: 1rem;
 					overflow: hidden;
 
 					background-color: white;
 					// background-color: pink;
 
 					a {
+						display: flex;
+						align-self: stretch;
+
 						text-decoration: none;
 
 						img {
@@ -92,31 +103,28 @@
 							justify-content: center;
 							align-items: center;
 							align-self: stretch;
-							justify-self: stretchs;
 
 							padding: 1rem;
 							box-sizing: border-box;
 
-							$DIMENSION: 6rem;
-							min-height: $DIMENSION;
-							min-width: $DIMENSION;
+							$DIMENSION: 8rem;
+							height: $DIMENSION;
 							width: $DIMENSION;
-
-							border-radius: 1rem;
-							box-shadow: 0px 0px 15px 0px rgb(130, 130, 130)
-								inset;
+							aspect-ratio: 1 / 1;
 
 							text-align: center;
 							text-wrap: wrap;
 							overflow: hidden;
+							word-break: normal;
 
 							text-decoration: none;
 
 							font-family: cursive;
 
-							color: black;
-							background-color: lightgray;
+							color: gray;
+							background-color: variables.$LIGHT_GRAY;
 						}
+
 						@media screen and (max-width: 400px) {
 							img {
 								display: none;
@@ -132,7 +140,6 @@
 						align-items: stretch;
 
 						width: 100%;
-						max-width: 20rem;
 						overflow-wrap: break-word;
 
 						padding-left: 0.75rem;
@@ -151,14 +158,42 @@
 							word-wrap: break-word;
 							overflow-wrap: break-word;
 							word-break: break-all;
+
 							// background-color: teal;
 
-							.name {
-								text-decoration: none;
+							.name_and_relationship_tier {
+								display: flex;
+								flex-direction: row;
+								justify-content: space-between;
+								align-items: start;
 
-								font-size: 1.33rem;
+								// background-color: orange;
 
-								// background-color: magenta;
+								.name {
+									text-decoration: none;
+
+									font-size: 1.33rem;
+									font-weight: bold;
+
+									color: black;
+									// background-color: magenta;
+								}
+
+								.relationship_icon {
+									display: flex;
+									flex-direction: column;
+									justify-content: start;
+									align-items: end;
+
+									margin-top: -0.33rem;
+									margin-left: 0.75rem;
+
+									font-size: 1.5em;
+
+									user-select: none;
+
+									// background-color: red;
+								}
 							}
 
 							.under_name {
@@ -169,8 +204,7 @@
 
 								text-align: center;
 
-								margin-top: 0.66rem;
-								margin-bottom: 0.75rem;
+								height: 100%;
 
 								// background-color: yellow;
 
@@ -178,6 +212,7 @@
 									margin-left: 0.33rem;
 								}
 							}
+
 							.birthday {
 								flex-direction: column;
 
@@ -195,6 +230,8 @@
 
 							width: 100%;
 
+							margin-top: 0.66rem;
+
 							// background-color: red;
 
 							button {
@@ -203,17 +240,30 @@
 								padding-right: 0.75rem;
 
 								border: none;
-								border-radius: 0.25rem;
+
+								color: white;
+								background-color: variables.$DARK_GRAY;
 							}
+
 							button:hover {
 								cursor: pointer;
+								background-color: gray;
 							}
 
 							.mark_completed {
+								width: 100%;
+
 								margin-left: 0.5rem;
+
+								background-color: variables.$VIOLET;
+							}
+
+							.mark_completed:hover {
+								background-color: variables.$VIOLET_DARK;
 							}
 						}
 					}
+
 					@media screen and (max-width: 400px) {
 						.body {
 							padding-left: 0;
@@ -225,6 +275,140 @@
 
 		#upcomingSection {
 			// background-color: greenyellow;
+
+			$COLUMN_BORDER_WIDTH: 3px;
+
+			#calendar {
+				display: flex;
+				flex-direction: row;
+				justify-content: stretch;
+				align-items: stretch;
+
+				width: 100%;
+				max-width: 47.5rem;
+				height: 20rem;
+
+				background-color: turquoise;
+
+				.column {
+					display: flex;
+					flex-direction: column;
+					justify-content: stretch;
+					align-items: center;
+
+					width: 100%;
+
+					border: 1px solid black;
+					border: none;
+					box-sizing: border-box;
+
+					user-select: none;
+
+					background-color: cyan;
+
+					.day_header {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+
+						width: 100%;
+						height: 25%;
+						max-height: 2.5em;
+
+						background-color: variables.$LIGHT_GRAY;
+						// background-color: orange;
+					}
+
+					.body {
+						display: flex;
+						flex-direction: column;
+						justify-content: space-between;
+						align-items: center;
+
+						width: 100%;
+						height: 100%;
+
+						background-color: white;
+
+						.icons {
+							display: flex;
+							flex-direction: column;
+							justify-content: space-evenly;
+							align-items: center;
+							overflow: hidden;
+							word-break: break-all;
+
+							height: 100%;
+
+							padding-top: 0.5rem;
+							padding-bottom: 0.5rem;
+							box-sizing: border-box;
+
+							// background-color: red;
+
+							.icon {
+								display: flex;
+								align-items: center;
+								overflow: hidden;
+
+								width: 50%;
+								aspect-ratio: 1 / 1;
+
+								box-sizing: border-box;
+
+								text-align: center;
+
+								border: 2px solid blue;
+								border: none;
+								border-radius: 100%;
+
+								user-select: none;
+
+								background-color: variables.$LIGHT_GRAY;
+							}
+						}
+
+						.emoji {
+							display: flex;
+							justify-content: center;
+							align-items: center;
+
+							width: 100%;
+							height: 1.5em;
+
+							padding-bottom: 0.25rem;
+
+							font-size: 1.5em;
+
+							user-select: none;
+
+							// background-color: red;
+						}
+					}
+				}
+
+				.column:hover {
+					box-sizing: content-box;
+
+					border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
+
+					cursor: pointer;
+				}
+
+				.selected {
+					box-sizing: border-box;
+
+					border: $COLUMN_BORDER_WIDTH solid variables.$VIOLET;
+
+					.day_header {
+						background-color: variables.$YELLOW;
+					}
+				}
+
+				.selected:hover {
+					border-color: variables.$VIOLET_DARK;
+				}
+			}
 		}
 	}
 }
