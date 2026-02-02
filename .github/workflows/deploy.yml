@@ -53,13 +53,13 @@ jobs:
                       # We check for both 'docker-compose' and 'docker compose' (newer Docker version)
                       echo "Starting Docker containers..."
                       if command -v docker-compose &> /dev/null; then
-                          sudo docker-compose down --remove-orphans
-                          sudo docker-compose up --build -d
+                          docker-compose down --remove-orphans
+                          docker-compose up --build -d
                       else
-                          sudo docker compose down --remove-orphans
-                          sudo docker compose up --build -d
+                          docker compose down --remove-orphans
+                          docker compose up --build -d
                       fi
 
                       # 5. Post-deployment cleanup
-                      sudo docker image prune -f
+                      docker image prune -f
                       echo "Deployment successful! Site should be live at your VPS IP."
