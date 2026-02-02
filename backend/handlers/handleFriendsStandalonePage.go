@@ -17,7 +17,7 @@ import (
 
 func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 
-	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	util.SetCrossOriginResourceSharing(w)
 	util.LogHttpRequest(req)
 
 	var (

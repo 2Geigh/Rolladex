@@ -12,7 +12,7 @@ import (
 
 func FriendsInteractions(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
-	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	util.SetCrossOriginResourceSharing(w)
 
 	switch req.Method {
 	case http.MethodOptions:

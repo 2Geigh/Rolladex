@@ -19,7 +19,7 @@ type UrgentFriendAndStatus struct {
 
 func UrgentFriends(w http.ResponseWriter, req *http.Request) {
 
-	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	util.SetCrossOriginResourceSharing(w)
 	util.LogHttpRequest(req)
 
 	switch req.Method {

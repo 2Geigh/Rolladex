@@ -19,7 +19,7 @@ type signupFormData struct {
 func Signup(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
-	util.SetCrossOriginResourceSharing(w, util.FrontendOrigin)
+	util.SetCrossOriginResourceSharing(w)
 
 	switch req.Method {
 
