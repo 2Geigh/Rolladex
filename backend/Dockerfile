@@ -1,21 +1,21 @@
-# Use a lightweight Debian image for the final stage
-FROM golang
+# Stage 1: Build
+FROM golang AS builder
+WORKDIR /app
+COPY . .
+
+# CGO_ENABLED=0 ensures no C libraries are linked
+RUN CGO_ENABLED=0 GOOS=linux go build -o main.out ./bin/main.go
+
+
+# Stage 2: Run
+FROM alpine
 WORKDIR /app
 
-RUN apt update
-RUN apt upgrade
-RUN apt install sqlite3
-RUN apt install make
+# Install CA certificates (needed if your app makes HTTPS calls)
+RUN apk --no-cache add ca-certificates
 
-COPY . .
-# xterm is the required TERM (terminal emulation environment variable) 
-# value needed for make to run
-# xterm is commonly used for Linux-based terminal emulators 
-ENV TERM xterm
-RUN make
-
-# Create a directory for the SQLite file
-RUN mkdir -p /app/data
+# Copy the static binary
+COPY --from=builder /app/main.out .
 
 EXPOSE 3001
-CMD ["./bin/main.out"]
+CMD ["./main.out"]

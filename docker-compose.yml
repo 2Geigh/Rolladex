@@ -1,17 +1,48 @@
 services:
+    db:
+        image: mariadb
+        container_name: rolladex-db
+        restart: always
+        environment:
+            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+            MARIADB_DATABASE: ${DB_NAME}
+            MARIADB_USER: ${DB_USER}
+            MARIADB_PASSWORD: ${DB_PASS}
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - rolladex-net
+
     backend:
         build: ./backend
-        ports:
-            - "8080:3001"
-        volumes:
-            - sqlite_data:/app/data # Persists your .db file
+        env_file:
+            - .env
+        container_name: rolladex-api
+        restart: always
+        depends_on:
+            - db
+        environment:
+            environment:
+                - DB_USER=${DB_USER}
+                - DB_PASS=${DB_PASS}
+                - DB_NAME=${DB_NAME}
+                - DB_HOST=db # Note: This is referencing the service
+                - DB_PORT=3306
+        networks:
+            - rolladex-net
 
     frontend:
         build: ./frontend
+        container_name: rolladex-ui
+        restart: always
         ports:
             - "80:80"
-        depends_on:
-            - backend
+        networks:
+            - rolladex-net
+
+networks:
+    rolladex-net:
+        driver: bridge
 
 volumes:
-    sqlite_data:
+    db_data:
