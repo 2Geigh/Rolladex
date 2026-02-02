@@ -21,32 +21,45 @@ jobs:
                   timeout: 40s
                   command_timeout: 20m
                   script: |
-                      # 1. Setup path and ensure the directory exists
-                      mkdir -p ~/Rolladex
-                      cd ~/Rolladex
+                      # Exit on any error
+                      set -e
 
-                      # 2. Initialize repo if this is the first run
+                      PROJECT_DIR="$HOME/Rolladex"
+                      REPO_URL="https://github.com/${{ github.repository }}.git"
+
+                      # 1. Ensure the directory exists
+                      mkdir -p $PROJECT_DIR
+                      cd $PROJECT_DIR
+
+                      # 2. Handle Git Logic properly
                       if [ ! -d ".git" ]; then
                         echo "First time setup: Cloning repository..."
-                        git clone https://github.com/${{ github.repository }}.git .
+                        # Clone into a temp folder then move .git to current folder
+                        git clone $REPO_URL .
+                      else
+                        echo "Updating repository..."
+                        git fetch origin main
+                        git reset --hard origin/main
                       fi
 
-                      # 3. Handle Git state (Hard reset ensures local changes on VPS don't block the pull)
-                      git fetch origin main
-                      git reset --hard origin/main
-
-                      # 4. Dependency & Environment Check
+                      # 3. Dependency & Environment Check
                       if [ ! -f ".env" ]; then
-                        echo "ERROR: .env file missing on VPS in ~/Rolladex. Please create it manually."
+                        echo "CRITICAL ERROR: .env file missing in $PROJECT_DIR"
+                        echo "Please SSH into the VPS and run: nano $PROJECT_DIR/.env"
                         exit 1
                       fi
 
-                      # 5. Build and Deploy
-                      # We use 'sudo' for Docker on Debian unless you've configured the docker group.
-                      # Using 'docker-compose' as you requested.
-                      sudo docker-compose down --remove-orphans
-                      sudo docker-compose up --build -d
+                      # 4. Build and Deploy
+                      # We check for both 'docker-compose' and 'docker compose' (newer Docker version)
+                      echo "Starting Docker containers..."
+                      if command -v docker-compose &> /dev/null; then
+                          sudo docker-compose down --remove-orphans
+                          sudo docker-compose up --build -d
+                      else
+                          sudo docker compose down --remove-orphans
+                          sudo docker compose up --build -d
+                      fi
 
-                      # 6. Post-deployment cleanup
+                      # 5. Post-deployment cleanup
                       sudo docker image prune -f
-                      echo "Deployment successful!"
+                      echo "Deployment successful! Site should be live at your VPS IP."
