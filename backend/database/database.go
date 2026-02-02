@@ -30,6 +30,7 @@ var (
 
 func InitializeDB() error {
 	log.Println("Connecting to MariaDB...")
+	var err error
 
 	// Optional, in the event that the environment variables
 	// aren't alreay instantiated in the Docker container
@@ -50,7 +51,7 @@ func InitializeDB() error {
 	}
 
 	// Open (or create) the SQLite database
-	DB, err := sql.Open("mysql", dsn)
+	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
