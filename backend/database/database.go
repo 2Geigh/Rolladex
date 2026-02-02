@@ -145,7 +145,8 @@ func updateSeedPasswords() error {
 	}
 
 	if totalRowsAffected == 0 {
-		return fmt.Errorf("no rows affected, no updates made")
+		log.Println("Note: No seed users needed password updates (already updated).")
+		return nil
 	}
 
 	return nil

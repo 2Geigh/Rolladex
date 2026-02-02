@@ -20,11 +20,11 @@ func LogHttpRequest(req *http.Request) {
 
 func SetCrossOriginResourceSharing(w http.ResponseWriter) {
 
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	_ = godotenv.Load("../.env")
 	origin := os.Getenv("FRONTEND_ORIGIN")
+	if origin == "" {
+		origin = "http://localhost" // Safe fallback for Docker
+	}
 
 	w.Header().Set("Access-Control-Allow-Origin", origin)
 	w.Header().Set("Access-Control-Allow-Credentials", "true")

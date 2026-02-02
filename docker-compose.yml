@@ -1,13 +1,14 @@
 services:
     db:
-        image: mariadb
+        image: mariadb:latest
         container_name: rolladex-db
         restart: always
         environment:
-            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+            # Match these to your .env file keys exactly
+            MARIADB_ROOT_PASSWORD: ${DB_PASSWORD}
             MARIADB_DATABASE: ${DB_NAME}
-            MARIADB_USER: ${DB_USER}
-            MARIADB_PASSWORD: ${DB_PASS}
+            MARIADB_USER: ${DB_USERNAME}
+            MARIADB_PASSWORD: ${DB_PASSWORD}
         volumes:
             - db_data:/var/lib/mysql
         networks:
@@ -15,19 +16,18 @@ services:
 
     backend:
         build: ./backend
-        env_file:
-            - .env
         container_name: rolladex-api
         restart: always
         depends_on:
             - db
+        env_file:
+            - .env
         environment:
-            environment:
-                - DB_USER=${DB_USER}
-                - DB_PASS=${DB_PASS}
-                - DB_NAME=${DB_NAME}
-                - DB_HOST=db # Note: This is referencing the service
-                - DB_PORT=3306
+            - DB_HOST=db
+            - DB_PORT=3306
+        # Exposed for local testing; on VPS we might hide this behind Nginx
+        ports:
+            - "3001:3001"
         networks:
             - rolladex-net
 
