@@ -21,70 +21,68 @@ type FriendCardProps = {
 const InteractionCard: React.FC<FriendCardProps> = ({
 	id,
 	date,
-	friend_id,
-	interaction_type,
 	attendees,
 	name,
 	location,
-	isEdittingInteraction,
-	setIsEdittingInteraction,
+	// isEdittingInteraction,
+	// setIsEdittingInteraction,
 }) => {
-	async function deleteInteraction() {
-		const response = await fetch(`${backend_base_url}/friends/${id}`, {
-			method: "DELETE",
-			credentials: "include",
-		})
+	// async function deleteInteraction() {
+	// 	const response = await fetch(`${backend_base_url}/friends/${id}`, {
+	// 		method: "DELETE",
+	// 		credentials: "include",
+	// 	})
 
-		if (!response.ok) {
-			throw new Error(`${response.status}: ${response.statusText}`)
-		}
+	// 	if (!response.ok) {
+	// 		throw new Error(`${response.status}: ${response.statusText}`)
+	// 	}
 
-		return
-	}
+	// 	return
+	// }
 
-	function editInteraction() {
-		setIsEdittingInteraction(true)
-	}
+	// function editInteraction() {
+	// 	setIsEdittingInteraction(true)
+	// }
 
-	async function finishEdittingInteraction() {
-		const nameInput = document.getElementById(
-			"nameInput",
-		)! as HTMLInputElement
-		const RelationshipSelect = document.getElementById(
-			"relationshipSelect",
-		) as HTMLSelectElement
-		const birthdayMonthSelect = document.getElementById(
-			"birthdayMonthSelect",
-		) as HTMLSelectElement
-		const birthdayDaySelect = document.getElementById(
-			"birthdayDaySelect",
-		) as HTMLSelectElement
+	// async function finishEdittingInteraction() {
+	// 	const nameInput = document.getElementById(
+	// 		"nameInput",
+	// 	)! as HTMLInputElement
+	// 	const RelationshipSelect = document.getElementById(
+	// 		"relationshipSelect",
+	// 	) as HTMLSelectElement
+	// 	const birthdayMonthSelect = document.getElementById(
+	// 		"birthdayMonthSelect",
+	// 	) as HTMLSelectElement
+	// 	const birthdayDaySelect = document.getElementById(
+	// 		"birthdayDaySelect",
+	// 	) as HTMLSelectElement
 
-		if (nameInput.value.length < 1) {
-			alert("Name required")
-			return
-		}
+	// 	if (nameInput.value.length < 1) {
+	// 		alert("Name required")
+	// 		return
+	// 	}
 
-		const reqBody = {
-			id: id,
-			name: nameInput.value,
-			relationship_tier: parseInt(RelationshipSelect.value),
-			birthday_month: parseInt(birthdayMonthSelect.value),
-			birthday_day: parseInt(birthdayDaySelect.value),
-		}
+	// 	const reqBody = {
+	// 		id: id,
+	// 		name: nameInput.value,
+	// 		relationship_tier: parseInt(RelationshipSelect.value),
+	// 		birthday_month: parseInt(birthdayMonthSelect.value),
+	// 		birthday_day: parseInt(birthdayDaySelect.value),
+	// 	}
 
-		const response = await fetch(`${backend_base_url}/friends/${id}`, {
-			method: "PUT",
-			credentials: "include",
-			body: JSON.stringify(reqBody),
-		})
+	// 	const response = await fetch(`${backend_base_url}/friends/${id}`, {
+	// 		method: "PUT",
+	// 		credentials: "include",
+	// 		body: JSON.stringify(reqBody),
+	// 	})
 
-		if (!response.ok) {
-			throw new Error(`${response.statusText}: ${response.text}`)
-		}
+	// 	if (!response.ok) {
+	// 		throw new Error(`${response.statusText}: ${response.text}`)
+	// 	}
 
-		setIsEdittingInteraction(false)
-	}
+	// 	setIsEdittingInteraction(false)
+	// }
 
 	const AttendeeList = attendees.map((attendee) => (
 		<>
@@ -100,7 +98,7 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 	))
 
 	return (
-		<div id="interactionCard">
+		<div id="interactionCard" key={id}>
 			<div className="name_and_subtitle">
 				<div className="name">
 					<h1>{name ? name : "Unnamed Interaction"}</h1>
