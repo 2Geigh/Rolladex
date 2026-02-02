@@ -45,6 +45,10 @@ func InitializeDB() error {
 		dsn string = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, dbHost, dbPort, dbName)
 	)
 
+	if username == "" {
+		log.Println("Warning: DB_USERNAME is empty. Connection might fail.")
+	}
+
 	// Open (or create) the SQLite database
 	DB, err := sql.Open("mysql", dsn)
 	if err != nil {
