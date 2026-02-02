@@ -31,9 +31,9 @@ var (
 func InitializeDB() error {
 	log.Println("Connecting to MariaDB...")
 
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 
 	var (
