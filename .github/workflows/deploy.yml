@@ -1,0 +1,38 @@
+name: Deploy Rolladex
+
+on:
+    push:
+        branches: [main] # Trigger only on pushes to main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest # Refer's to Github's machine, not the VPS
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Deploy to VPS via SSH
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.VPS_HOST }}
+                  username: ${{ secrets.VPS_USER }}
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  script: |
+                      # 1. Navigate to the Rolladex directory or create it
+                      mkdir -p ~/Rolladex
+                      cd ~/Rolladex
+
+                      # 2. If not a git repo yet, initialize it
+                      if [ ! -d ".git" ]; then
+                        git clone https://github.com/${{ github.repository }}.git .
+                      fi
+
+                      # 3. Fetch latest code
+                      git pull origin main
+
+                      # 4. Spin up the containers
+                      # Note: Ensure your .env file is already sitting in ~/Rolladex/
+                      docker-compose up --build -d
+
+                      # 5. Prune old images to save space on Debian
+                      docker image prune -f
