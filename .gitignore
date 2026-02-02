@@ -6,3 +6,4 @@ backend/bin/main.out
 *.db
 *.css
 *.map
+.env

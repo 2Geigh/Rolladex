@@ -246,7 +246,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 
 	switch sortBy {
 	case "name":
-		OrderBy = `ORDER BY name COLLATE NOCASE ASC`
+		OrderBy = `ORDER BY name ASC`
 	case "relationship_tier":
 		OrderBy = `ORDER BY relationship_tier DESC`
 	case "last_interaction_date":
@@ -256,7 +256,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 	case "created_at":
 		OrderBy = `ORDER BY friend_created_at DESC`
 	default:
-		OrderBy = `ORDER BY name COLLATE NOCASE ASC`
+		OrderBy = `ORDER BY name ASC`
 	}
 
 	sqlQuery = fmt.Sprintf(`

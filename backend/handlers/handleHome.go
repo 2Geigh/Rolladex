@@ -65,7 +65,7 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 		date := time.Now().AddDate(0, 0, i)
 		urgentFriends, err := getUrgentFriends(user_id, date)
 		if err != nil {
-			return allUrgentFriendsForDays, fmt.Errorf("couldn't get urgent friends")
+			return allUrgentFriendsForDays, fmt.Errorf("couldn't get urgent friends: %w", err)
 		}
 
 		allUrgentFriendsForDays[i] = urgentFriends
