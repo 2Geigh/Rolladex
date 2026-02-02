@@ -49,7 +49,7 @@ var (
 
 func Friends(w http.ResponseWriter, req *http.Request) {
 
-	util.SetCrossOriginResourceSharing(w)
+	util.SetCrossOriginResourceSharing(w, req)
 	util.LogHttpRequest(req)
 
 	switch req.Method {

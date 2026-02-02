@@ -18,20 +18,24 @@ func LogHttpRequest(req *http.Request) {
 	log.Printf("%v %v\n", req.Method, req.RequestURI)
 }
 
-func SetCrossOriginResourceSharing(w http.ResponseWriter) {
+func SetCrossOriginResourceSharing(w http.ResponseWriter, req *http.Request) {
+	// Docker injects variables directly into the OS environment.
+	// We only try to load .env if it exists (mainly for local non-docker dev).
+	_ = godotenv.Load()
 
-	_ = godotenv.Load("../.env")
 	origin := os.Getenv("FRONTEND_ORIGIN")
 	if origin == "" {
-		origin = "http://localhost" // Safe fallback for Docker
+		origin = "http://localhost" // Fallback for local dev
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", origin)
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS, PUT")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-	w.Header().Set("Access-Control-Allow-Origin", origin)
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
+	// Handle Preflight
+	if req.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
 }

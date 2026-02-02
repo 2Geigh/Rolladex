@@ -19,7 +19,7 @@ var (
 func SessionValid(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
-	util.SetCrossOriginResourceSharing(w)
+	util.SetCrossOriginResourceSharing(w, req)
 
 	switch req.Method {
 

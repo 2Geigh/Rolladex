@@ -28,7 +28,7 @@ type loginFormData struct {
 func Login(w http.ResponseWriter, req *http.Request) {
 
 	// CORS
-	util.SetCrossOriginResourceSharing(w)
+	util.SetCrossOriginResourceSharing(w, req)
 	util.LogHttpRequest(req)
 
 	switch req.Method {
