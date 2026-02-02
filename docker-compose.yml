@@ -35,6 +35,8 @@ services:
         build: ./frontend
         container_name: rolladex-ui
         restart: always
+        volumes:
+            - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
         ports:
             - "80:80"
         networks:
