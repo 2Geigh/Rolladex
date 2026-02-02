@@ -19,7 +19,7 @@ import Loading from "./components/Loading/Loading"
 import Navbar from "./components/Navbar/Navbar"
 import AddFriends from "./components/AddFriends/AddFriends"
 import Footer from "./components/Footer/Footer"
-import "../static/styles/app.css"
+import "../static/styles/app.scss"
 import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 import InteractionStandalonePage from "./components/Interactions/InteractionStandalonePage"
 
