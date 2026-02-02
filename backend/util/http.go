@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	FrontendOrigin = "http://localhost:5173"
+	FrontendOrigin = "http://localhost"
 )
 
 func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
@@ -22,6 +22,6 @@ func LogHttpRequest(req *http.Request) {
 func SetCrossOriginResourceSharing(w http.ResponseWriter, origin string) {
 	w.Header().Set("Access-Control-Allow-Origin", origin)
 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, DELETE, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 }
