@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react"
 import { Navigate } from "react-router-dom"
 import "./Signup.scss"
+import { backend_base_url } from "../../util/url"
 
 export type SignupData = {
 	username: string
@@ -21,7 +22,7 @@ const SignUp = () => {
 			password: String(data.password),
 		}
 
-		const response = await fetch("http://localhost:3001/signup", {
+		const response = await fetch(`${backend_base_url}/signup`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

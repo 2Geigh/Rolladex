@@ -7,6 +7,7 @@ import {
 	useLoginSessionContext,
 } from "../../contexts/LoginSession"
 import Loading from "../Loading/Loading"
+import { backend_base_url } from "../../util/url"
 
 type loginData = {
 	username: string
@@ -41,7 +42,7 @@ const Login: React.FC = () => {
 			password: String(data.password),
 		}
 
-		const response = await fetch("http://localhost:3001/login", {
+		const response = await fetch(`${backend_base_url}/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
