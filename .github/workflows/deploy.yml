@@ -2,11 +2,11 @@ name: Deploy Rolladex
 
 on:
     push:
-        branches: [main] # Trigger only on pushes to main
+        branches: [main]
 
 jobs:
     deploy:
-        runs-on: ubuntu-latest # Refer's to Github's machine, not the VPS
+        runs-on: ubuntu-latest
         steps:
             - name: Checkout code
               uses: actions/checkout@v4
@@ -17,22 +17,36 @@ jobs:
                   host: ${{ secrets.VPS_HOST }}
                   username: ${{ secrets.VPS_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  # Increase timeout for Debian builds which can sometimes be slower on modest VPS hardware
+                  timeout: 40s
+                  command_timeout: 20m
                   script: |
-                      # 1. Navigate to the Rolladex directory or create it
+                      # 1. Setup path and ensure the directory exists
                       mkdir -p ~/Rolladex
                       cd ~/Rolladex
 
-                      # 2. If not a git repo yet, initialize it
+                      # 2. Initialize repo if this is the first run
                       if [ ! -d ".git" ]; then
+                        echo "First time setup: Cloning repository..."
                         git clone https://github.com/${{ github.repository }}.git .
                       fi
 
-                      # 3. Fetch latest code
-                      git pull origin main
+                      # 3. Handle Git state (Hard reset ensures local changes on VPS don't block the pull)
+                      git fetch origin main
+                      git reset --hard origin/main
 
-                      # 4. Spin up the containers
-                      # Note: Ensure your .env file is already sitting in ~/Rolladex/
-                      docker-compose up --build -d
+                      # 4. Dependency & Environment Check
+                      if [ ! -f ".env" ]; then
+                        echo "ERROR: .env file missing on VPS in ~/Rolladex. Please create it manually."
+                        exit 1
+                      fi
 
-                      # 5. Prune old images to save space on Debian
-                      docker image prune -f
+                      # 5. Build and Deploy
+                      # We use 'sudo' for Docker on Debian unless you've configured the docker group.
+                      # Using 'docker-compose' as you requested.
+                      sudo docker-compose down --remove-orphans
+                      sudo docker-compose up --build -d
+
+                      # 6. Post-deployment cleanup
+                      sudo docker image prune -f
+                      echo "Deployment successful!"
