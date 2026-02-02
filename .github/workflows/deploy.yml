@@ -18,8 +18,8 @@ jobs:
                   username: ${{ secrets.VPS_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   # Increase timeout for Debian builds which can sometimes be slower on modest VPS hardware
-                  timeout: 40s
-                  command_timeout: 20m
+                  timeout: 120s
+                  command_timeout: 30m
                   script: |
                       # Exit on any error
                       set -e
