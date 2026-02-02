@@ -2,13 +2,15 @@ package database
 
 import (
 	"database/sql"
-	"errors"
+	"embed"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"rolladex-backend/util"
-	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+	"github.com/pressly/goose/v3"
 )
 
 type SqlId interface {
@@ -16,114 +18,74 @@ type SqlId interface {
 }
 
 var (
-	DB         *sql.DB = nil
-	DbFilePath string  = "database/myFriends.db"
+	DB *sql.DB = nil
 
-	// SQLite-optimized pool settings
-	maxOppenDatabaseConnections int           = 1 // 1 writer only
-	maxIdleDatabaseConnections  int           = 3 // Few idle readers
-	maxConnectionLifetime       time.Duration = (5 * time.Minute)
+	// DSN format for MariaDB/MySQL
+
+	// Use go:embed to bundle migrations into the binary
+	// This assumes your migrations are in a folder named 'migrations'
+	//go:embed migrations/*.sql
+	embedMigrations embed.FS
 )
 
-func InitializeDB(dbFilePath string) error {
-	log.Println("Initializing database...")
-	var err error
+func InitializeDB() error {
+	log.Println("Connecting to MariaDB...")
 
-	// Ensure the directory exists
-	if err := os.MkdirAll(filepath.Dir(dbFilePath), os.ModePerm); err != nil {
-		return fmt.Errorf("failed to create directory: %v", err)
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-	// Check if SQLite database file exists
-	var databaseExists bool
-	_, err = os.Stat(dbFilePath)
-	if err == nil {
-		databaseExists = true
-	} else if errors.Is(err, os.ErrNotExist) {
-		databaseExists = false
-	} else {
-		return fmt.Errorf("couldn't determine if database file exists: %w", err)
-	}
+	var (
+		username string = os.Getenv("DB_USERNAME")
+		password string = os.Getenv("DB_PASSWORD")
+		dbHost   string = os.Getenv("DB_HOST")
+		dbPort   string = os.Getenv("DB_PORT")
+		dbName   string = os.Getenv("DB_NAME")
+
+		dsn string = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, dbHost, dbPort, dbName)
+	)
 
 	// Open (or create) the SQLite database
-	DB, err = sql.Open("sqlite", dbFilePath)
+	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
-		return fmt.Errorf("failed to open database: %v\n", err)
+		return fmt.Errorf("failed to open database: %w", err)
 	}
 
 	// Check if the database is reachable
-	err = DB.Ping()
-	if err != nil {
-		return fmt.Errorf("failed to reach database: %v\n", err)
+	if err = DB.Ping(); err != nil {
+		return fmt.Errorf("failed to reach database: %w", err)
 	}
 
-	// Set connection pool limits
-	DB.SetMaxOpenConns(maxOppenDatabaseConnections)
-	DB.SetMaxIdleConns(maxIdleDatabaseConnections)
-	DB.SetConnMaxLifetime(maxConnectionLifetime)
-
-	err = migrate()
-	if err != nil {
-		return fmt.Errorf("couldn't migrate database schema: %w", err)
+	// Run Goose Migrations
+	if err := runMigrations(); err != nil {
+		return err
 	}
 
-	if !databaseExists {
-		err = seed()
-		if err != nil {
-			os.Remove(dbFilePath)
-			return fmt.Errorf("couldn't seed database: %w", err)
-		}
+	// Password update logic
+	if err := updateSeedPasswords(); err != nil {
+		log.Printf("Warning: Seed password update skipped or failed: %v", err)
 	}
 
-	log.Println("Initialized database.")
-	return err
+	log.Println("Database initialized and migrated.")
+	return nil
 }
 
-func migrate() error {
-	log.Println("Migrating database schema...")
-	var (
-		databaseSchemaPath string = filepath.Join("database", "schema", "schema.sql")
-		err                error
-	)
+func runMigrations() error {
+	log.Println("Running migrations...")
 
-	databaseSchema, err := os.ReadFile(databaseSchemaPath)
-	if err != nil {
-		return fmt.Errorf("couldn't read database schema file: %v\n", err)
+	goose.SetBaseFS(embedMigrations)
+
+	if err := goose.SetDialect("mysql"); err != nil {
+		return err
 	}
 
-	_, err = DB.Exec(string(databaseSchema))
-	if err != nil {
-		return fmt.Errorf("couldn't execute database migration: %v\n", err)
+	// This runs all migrations in the 'migrations' directory
+	if err := goose.Up(DB, "migrations"); err != nil {
+		return fmt.Errorf("goose up failed: %w", err)
 	}
 
-	log.Println("Migrated database schema.")
-	return err
-}
-
-func seed() error {
-	log.Println("Seeding database...")
-	var (
-		seedFilePath = filepath.Join("database", "seed", "seed.sql")
-		err          error
-	)
-
-	seedScript, err := os.ReadFile(seedFilePath)
-	if err != nil {
-		return fmt.Errorf("couldn't read database seed file: %w", err)
-	}
-
-	_, err = DB.Exec(string(seedScript))
-	if err != nil {
-		return fmt.Errorf("couldn't execute database migration: %w", err)
-	}
-
-	err = updateSeedPasswords()
-	if err != nil {
-		return fmt.Errorf("couldn't update passwords in seed data: %w", err)
-	}
-
-	log.Println("Database seeded.")
-	return err
+	return nil
 }
 
 func updateSeedPasswords() error {
@@ -137,8 +99,6 @@ func updateSeedPasswords() error {
 			{"bob_minimal", "bob"},
 			{"max_tester", "max"},
 		}
-
-		err error
 	)
 
 	tx, err := DB.Begin()
@@ -184,5 +144,5 @@ func updateSeedPasswords() error {
 		return fmt.Errorf("no rows affected, no updates made")
 	}
 
-	return err
+	return nil
 }

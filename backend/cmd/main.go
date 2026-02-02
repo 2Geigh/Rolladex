@@ -47,7 +47,7 @@ func main() {
 	http.HandleFunc("/404", handlers.PageNotFound)
 
 	// Database
-	err := database.InitializeDB(database.DbFilePath)
+	err := database.InitializeDB()
 	if err != nil {
 		log.Fatal(fmt.Errorf("couldn't initialize database: %w", err))
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers

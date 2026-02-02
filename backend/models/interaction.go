@@ -28,7 +28,7 @@ func GetLastInteractionDate[F database.SqlId, U database.SqlId](friend_id F, use
 					SELECT date
 					FROM
 						Interactions
-						LEFT JOIN InteractionsAttendees
+						LEFT JOIN InteractionsAttendees ON Interactions.id = InteractionsAttendees.interaction_id
 					WHERE friend_id = ? AND user_id = ?
 					ORDER BY date DESC
 					LIMIT 1;
