@@ -31,10 +31,9 @@ var (
 func InitializeDB() error {
 	log.Println("Connecting to MariaDB...")
 
-	err := godotenv.Load("../.env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+	// Optional, in the event that the environment variables
+	// aren't alreay instantiated in the Docker container
+	_ = godotenv.Load("../.env")
 
 	var (
 		username string = os.Getenv("DB_USERNAME")
@@ -47,7 +46,7 @@ func InitializeDB() error {
 	)
 
 	// Open (or create) the SQLite database
-	DB, err = sql.Open("mysql", dsn)
+	DB, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
