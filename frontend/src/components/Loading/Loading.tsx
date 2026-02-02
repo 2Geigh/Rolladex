@@ -1,4 +1,4 @@
-import "./Loading.css"
+import "./Loading.scss"
 
 const Loading: React.FC = () => {
 	return <span id="loading">Loading...</span>

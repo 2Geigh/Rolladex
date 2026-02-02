@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { Navigate } from "react-router-dom"
-import "./Signup.css"
+import "./Signup.scss"
 
 export type SignupData = {
 	username: string

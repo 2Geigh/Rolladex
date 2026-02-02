@@ -1,7 +1,7 @@
 import Navbar from "../Navbar/Navbar"
 import Footer from "../Footer/Footer"
 import { useLoginSessionContext } from "../../contexts/LoginSession"
-import "./PageNotFound.css"
+import "./PageNotFound.scss"
 
 const PageNotFoundWithHeaderAndFooter = () => {
 	const loginSessionData = useLoginSessionContext()

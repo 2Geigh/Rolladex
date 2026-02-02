@@ -4,7 +4,7 @@ import {
 	GetRelationshipTierInfo,
 	MAX_NAME_LENGTH,
 } from "../../types/models/Friend"
-import "./styles/AddFriends.css"
+import "./styles/AddFriends.scss"
 import { backend_base_url } from "../../util/url"
 import { useNavigate } from "react-router-dom"
 import { GetMaxDaysInMonth, GetZodiac } from "../../util/dates"
@@ -113,7 +113,7 @@ const RelationshipTierDescription: React.FC<
 		<p className="relationship_tier_description">
 			{relationship_tier_code ?
 				relationship_tier.description + "."
-				: "Hover over a relationship type to see its description."}
+			:	"Hover over a relationship type to see its description."}
 		</p>
 	)
 }
@@ -199,24 +199,27 @@ const RelationshipTierSelectOptions = ({
 								relationship_tier.code,
 							)
 						}}
-						onKeyDown={(e) => e.key === 'Enter' ? setLastHoveredRelationshipTier(
-							relationship_tier.code,
-						) : <></>
+						onKeyDown={(e) =>
+							e.key === "Enter" ?
+								setLastHoveredRelationshipTier(
+									relationship_tier.code,
+								)
+							:	<></>
 						}
 						className={
 							(
 								currentlySelectedRelationshipTier !==
-								undefined &&
+									undefined &&
 								currentlySelectedRelationshipTier ===
-								relationship_tier.code
+									relationship_tier.code
 							) ?
 								"selected"
-								: ""
+							:	""
 						}
 					>
 						{labelInnerHtml}
 					</label>
-				</div >
+				</div>
 			)
 		},
 	)
@@ -273,7 +276,11 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						onClick={() => {
 							setWantsToKnowWhy(!wantsToKnowWhy)
 						}}
-						onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
+						onKeyDown={(e) =>
+							e.key === "Enter" ?
+								setWantsToKnowWhy(!wantsToKnowWhy)
+							:	<></>
+						}
 					>
 						(why?)
 					</span>
@@ -296,12 +303,16 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 							onClick={() => {
 								setWantsToKnowWhy(!wantsToKnowWhy)
 							}}
-							onKeyDown={(e) => e.key === 'Enter' ? setWantsToKnowWhy(!wantsToKnowWhy) : <></>}
+							onKeyDown={(e) =>
+								e.key === "Enter" ?
+									setWantsToKnowWhy(!wantsToKnowWhy)
+								:	<></>
+							}
 						>
 							Close
 						</span>
 					</div>
-					: <></>}
+				:	<></>}
 				<div className="tiersAndInfo">
 					<RelationshipTierDescription
 						relationship_tier_code={lastHoveredRelationshipTier}
@@ -491,7 +502,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 					className={
 						knowsAbsoluteLastInteraction ?
 							"approximate ignored"
-							: "approximate"
+						:	"approximate"
 					}
 				>
 					<span className="inputtedTimeAgo">
@@ -675,20 +686,20 @@ const AddFriends: React.FC = () => {
 
 									{formData.relationship_tier_code !==
 										undefined && (
-											<>
-												<Optional
-													formData={formData}
-													setFormData={setFormData}
-													friendName={formData.name}
-												/>
-												<input
-													tabIndex={0}
-													type="submit"
-													id="Submit"
-													value="Add friend"
-												/>
-											</>
-										)}
+										<>
+											<Optional
+												formData={formData}
+												setFormData={setFormData}
+												friendName={formData.name}
+											/>
+											<input
+												tabIndex={0}
+												type="submit"
+												id="Submit"
+												value="Add friend"
+											/>
+										</>
+									)}
 								</>
 							)}
 						</>

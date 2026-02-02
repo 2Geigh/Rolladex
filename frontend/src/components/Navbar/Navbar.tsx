@@ -1,5 +1,5 @@
 import type React from "react"
-import "./styles/Navbar.css"
+import "./styles/Navbar.scss"
 import "../../../static/images/Hamburger_icon.svg"
 import { useEffect } from "react"
 

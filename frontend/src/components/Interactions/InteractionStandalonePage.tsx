@@ -5,7 +5,7 @@ import { backend_base_url } from "../../util/url"
 import Loading from "../Loading/Loading"
 import type { Interaction } from "../../types/models/Interaction"
 import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
-import "./styles/InteractionStandalonePage.css"
+import "./styles/InteractionStandalonePage.scss"
 import { TimeAgo } from "../../util/dates"
 
 type FriendCardProps = {

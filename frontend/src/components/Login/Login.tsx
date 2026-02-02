@@ -1,4 +1,4 @@
-import "./Login.css"
+import "./Login.scss"
 import { Navigate } from "react-router-dom"
 import type { FormEvent } from "react"
 import { useLayoutEffect, useState } from "react"
