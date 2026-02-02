@@ -1,5 +1,5 @@
 # --- Stage 1: Build the Static Files ---
-FROM node AS build-stage
+FROM node:latest AS build-stage
 
 WORKDIR /app
 
