@@ -10,6 +10,9 @@ services:
             target: dev
         ports:
             - "8080:5173"
+        volumes:
+            - ./frontend:/app           # Maps your code
+            - /app/node_modules         # "Anonymous volume" to protect container modules
 
 volumes:
     db_data:
