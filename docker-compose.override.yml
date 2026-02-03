@@ -9,7 +9,7 @@ services:
         build:
             target: dev
         ports:
-            - "80:5173"
+            - "8080:5173"
 
 volumes:
     db_data:
