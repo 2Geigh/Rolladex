@@ -1,0 +1,15 @@
+services:
+    db:
+
+    backend:
+        ports:
+            - "3001:3001"
+
+    frontend:
+        build:
+            target: dev
+        ports:
+            - "80:5173"
+
+volumes:
+    db_data:
