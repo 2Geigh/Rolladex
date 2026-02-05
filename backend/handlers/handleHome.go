@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+type HomepageCalendarData = map[int][]models.Friend
+
 func Home(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 	util.SetCrossOriginResourceSharing(w, req)
@@ -56,135 +58,249 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 		daysAhead int = 5
 		totalDays int = daysAhead + 1
 
-		allUrgentFriendsForDays map[int][]models.Friend = make(map[int][]models.Friend)
+		homepageCalendarData map[int][]models.Friend = make(map[int][]models.Friend)
 
 		err error
 	)
 
-	for i := 0; i < totalDays; i++ {
+	// Get all friends who, by daysAhead days from now, will be passed their "best before" date
+	friendsDueToExpire, err := getFriendsDueToExpire(user_id, daysAhead)
+	if err != nil {
+		return homepageCalendarData, fmt.Errorf("couldn't determine which friends are passed their 'best before' %d days from now: %w", daysAhead, err)
+	}
+
+	// Get all friends whos birthdays are this week
+	friendsWithUpcomingBirthdays, err := getFriendsWithUpcomingBirthdays(user_id, daysAhead)
+	if err != nil {
+		return homepageCalendarData, fmt.Errorf("couldn't determine which friends have birthdays within the next %d days: %w", daysAhead, err)
+	}
+
+	// Assign birthday friends to respective birthday dates
+	for i := range totalDays {
 		date := time.Now().AddDate(0, 0, i)
-		urgentFriends, err := getUrgentFriends(user_id, date)
-		if err != nil {
-			return allUrgentFriendsForDays, fmt.Errorf("couldn't get urgent friends: %w", err)
+
+		for _, friend := range friendsWithUpcomingBirthdays {
+			if friend.BirthdayMonth == int(date.Month()) && friend.BirthdayDay == date.Day() {
+				homepageCalendarData[i] = append(homepageCalendarData[i], friend)
+			}
+		}
+	}
+
+	// For non-birthday friends
+	// Sort by most urgent first
+	sort.Slice(friendsDueToExpire, func(i, j int) bool {
+		return friendsDueToExpire[i].RelationshipTier < friendsDueToExpire[j].RelationshipTier
+	})
+	// Distribute them throughout the week as evenly as possible
+	day := 0
+	for _, friend := range friendsDueToExpire {
+		// Check if friend is already in calendar
+		friendAlreadyInCalendar := false
+		for _, existing := range homepageCalendarData[day] {
+			if existing.ID == friend.ID {
+				friendAlreadyInCalendar = true
+				break
+			}
 		}
 
-		allUrgentFriendsForDays[i] = urgentFriends
+		if !friendAlreadyInCalendar {
+			homepageCalendarData[day] = append(homepageCalendarData[day], friend)
+		}
+
+		day = (day + 1) % totalDays
 	}
 
-	return allUrgentFriendsForDays, err
+	return homepageCalendarData, err
 }
 
-func getUrgentFriends[U database.SqlId](user_id U, date time.Time) ([]models.Friend, error) {
+func getFriendsDueToExpire[U database.SqlId](user_id U, daysAhead int) ([]models.Friend, error) {
 	var (
-		friends       []models.Friend = []models.Friend{}
-		urgentFriends []models.Friend = []models.Friend{}
+		friends            []models.Friend
+		friendsDueToExpire []models.Friend
 
 		err error
 	)
 
-	sqlQuery := `
-					SELECT
-						Friends.id as friend_id,
-						Friends.name as friend_name,
-						Friends.birthday_month as friend_birthday_month,
-						Friends.birthday_day as friend_birthday_day,
-						Images.filepath as profile_image_path,
-						Relationships.relationship_tier as relationship_tier
-					FROM Friends
-					LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
-					LEFT JOIN Images on Images.id = Friends.profile_image_id
-					WHERE Relationships.user_id = ?;
-	`
-	stmt, err := database.DB.Prepare(sqlQuery)
+	stmt, err := database.DB.Prepare(`
+		WITH RankedInteractions AS (
+			SELECT
+				InteractionsAttendees.friend_id,
+				Interactions.date,
+				ROW_NUMBER() OVER (
+					PARTITION BY InteractionsAttendees.friend_id
+					ORDER BY Interactions.date DESC
+				) AS latest_rank
+			FROM
+				InteractionsAttendees
+				JOIN Interactions ON Interactions.id = InteractionsAttendees.interaction_id
+		)
+		SELECT
+			Friends.id,
+			Friends.name,
+			Friends.birthday_day,
+			Friends.birthday_month,
+			Images.filepath,
+			RankedInteractions.date AS latest_interaction_date,
+			Relationships.relationship_tier
+		FROM
+			Friends
+			LEFT JOIN Images ON Friends.profile_image_id = Images.id
+			LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
+			LEFT JOIN RankedInteractions ON RankedInteractions.friend_id = Friends.id 
+				AND RankedInteractions.latest_rank = 1
+		WHERE
+			Relationships.user_id = ?
+		ORDER BY latest_interaction_date DESC;
+	`)
 	if err != nil {
-		return urgentFriends, fmt.Errorf("couldn't prepare statement: %w", err)
+		return friendsDueToExpire, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
-	defer stmt.Close()
-
 	rows, err := stmt.Query(user_id)
+	if err == sql.ErrNoRows {
+		return friendsDueToExpire, nil
+	}
 	if err != nil {
-		return urgentFriends, fmt.Errorf("couldn't execute statement: %w", err)
+		return friendsDueToExpire, fmt.Errorf("couldn't query statement: %w", err)
 	}
 
 	for rows.Next() {
 		var (
 			friend models.Friend
 
-			birthdayMonth    sql.NullInt64
-			birthdayDay      sql.NullInt64
-			ProfileImagePath sql.NullString
-			RelationshipTier sql.NullInt64
+			id                    int
+			name                  string
+			birthday_day          sql.NullInt64
+			birthday_month        sql.NullInt64
+			pfp_path              sql.NullString
+			last_interaction_date sql.NullTime
+			relationship_tier     sql.NullInt64
 		)
 
-		rows.Scan(
-			&friend.ID,
-			&friend.Name,
-			&birthdayMonth,
-			&birthdayDay,
-			&ProfileImagePath,
-			&RelationshipTier,
+		err = rows.Scan(
+			&id,
+			&name,
+			&birthday_day,
+			&birthday_month,
+			&pfp_path,
+			&last_interaction_date,
+			&relationship_tier,
 		)
-		if birthdayMonth.Valid {
-			friend.BirthdayMonth = int(birthdayMonth.Int64)
+		if err != nil {
+			return friendsDueToExpire, fmt.Errorf("couldn't scan row to local variables: %w", err)
 		}
-		if birthdayDay.Valid {
-			friend.BirthdayDay = int(birthdayDay.Int64)
+
+		friend = models.Friend{ID: uint(id), Name: name}
+		if birthday_day.Valid {
+			friend.BirthdayDay = int(birthday_day.Int64)
 		}
-		if ProfileImagePath.Valid {
-			friend.ProfileImagePath = ProfileImagePath.String
+		if birthday_month.Valid {
+			friend.BirthdayMonth = int(birthday_month.Int64)
 		}
-		if RelationshipTier.Valid {
-			friend.RelationshipTier = uint(RelationshipTier.Int64)
+		if pfp_path.Valid {
+			friend.ProfileImagePath = pfp_path.String
+		}
+		if last_interaction_date.Valid {
+			friend.LastInteraction.Date = last_interaction_date.Time
+		}
+		if relationship_tier.Valid {
+			friend.RelationshipTier = uint(relationship_tier.Int64)
 		}
 
 		friends = append(friends, friend)
 	}
 
 	for _, friend := range friends {
-		var (
-			urgencyScore float64
-		)
-
-		daysSinceLastInteraction, err := models.GetDaysSinceLastInteraction(friend.ID, user_id)
-		if err != nil {
-			return urgentFriends, fmt.Errorf("couldn't get days since last interaction with %s: %w", friend.Name, err)
-		}
+		var daysToExpire int
 
 		switch friend.RelationshipTier {
 		case 1: // inner clique
-			urgencyScore = daysSinceLastInteraction / 3
+			daysToExpire = 3
 		case 2: // close friends
-			urgencyScore = daysSinceLastInteraction / 7
+			daysToExpire = 7
 		case 3: // ordinary friends
-			urgencyScore = daysSinceLastInteraction / 10
+			daysToExpire = 10
 		case 4: // acquaintances
-			urgencyScore = daysSinceLastInteraction / 14
+			daysToExpire = 14
 		default:
-			urgencyScore = daysSinceLastInteraction / 14
+			daysToExpire = 14
 		}
 
-		friend.Urgency = urgencyScore
-	}
+		friendExpirationDate := friend.LastInteraction.Date.AddDate(0, 0, daysToExpire)
+		friendExpiresSoon := friendExpirationDate.Before(time.Now().AddDate(0, 0, daysAhead+1))
 
-	sort.Slice(friends, func(i, j int) bool {
-		if friends[i].Urgency == friends[j].Urgency {
-			return friends[i].RelationshipTier < friends[j].RelationshipTier // ascending
-		}
-
-		return friends[i].Urgency > friends[j].Urgency // descending
-	})
-
-	for index, friend := range friends {
-		isBirthdayToday := date.Day() == friend.BirthdayDay && date.Month() == time.Month(friend.BirthdayMonth)
-
-		if index == 0 {
-			urgentFriends = append(urgentFriends, friend)
-			continue
-		} else if isBirthdayToday {
-			urgentFriends = append(urgentFriends, friend)
-			continue
+		if friendExpiresSoon {
+			friendsDueToExpire = append(friendsDueToExpire, friend)
 		}
 	}
 
-	return urgentFriends, err
+	return friendsDueToExpire, nil
+}
+
+func getFriendsWithUpcomingBirthdays[U database.SqlId](user_id U, daysAhead int) ([]models.Friend, error) {
+	var (
+		friendsWithUpcomingBirthdays []models.Friend
+
+		err error
+	)
+
+	stmt, err := database.DB.Prepare(`
+		SELECT
+			Friends.id,
+			Friends.name,
+			Friends.birthday_day,
+			Friends.birthday_month,
+			Images.filepath
+		FROM
+			Friends
+			LEFT JOIN Images ON Friends.profile_image_id = Images.id
+			LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
+		WHERE
+			Relationships.user_id = ?;
+	`)
+	if err != nil {
+		return friendsWithUpcomingBirthdays, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	rows, err := stmt.Query(user_id)
+	if err == sql.ErrNoRows {
+		return friendsWithUpcomingBirthdays, nil
+	}
+	if err != nil {
+		return friendsWithUpcomingBirthdays, fmt.Errorf("couldn't query statement: %w", err)
+	}
+
+	for rows.Next() {
+		var (
+			friend models.Friend
+
+			id             int
+			name           string
+			birthday_day   sql.NullInt64
+			birthday_month sql.NullInt64
+			pfp_path       sql.NullString
+		)
+
+		err = rows.Scan(&id, &name, &birthday_day, &birthday_month, &pfp_path)
+		if err != nil {
+			return friendsWithUpcomingBirthdays, fmt.Errorf("couldn't scan row to local variables: %w", err)
+		}
+
+		friend = models.Friend{ID: uint(id), Name: name}
+		if birthday_day.Valid {
+			friend.BirthdayDay = int(birthday_day.Int64)
+		}
+		if birthday_month.Valid {
+			friend.BirthdayMonth = int(birthday_month.Int64)
+		}
+		if pfp_path.Valid {
+			friend.ProfileImagePath = pfp_path.String
+		}
+		if birthday_month.Valid && birthday_day.Valid {
+			endOfUpcomingDays := time.Now().AddDate(0, 0, daysAhead)
+			if birthday_month.Int64 <= int64(endOfUpcomingDays.Month()) && birthday_day.Int64 <= int64(endOfUpcomingDays.Day()) {
+				friendsWithUpcomingBirthdays = append(friendsWithUpcomingBirthdays, friend)
+			}
+		}
+	}
+
+	return friendsWithUpcomingBirthdays, nil
 }

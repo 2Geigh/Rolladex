@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"rolladex-backend/database"
 	"rolladex-backend/handlers"
-
-	"github.com/inancgumus/screen"
 )
 
 var (
@@ -15,8 +13,6 @@ var (
 )
 
 func main() {
-	screen.Clear()
-
 	// Meta
 	http.HandleFunc("/", handlers.Root)
 	http.HandleFunc("/api_sanity_check", handlers.ApiSanityCheck)

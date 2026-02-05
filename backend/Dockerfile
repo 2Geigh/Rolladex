@@ -7,7 +7,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o main.out ./cmd/main.go
 
 # Production dist stage
-FROM alpine:latest as dist
+FROM alpine:latest AS dist
 WORKDIR /root/
 # Install CA certificates so the app can make HTTPS calls if needed
 RUN apk --no-cache add ca-certificates
