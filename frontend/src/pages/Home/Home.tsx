@@ -4,7 +4,7 @@ import "./styles/Home.scss"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
 import type { JSX, SetStateAction } from "react"
-import { TimeAgo } from "../../util/dates"
+import { TimeAgo, addDays } from "../../util/dates"
 
 type UrgentFriendsProps = {
 	urgentFriendsByDay: Record<number, Friend[]>
@@ -169,15 +169,28 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		return <>Loading...</>
 	}
 
+	Date.prototype.addDays = function (days: number) {
+		var date = new Date(this.valueOf())
+		date.setDate(date.getDate() + days)
+		return date
+	}
+
 	return (
 		<div id="urgentFriendsSection" className="homeSection">
 			<h2>
-				Today — Chuesday, Novembruary 32<sup>nd</sup>
+				{addDays(new Date(), daySelected).toLocaleDateString("en-CA", {
+					month: "long",
+					day: "numeric",
+					weekday: "long",
+				})}
 			</h2>
 
 			{weekEmpty ?
 				NoFriends
-			:	<div id="urgentCards">{MostUrgentFriends}</div>}
+			:	<>
+					<div id="urgentCards">{MostUrgentFriends}</div>
+				</>
+			}
 		</div>
 	)
 }

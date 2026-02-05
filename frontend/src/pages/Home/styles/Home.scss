@@ -413,6 +413,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 1 * $HOMEPAGE_HORIZONTAL_PAD
 							.icon {
 								display: flex;
 								align-items: center;
+								justify-content: center;
 								overflow: hidden;
 
 								width: 3rem;
@@ -421,14 +422,16 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 1 * $HOMEPAGE_HORIZONTAL_PAD
 								margin: .25rem;
 								box-sizing: border-box;
 
-								text-align: center;
 
 								border: 2px solid blue;
 								border: none;
 								border-radius: 100%;
 
+								font-family: cursive;
+								text-align: center;
 								user-select: none;
 
+								color: gray;
 								background-color: variables.$LIGHT_GRAY;
 							}
 						}
