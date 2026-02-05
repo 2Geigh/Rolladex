@@ -29,9 +29,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	}
 	let MostUrgentFriends: JSX.Element[] = []
 	if (!weekEmpty) {
-		const MostUrgentFriends: JSX.Element[] = urgentFriendsByDay[
-			daySelected
-		].map((friend) => {
+		MostUrgentFriends = urgentFriendsByDay[daySelected].map((friend) => {
 			const today = new Date()
 			const isBirthdayToday =
 				today.getMonth() + 1 === friend.birthday_month && // Because today.getMonth() returns January as 0 🤦
@@ -169,11 +167,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		return <>Loading...</>
 	}
 
-	Date.prototype.addDays = function (days: number) {
-		var date = new Date(this.valueOf())
-		date.setDate(date.getDate() + days)
-		return date
-	}
+	console.log(MostUrgentFriends)
 
 	return (
 		<div id="urgentFriendsSection" className="homeSection">
