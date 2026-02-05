@@ -4,6 +4,14 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+
+#Dev stage
+FROM base AS dev
+EXPOSE 3001
+CMD ["go", "run", "./cmd/main.go"]
+
+# Builder stage
+FROM base AS builder
 RUN CGO_ENABLED=0 GOOS=linux go build -o main.out ./cmd/main.go
 
 # Production dist stage
@@ -11,6 +19,6 @@ FROM alpine:latest AS dist
 WORKDIR /root/
 # Install CA certificates so the app can make HTTPS calls if needed
 RUN apk --no-cache add ca-certificates
-COPY --from=base /app/main.out .
+COPY --from=builder /main.out .
 EXPOSE 3001
 CMD ["./main.out"]

@@ -78,6 +78,7 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 	// Assign birthday friends to respective birthday dates
 	for i := range totalDays {
 		date := time.Now().AddDate(0, 0, i)
+		homepageCalendarData[i] = []models.Friend{}
 
 		for _, friend := range friendsWithUpcomingBirthdays {
 			if friend.BirthdayMonth == int(date.Month()) && friend.BirthdayDay == date.Day() {

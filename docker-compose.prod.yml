@@ -3,6 +3,8 @@ services:
         restart: always
 
     backend:
+        build:
+            target: dist
         restart: always
 
     frontend:

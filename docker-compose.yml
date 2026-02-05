@@ -23,7 +23,7 @@ services:
     backend:
         build:
             context: ./backend
-            target: dist
+            target: base
         container_name: rolladex-api
         depends_on:
             db:
