@@ -1,18 +1,18 @@
 import { Routes, Route } from "react-router-dom"
 import Login from "./components/Login/Login"
 import SignUp from "./components/Signup/Signup"
-import Home from "./components/Home/Home"
+import Home from "./pages/Home/Home"
 import Friends from "./components/Friends/Friends"
 import FriendStandalonePage from "./components/Friends/FriendStandalonePage"
 import Profile from "./components/Profile/Profile"
-import Logout from "./components/Logout/Logout"
+import Logout from "./pages/Logout/Logout"
 import { useState } from "react"
 import {
 	GetSessionAndUserData,
 	LoginSessionContext,
 } from "./contexts/LoginSession"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
-import Settings from "./components/Settings/Settings"
+import Settings from "./pages/Settings/Settings"
 import type { LoginSessionData } from "./contexts/LoginSession"
 import { useLayoutEffect } from "react"
 import Loading from "./components/Loading/Loading"

@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom"
 import { useLayoutEffect, useState } from "react"
-import Loading from "../Loading/Loading"
+import Loading from "../../components/Loading/Loading"
 import { backend_base_url } from "../../util/url"
 import { useLoginSessionContext } from "../../contexts/LoginSession"
 
