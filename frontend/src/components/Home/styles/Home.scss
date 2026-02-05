@@ -1,5 +1,9 @@
 @use "../../../../static/styles/variables";
 
+
+$COLUMN_BORDER_WIDTH: 3px;
+$HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: 1000px;
+
 #homeContent {
 	display: flex;
 	flex-direction: column;
@@ -10,6 +14,7 @@
 	width: 100%;
 
 	padding-top: min(5.5vh, 30px);
+
 	box-sizing: border-box;
 
 	background-color: variables.$VIOLET_BACKGROUND;
@@ -20,6 +25,7 @@
 		margin-bottom: min(3vh, 20px);
 	}
 
+
 	#homeSections {
 		display: flex;
 		flex-direction: row;
@@ -29,17 +35,23 @@
 
 		width: 100%;
 
+		// background-color: red;
+
 		.homeSection {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 			align-items: center;
 
-			min-width: 500px;
+			// min-width: 500px;
 			width: 100%;
-			max-width: 49vw;
-
 			height: 100%;
+
+			padding-left: 1rem;
+			padding-right: 1rem;
+			box-sizing: border-box;
+
+			margin-bottom: 1.25rem;
 
 			// border: 1px solid black;
 			// background-color: orange;
@@ -54,10 +66,13 @@
 			}
 		}
 
+
+
 		#urgentFriendsSection {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
+
 
 			// background-color: yellow;
 
@@ -107,10 +122,10 @@
 							padding: 1rem;
 							box-sizing: border-box;
 
-							$DIMENSION: 8rem;
-							height: $DIMENSION;
+							$DIMENSION: min(16vw, 8rem);
+							// height: $DIMENSION;
 							width: $DIMENSION;
-							aspect-ratio: 1 / 1;
+							// aspect-ratio: 1 / 1;
 
 							text-align: center;
 							text-wrap: wrap;
@@ -276,44 +291,51 @@
 		#upcomingSection {
 			// background-color: greenyellow;
 
-			$COLUMN_BORDER_WIDTH: 3px;
 
 			#calendar {
 				display: flex;
-				flex-direction: row;
+				flex-direction: column;
 				justify-content: stretch;
 				align-items: stretch;
 
 				width: 100%;
 				max-width: 47.5rem;
-				height: 20rem;
 
-				background-color: turquoise;
+				box-sizing: border-box;
+
+
+				// background-color: turquoise;
 
 				.column {
 					display: flex;
-					flex-direction: column;
+					flex-direction: row;
 					justify-content: stretch;
-					align-items: center;
+					align-items: stretch;
+					align-self: stretch;
 
 					width: 100%;
+					min-height: 4.5rem;
+
+					padding: 0px;
+					box-sizing: border-box;
 
 					border: 1px solid black;
 					border: none;
-					box-sizing: border-box;
 
 					user-select: none;
 
-					background-color: cyan;
+					// background-color: cyan;
 
 					.day_header {
 						display: flex;
+						flex-direction: row;
 						justify-content: center;
 						align-items: center;
+						align-self: stretch;
+						flex-shrink: 0;
 
-						width: 100%;
-						height: 25%;
-						max-height: 2.5em;
+						min-width: 2.5rem;
+						width: 2.5em;
 
 						background-color: variables.$LIGHT_GRAY;
 						// background-color: orange;
@@ -321,39 +343,41 @@
 
 					.body {
 						display: flex;
-						flex-direction: column;
+						flex-direction: row;
 						justify-content: space-between;
 						align-items: center;
 
-						width: 100%;
-						height: 100%;
+						flex: 1;
 
 						background-color: white;
 
 						.icons {
 							display: flex;
-							flex-direction: column;
-							justify-content: space-evenly;
+							flex-direction: row;
+							justify-content: flex-start;
 							align-items: center;
 							overflow: hidden;
 							word-break: break-all;
+							flex-wrap: wrap;
 
 							height: 100%;
+							width: 100%;
 
-							padding-top: 0.5rem;
-							padding-bottom: 0.5rem;
+							padding-left: .5rem;
+							padding-right: .5rem;
 							box-sizing: border-box;
 
-							// background-color: red;
+							// background-color: orange;
 
 							.icon {
 								display: flex;
 								align-items: center;
 								overflow: hidden;
 
-								width: 50%;
+								width: 3rem;
 								aspect-ratio: 1 / 1;
 
+								margin: .25rem;
 								box-sizing: border-box;
 
 								text-align: center;
@@ -370,13 +394,16 @@
 
 						.emoji {
 							display: flex;
+							flex-direction: row;
 							justify-content: center;
 							align-items: center;
 
-							width: 100%;
-							height: 1.5em;
+							width: 2.5rem;
+							height: 100%;
 
-							padding-bottom: 0.25rem;
+							padding-left: .25rem;
+							padding-right: .25rem;
+							box-sizing: border-box;
 
 							font-size: 1.5em;
 
@@ -387,16 +414,9 @@
 					}
 				}
 
-				.column:hover {
-					box-sizing: content-box;
 
-					border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
-
-					cursor: pointer;
-				}
 
 				.selected {
-					box-sizing: border-box;
 
 					border: $COLUMN_BORDER_WIDTH solid variables.$VIOLET;
 
@@ -407,6 +427,70 @@
 
 				.selected:hover {
 					border-color: variables.$VIOLET_DARK;
+				}
+			}
+		}
+
+		@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
+			.homeSection {
+				min-width: 30rem;
+				width: 50%;
+
+				margin-bottom: 0px;
+			}
+
+			#upcomingSection {
+				#calendar {
+					flex-direction: row;
+
+					min-height: 20rem;
+
+
+					.column {
+						flex-direction: column;
+
+						height: auto;
+
+						.day_header {
+							width: 100%;
+							height: 2.5em;
+						}
+
+						.body {
+							flex-direction: column;
+
+							.icons {
+								flex-direction: column;
+								justify-content: flex-start;
+								flex-wrap: nowrap;
+
+								padding-top: 0.5rem;
+								padding-bottom: 0.5rem;
+
+								.icon {
+									flex-wrap: nowrap;
+
+									width: clamp(3rem, 4vw, 4.75rem);
+								}
+							}
+						}
+
+						.emoji {
+							max-height: 1.5em;
+							max-width: max-content;
+							padding-bottom: 0.25rem;
+							padding-left: 0rem;
+
+							width: 100%;
+						}
+					}
+
+					.column:hover {
+
+						border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
+
+						cursor: pointer;
+					}
 				}
 			}
 		}

@@ -99,7 +99,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 								<br></br>
 								<div className="emoji">🎂 🎁 🎉</div>
 							</div>
-						:	<div className="under_name last_interaction">
+							: <div className="under_name last_interaction">
 								Last interaction:{" "}
 								<span className="time_ago">
 									{friend.last_interaction ?
@@ -109,7 +109,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 											) === "Just now"
 										) ?
 											<>Just now</>
-										:	<>
+											: <>
 												{TimeAgo(
 													friend.last_interaction
 														.date,
@@ -117,7 +117,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 												ago
 											</>
 
-									:	<>Unknown</>}
+										: <>Unknown</>}
 								</span>
 							</div>
 						}
@@ -228,11 +228,11 @@ const Upcoming: React.FC<UpcomingProps> = ({
 							<div className="emoji">
 								{friends.length < 1 ?
 									"🫥"
-								: todayIsBirthday ?
-									"🎂"
-								:	GetRelationshipTierInfo(
-										closestRelationshipTier,
-									).emoji
+									: todayIsBirthday ?
+										"🎂"
+										: GetRelationshipTierInfo(
+											closestRelationshipTier,
+										).emoji
 								}
 							</div>
 						</div>
@@ -302,7 +302,7 @@ const Home: React.FC = () => {
 		<div id="homeContent">
 			{loginSessionContext.user ?
 				<h1>Hello, {loginSessionContext.user?.username}.</h1>
-			:	<h1>Good afternoon.</h1>}
+				: <h1>Good afternoon.</h1>}
 
 			<div id="homeSections">
 				<UrgentFriends
