@@ -1,27 +1,27 @@
 import { Routes, Route } from "react-router-dom"
-import Login from "./components/Login/Login"
-import SignUp from "./components/Signup/Signup"
 import Home from "./pages/Home/Home"
-import Friends from "./components/Friends/Friends"
-import FriendStandalonePage from "./components/Friends/FriendStandalonePage"
-import Profile from "./components/Profile/Profile"
 import Logout from "./pages/Logout/Logout"
 import { useState } from "react"
 import {
 	GetSessionAndUserData,
 	LoginSessionContext,
 } from "./contexts/LoginSession"
+import Login from "./pages/Login/Login"
+import SignUp from "./pages/Signup/Signup"
+import Friends from "./pages/Friends/Friends"
+import FriendStandalonePage from "./pages/Friends/FriendStandalonePage"
+import Loading from "./components/Loading/Loading"
 import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
+import InteractionStandalonePage from "./pages/Interactions/InteractionStandalonePage"
 import Settings from "./pages/Settings/Settings"
 import type { LoginSessionData } from "./contexts/LoginSession"
+import AddFriends from "./pages/AddFriends/AddFriends"
+import Profile from "./pages/Profile/Profile"
 import { useLayoutEffect } from "react"
-import Loading from "./components/Loading/Loading"
 import Navbar from "./components/Navbar/Navbar"
-import AddFriends from "./components/AddFriends/AddFriends"
 import Footer from "./components/Footer/Footer"
 import "../static/styles/app.scss"
 import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
-import InteractionStandalonePage from "./components/Interactions/InteractionStandalonePage"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({

@@ -6,7 +6,7 @@ import {
 	GetSessionAndUserData,
 	useLoginSessionContext,
 } from "../../contexts/LoginSession"
-import Loading from "../Loading/Loading"
+import Loading from "../../components/Loading/Loading"
 import { backend_base_url } from "../../util/url"
 
 type loginData = {

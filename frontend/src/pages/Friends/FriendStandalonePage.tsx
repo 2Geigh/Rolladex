@@ -6,7 +6,7 @@ import {
 } from "../../types/models/Friend"
 import React, { useEffect, useState } from "react"
 import { backend_base_url } from "../../util/url"
-import Loading from "../Loading/Loading"
+import Loading from "../../components/Loading/Loading"
 import "./styles/FriendStandalonePage.scss"
 import type { Interaction } from "../../types/models/Interaction"
 import {
@@ -15,7 +15,7 @@ import {
 	MonthNumberToString,
 	TimeAgo,
 } from "../../util/dates"
-import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import PageNotFoundWithoutHeaderAndFooter from "../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 
 type UpdateLastInteractionProps = {
 	friend_id: number
@@ -245,7 +245,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							profile_image_path.trim() !== ""
 						) ?
 							profile_image_path
-						:	"not_found"
+							: "not_found"
 					}
 					alt={name}
 					className="pfp"
@@ -261,7 +261,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							minLength={1}
 							maxLength={MAX_NAME_LENGTH}
 						/>
-					:	<h2 className="name">{name}</h2>}
+						: <h2 className="name">{name}</h2>}
 					<span className="relationship">
 						{isEdittingFriend ?
 							<>
@@ -304,7 +304,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 									</option>
 								</select>
 							</>
-						:	<span className="relationship_tier">
+							: <span className="relationship_tier">
 								<span className="emoji">
 									{relationship.emoji}
 								</span>
@@ -385,7 +385,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 									{DayOptions}
 								</select>
 							</>
-						:	<>
+							: <>
 								{(
 									birthday_day &&
 									birthday_day > 0 &&
@@ -402,7 +402,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 											{birthday_day}
 										</span>
 									</>
-								:	"Unknown"}
+									: "Unknown"}
 							</>
 						}
 					</span>
@@ -447,7 +447,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							Cancel
 						</button>
 					</>
-				:	<button className="edit_friend" onClick={editFriend}>
+					: <button className="edit_friend" onClick={editFriend}>
 						Edit friend
 					</button>
 				}

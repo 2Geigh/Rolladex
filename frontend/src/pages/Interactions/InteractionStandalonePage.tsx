@@ -2,9 +2,9 @@ import { useParams } from "react-router-dom"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import React, { useEffect, useState, type SetStateAction } from "react"
 import { backend_base_url } from "../../util/url"
-import Loading from "../Loading/Loading"
+import Loading from "../../components/Loading/Loading"
 import type { Interaction } from "../../types/models/Interaction"
-import PageNotFoundWithoutHeaderAndFooter from "../PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import PageNotFoundWithoutHeaderAndFooter from "../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
 import "./styles/InteractionStandalonePage.scss"
 import { TimeAgo } from "../../util/dates"
 
@@ -106,7 +106,7 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 						(
 						{TimeAgo(date) === "Just now" ?
 							"Just now"
-						:	`${TimeAgo(date)} ago`}
+							: `${TimeAgo(date)} ago`}
 						)
 					</span>
 				</div>

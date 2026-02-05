@@ -7,7 +7,7 @@ import {
 	type RelationshipTier,
 } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
-import Loading from "../Loading/Loading"
+import Loading from "../../components/Loading/Loading"
 import "./styles/Friends.scss"
 import {
 	GetZodiac,
@@ -116,7 +116,7 @@ const SetFriendsPerPage: React.FC<SetFriendsPerPageProps> = ({
 					value="Go"
 					onClick={setNewPerPage}
 				/>
-			:	<></>}
+				: <></>}
 		</div>
 	)
 }
@@ -206,7 +206,7 @@ const PageNav: React.FC<PageNavProps> = ({
 				<div className="arrow" id="left" onClick={goToPreviousPage}>
 					〈
 				</div>
-			:	<div className="blocked" id="left"></div>}
+				: <div className="blocked" id="left"></div>}
 			<select
 				name="page"
 				id="pageSelect"
@@ -219,7 +219,7 @@ const PageNav: React.FC<PageNavProps> = ({
 				<div className="arrow" id="right" onClick={goToNextPage}>
 					〉
 				</div>
-			:	<div className="blocked" id="right"></div>}
+				: <div className="blocked" id="right"></div>}
 		</div>
 	)
 }
@@ -248,7 +248,7 @@ const Table: React.FC<TableProps> = ({ FriendListItems }) => {
 			<tbody>
 				{FriendListItems && FriendListItems?.length > 0 ?
 					FriendListItems
-				:	<tr id="noFriends">
+					: <tr id="noFriends">
 						<td colSpan={5}>Nobody to be found...</td>
 					</tr>
 				}
@@ -373,7 +373,7 @@ const Friends: React.FC = () => {
 									</span>{" "}
 									<span className="day">{birthday.day}</span>
 								</>
-							:	<>Unknown</>}
+								: <>Unknown</>}
 						</span>
 						<div className="emoji">
 							{
@@ -476,7 +476,7 @@ const Friends: React.FC = () => {
 					className={
 						!FriendListItems?.length ?
 							"noFriends table_footer"
-						:	"table_footer"
+							: "table_footer"
 					}
 				>
 					<div className="subfooter">
@@ -496,7 +496,7 @@ const Friends: React.FC = () => {
 					searchParams={searchParams}
 					setSearchParams={setSearchParams}
 				/>
-			:	<></>}
+				: <></>}
 		</div>
 	)
 }
