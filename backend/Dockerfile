@@ -19,6 +19,6 @@ FROM alpine:latest AS dist
 WORKDIR /root/
 # Install CA certificates so the app can make HTTPS calls if needed
 RUN apk --no-cache add ca-certificates
-COPY --from=builder /main.out .
+COPY --from=builder /app/main.out .
 EXPOSE 3001
 CMD ["./main.out"]
