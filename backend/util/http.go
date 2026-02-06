@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
@@ -19,9 +17,6 @@ func LogHttpRequest(req *http.Request) {
 }
 
 func SetCrossOriginResourceSharing(w http.ResponseWriter, req *http.Request) {
-	// Docker injects variables directly into the OS environment.
-	// We only try to load .env if it exists (mainly for local non-docker dev).
-	_ = godotenv.Load()
 
 	origin := os.Getenv("FRONTEND_ORIGIN")
 	if origin == "" {

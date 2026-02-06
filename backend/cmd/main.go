@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"rolladex-backend/database"
 	"rolladex-backend/handlers"
+
+	"github.com/joho/godotenv"
 )
 
 var (
@@ -13,6 +15,8 @@ var (
 )
 
 func main() {
+	godotenv.Load()
+
 	// Meta
 	http.HandleFunc("/", handlers.Root)
 	http.HandleFunc("/api_sanity_check", handlers.ApiSanityCheck)
