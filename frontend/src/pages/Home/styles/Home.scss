@@ -3,7 +3,7 @@
 
 $COLUMN_BORDER_WIDTH: 3px;
 $HOMEPAGE_HORIZONTAL_PADDING: 1.5rem;
-$HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 1 * $HOMEPAGE_HORIZONTAL_PADDING);
+$HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PADDING);
 
 #homeContent {
 	display: flex;
@@ -478,7 +478,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 1 * $HOMEPAGE_HORIZONTAL_PAD
 		@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
 			.homeSection {
 				min-width: 30rem;
-				width: 50%;
+				width: calc(50% - 2 * $HOMEPAGE_HORIZONTAL_PADDING);
 
 				margin-bottom: 0px;
 			}
