@@ -39,6 +39,7 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't marshal upcoming urgent friends data to JSON", http.StatusInternalServerError)
 			return
 		}
+		fmt.Println(urgentFriendsForTodayAndNextFiveDays)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -75,6 +76,48 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 		return homepageCalendarData, fmt.Errorf("couldn't determine which friends have birthdays within the next %d days: %w", daysAhead, err)
 	}
 
+	// Eliminate friends who've been "completed" or "ignored" by the user
+	cutoffDate := time.Now().AddDate(0, 0, -(totalDays + 1))
+	friendsDueToExpire_FILTERED := []models.Friend{}
+	for _, friend := range friendsDueToExpire {
+		var (
+			created_at time.Time
+			err        error
+		)
+		stmt, err := database.DB.Prepare(`
+			SELECT created_at
+			FROM UserFriendUpdates
+			WHERE user_id = ? AND friend_id = ?
+			ORDER BY created_at DESC
+			LIMIT 1;
+		`)
+		if err != nil {
+			return homepageCalendarData, fmt.Errorf("couldn't prepare statement: %w", err)
+		}
+		err = stmt.QueryRow(user_id, friend.ID).Scan(&created_at)
+		if err == sql.ErrNoRows {
+			friendsDueToExpire_FILTERED = append(friendsDueToExpire_FILTERED, friend)
+			continue
+		}
+		if err != nil {
+			return homepageCalendarData, fmt.Errorf("couldn't execute statement: %w", err)
+		}
+
+		isActionOld := created_at.Before(cutoffDate)
+		if isActionOld {
+			friendsDueToExpire_FILTERED = append(friendsDueToExpire_FILTERED, friend)
+		}
+	}
+
+	for _, friend := range friendsDueToExpire {
+		fmt.Println(friend.Name)
+	}
+	fmt.Println()
+	for _, friend := range friendsDueToExpire_FILTERED {
+		fmt.Println(friend.Name)
+	}
+	fmt.Println()
+
 	// Assign birthday friends to respective birthday dates
 	for i := range totalDays {
 		date := time.Now().AddDate(0, 0, i)
@@ -89,12 +132,12 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 
 	// For non-birthday friends
 	// Sort by most urgent first
-	sort.Slice(friendsDueToExpire, func(i, j int) bool {
-		return friendsDueToExpire[i].RelationshipTier < friendsDueToExpire[j].RelationshipTier
+	sort.Slice(friendsDueToExpire_FILTERED, func(i, j int) bool {
+		return friendsDueToExpire_FILTERED[i].RelationshipTier < friendsDueToExpire_FILTERED[j].RelationshipTier
 	})
 	// Distribute them throughout the week as evenly as possible
 	day := 0
-	for _, friend := range friendsDueToExpire {
+	for _, friend := range friendsDueToExpire_FILTERED {
 		// Check if friend is already in calendar
 		friendAlreadyInCalendar := false
 		for _, existing := range homepageCalendarData[day] {
