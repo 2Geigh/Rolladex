@@ -54,17 +54,21 @@ jobs:
             
                         # 4. Build and Deploy
                         FILES="-f docker-compose.yml -f docker-compose.prod.yml"
-
+                        
                         echo "Starting Docker containers with Production Config..."
                         
-                        # Improved check using standard redirection
+                        # Explicitly force-remove the specific UI container if it's being stubborn
+                        docker rm -f rolladex-ui || true 
+                        
+                        # Standard Compose deployment
                         if command -v docker-compose > /dev/null 2>&1; then
-                            docker-compose $FILES down --remove-orphans
-                            docker-compose $FILES up --build -d
+                            DOCKER_CMD="docker-compose"
                         else
-                            docker compose $FILES down --remove-orphans
-                            docker compose $FILES up --build -d
+                            DOCKER_CMD="docker compose"
                         fi
+                        
+                        $DOCKER_CMD $FILES down --remove-orphans
+                        $DOCKER_CMD $FILES up --build -d
             
                         # 5. Post-deployment cleanup
                         docker image prune -f
