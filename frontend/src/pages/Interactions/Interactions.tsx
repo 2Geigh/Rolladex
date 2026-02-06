@@ -7,8 +7,7 @@ import {
 	type RelationshipTier,
 } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
-import Loading from "../Loading/Loading"
-import "./styles/Friends.scss"
+import Loading from "../../components/Loading/Loading"
 import {
 	GetZodiac,
 	MonthNumberToString,
