@@ -12,6 +12,7 @@
 	box-sizing: border-box;
 
 	width: 100%;
+	min-height: calc(100vh - 2*variables.$NAVBAR_HEIGHT);
 
 	background-color: variables.$VIOLET_BACKGROUND;
 
@@ -144,6 +145,7 @@
 						color: black;
 						// background-color: orangered;
 					}
+
 					.name:hover {
 						background-color: rgb(234, 234, 234);
 					}
@@ -170,6 +172,7 @@
 
 				border: none;
 			}
+
 			button:hover {
 				cursor: pointer;
 			}
@@ -180,6 +183,7 @@
 				color: black;
 				background-color: lightgray;
 			}
+
 			.edit:hover {
 				color: white;
 				background-color: rgb(171, 171, 171);
@@ -193,6 +197,7 @@
 				color: white;
 				background-color: variables.$DELETE_RED;
 			}
+
 			.delete:hover {
 				background-color: red;
 			}

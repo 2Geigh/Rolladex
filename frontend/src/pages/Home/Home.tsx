@@ -4,7 +4,7 @@ import "./styles/Home.scss"
 import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
 import { backend_base_url } from "../../util/url"
 import type { JSX, SetStateAction } from "react"
-import { TimeAgo } from "../../util/dates"
+import { TimeAgo, addDays } from "../../util/dates"
 
 type UrgentFriendsProps = {
 	urgentFriendsByDay: Record<number, Friend[]>
@@ -20,136 +20,171 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	numberOfRerenders,
 	setNumberOfRerenders,
 }) => {
-	const MostUrgentFriends: JSX.Element[] = urgentFriendsByDay[
-		daySelected
-	].map((friend) => {
-		const today = new Date()
-		const isBirthdayToday =
-			today.getMonth() + 1 === friend.birthday_month && // Because today.getMonth() returns January as 0 🤦
-			today.getDate() === friend.birthday_day
+	let weekEmpty = true
+	for (let key in Object.values(urgentFriendsByDay)) {
+		if (urgentFriendsByDay[key].length > 0) {
+			weekEmpty = false
+			break
+		}
+	}
+	let MostUrgentFriends: JSX.Element[] = []
+	if (!weekEmpty) {
+		MostUrgentFriends = urgentFriendsByDay[daySelected].map((friend) => {
+			const today = new Date()
+			const isBirthdayToday =
+				today.getMonth() + 1 === friend.birthday_month && // Because today.getMonth() returns January as 0 🤦
+				today.getDate() === friend.birthday_day
 
-		async function ignoreFriend(
-			event: React.MouseEvent<HTMLButtonElement>,
-		) {
-			event.preventDefault()
+			async function ignoreFriend(
+				event: React.MouseEvent<HTMLButtonElement>,
+			) {
+				event.preventDefault()
 
-			const response = await fetch(`${backend_base_url}/friends/status`, {
-				method: "POST",
-				credentials: "include",
-				body: JSON.stringify({
-					friend_id: friend.id,
-					action: "ignore",
-				}),
-			})
+				const response = await fetch(
+					`${backend_base_url}/friends/status`,
+					{
+						method: "POST",
+						credentials: "include",
+						body: JSON.stringify({
+							friend_id: friend.id,
+							action: "ignore",
+						}),
+					},
+				)
 
-			if (!response.ok) {
-				throw new Error(`${response.statusText}: ${response.text}`)
+				if (!response.ok) {
+					throw new Error(`${response.statusText}: ${response.text}`)
+				}
+
+				setNumberOfRerenders(numberOfRerenders + 1)
 			}
 
-			setNumberOfRerenders(numberOfRerenders + 1)
-		}
+			async function completeFriend(
+				event: React.MouseEvent<HTMLButtonElement>,
+			) {
+				event.preventDefault()
 
-		async function completeFriend(
-			event: React.MouseEvent<HTMLButtonElement>,
-		) {
-			event.preventDefault()
+				const response = await fetch(
+					`${backend_base_url}/friends/status`,
+					{
+						method: "POST",
+						credentials: "include",
+						body: JSON.stringify({
+							friend_id: friend.id,
+							action: "complete",
+						}),
+					},
+				)
 
-			const response = await fetch(`${backend_base_url}/friends/status`, {
-				method: "POST",
-				credentials: "include",
-				body: JSON.stringify({
-					friend_id: friend.id,
-					action: "complete",
-				}),
-			})
+				if (!response.ok) {
+					throw new Error(`${response.statusText}: ${response.text}`)
+				}
 
-			if (!response.ok) {
-				throw new Error(`${response.statusText}: ${response.text}`)
+				setNumberOfRerenders(numberOfRerenders + 1)
 			}
 
-			setNumberOfRerenders(numberOfRerenders + 1)
-		}
+			return (
+				<div className="urgent_friend" key={friend.id}>
+					<a href={`/friends/${friend.id}`}>
+						<img
+							src={String(friend.profile_image_path)}
+							alt={friend.name}
+						/>
+					</a>
 
-		return (
-			<div className="urgent_friend" key={friend.id}>
-				<a href={`/friends/${friend.id}`}>
-					<img
-						src={String(friend.profile_image_path)}
-						alt={friend.name}
-					/>
-				</a>
-
-				<div className="body">
-					<div className="text">
-						<span className="name_and_relationship_tier">
-							<a href={`/friends/${friend.id}`} className="name">
-								{friend.name}
-							</a>
-							<div className="relationship_icon">
-								{
-									GetRelationshipTierInfo(
-										friend.relationship_tier,
-									).emoji
-								}
-							</div>
-						</span>
-						{isBirthdayToday ?
-							<div className="under_name birthday">
-								Today's {friend.name}'s birthday!
-								<br></br>
-								<div className="emoji">🎂 🎁 🎉</div>
-							</div>
-							: <div className="under_name last_interaction">
-								Last interaction:{" "}
-								<span className="time_ago">
-									{friend.last_interaction ?
-										(
-											TimeAgo(
-												friend.last_interaction.date,
-											) === "Just now"
-										) ?
-											<>Just now</>
-											: <>
-												{TimeAgo(
+					<div className="body">
+						<div className="text">
+							<span className="name_and_relationship_tier">
+								<a
+									href={`/friends/${friend.id}`}
+									className="name"
+								>
+									{friend.name}
+								</a>
+								<div className="relationship_icon">
+									{
+										GetRelationshipTierInfo(
+											friend.relationship_tier,
+										).emoji
+									}
+								</div>
+							</span>
+							{isBirthdayToday ?
+								<div className="under_name birthday">
+									Today's {friend.name}'s birthday!
+									<br></br>
+									<div className="emoji">🎂 🎁 🎉</div>
+								</div>
+							:	<div className="under_name last_interaction">
+									Last interaction:{" "}
+									<span className="time_ago">
+										{friend.last_interaction ?
+											(
+												TimeAgo(
 													friend.last_interaction
 														.date,
-												)}{" "}
-												ago
-											</>
+												) === "Just now"
+											) ?
+												<>Just now</>
+											:	<>
+													{TimeAgo(
+														friend.last_interaction
+															.date,
+													)}{" "}
+													ago
+												</>
 
-										: <>Unknown</>}
-								</span>
-							</div>
-						}
-					</div>
+										:	<>Unknown</>}
+									</span>
+								</div>
+							}
+						</div>
 
-					<div className="buttons">
-						<button className="ignore" onClick={ignoreFriend}>
-							Ignore
-						</button>
-						<button
-							className="mark_completed"
-							onClick={completeFriend}
-						>
-							Mark completed
-						</button>
+						<div className="buttons">
+							<button className="ignore" onClick={ignoreFriend}>
+								Ignore
+							</button>
+							<button
+								className="mark_completed"
+								onClick={completeFriend}
+							>
+								Mark completed
+							</button>
+						</div>
 					</div>
 				</div>
-			</div>
-		)
-	})
+			)
+		})
+	}
+	let NoFriends = (
+		<div id="noFriends">
+			<span>No upcoming communications. 🗿</span>
+			<a href="/addfriend">Add a friend</a>
+		</div>
+	)
 
 	if (isLoading) {
 		return <>Loading...</>
 	}
 
+	console.log(MostUrgentFriends)
+
 	return (
 		<div id="urgentFriendsSection" className="homeSection">
 			<h2>
-				Today — Chuesday, Novembruary 32<sup>nd</sup>
+				{addDays(new Date(), daySelected).toLocaleDateString("en-CA", {
+					month: "long",
+					day: "numeric",
+					weekday: "long",
+				})}
 			</h2>
 
-			<div id="urgentCards">{MostUrgentFriends}</div>
+			{weekEmpty ?
+				NoFriends
+			:	<>
+					<div id="urgentCards">{MostUrgentFriends}</div>
+				</>
+			}
 		</div>
 	)
 }
@@ -228,11 +263,11 @@ const Upcoming: React.FC<UpcomingProps> = ({
 							<div className="emoji">
 								{friends.length < 1 ?
 									"🫥"
-									: todayIsBirthday ?
-										"🎂"
-										: GetRelationshipTierInfo(
-											closestRelationshipTier,
-										).emoji
+								: todayIsBirthday ?
+									"🎂"
+								:	GetRelationshipTierInfo(
+										closestRelationshipTier,
+									).emoji
 								}
 							</div>
 						</div>
@@ -302,7 +337,7 @@ const Home: React.FC = () => {
 		<div id="homeContent">
 			{loginSessionContext.user ?
 				<h1>Hello, {loginSessionContext.user?.username}.</h1>
-				: <h1>Good afternoon.</h1>}
+			:	<h1>Good afternoon.</h1>}
 
 			<div id="homeSections">
 				<UrgentFriends
