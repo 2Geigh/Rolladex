@@ -33,8 +33,12 @@ jobs:
             
                         # 2. Handle Git Logic properly
                         if [ ! -d ".git" ]; then
-                          echo "First time setup: Cloning repository..."
-                          git clone $REPO_URL .
+                          echo "First time setup: Initializing repository..."
+                          git init
+                          git remote add origin $REPO_URL
+                          git fetch origin main
+                          # This pulls the code without deleting your manual .env
+                          git reset --hard origin/main 
                         else
                           echo "Updating repository..."
                           git fetch origin main
