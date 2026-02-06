@@ -21,45 +21,46 @@ jobs:
                   timeout: 120s
                   command_timeout: 30m
                   script: |
-                      # Exit on any error
-                      set -e
-
-                      PROJECT_DIR="$HOME/Rolladex"
-                      REPO_URL="https://github.com/${{ github.repository }}.git"
-
-                      # 1. Ensure the directory exists
-                      mkdir -p $PROJECT_DIR
-                      cd $PROJECT_DIR
-
-                      # 2. Handle Git Logic properly
-                      if [ ! -d ".git" ]; then
-                        echo "First time setup: Cloning repository..."
-                        # Clone into a temp folder then move .git to current folder
-                        git clone $REPO_URL .
-                      else
-                        echo "Updating repository..."
-                        git fetch origin main
-                        git reset --hard origin/main
-                      fi
-
-                      # 3. Dependency & Environment Check
-                      if [ ! -f ".env" ]; then
-                        echo "CRITICAL ERROR: .env file missing in $PROJECT_DIR"
-                        echo "Please SSH into the VPS and run: nano $PROJECT_DIR/.env"
-                        exit 1
-                      fi
-
-                      # 4. Build and Deploy
-                      # We check for both 'docker-compose' and 'docker compose' (newer Docker version)
-                      echo "Starting Docker containers..."
-                      if command -v docker-compose &> /dev/null; then
-                          docker-compose down --remove-orphans
-                          docker-compose up --build -d
-                      else
-                          docker compose down --remove-orphans
-                          docker compose up --build -d
-                      fi
-
-                      # 5. Post-deployment cleanup
-                      docker image prune -f
-                      echo "Deployment successful! Site should be live at your VPS IP."
+                        # Exit on any error
+                        set -e
+            
+                        PROJECT_DIR="$HOME/Rolladex"
+                        REPO_URL="https://github.com/${{ github.repository }}.git"
+            
+                        # 1. Ensure the directory exists
+                        mkdir -p $PROJECT_DIR
+                        cd $PROJECT_DIR
+            
+                        # 2. Handle Git Logic properly
+                        if [ ! -d ".git" ]; then
+                          echo "First time setup: Cloning repository..."
+                          git clone $REPO_URL .
+                        else
+                          echo "Updating repository..."
+                          git fetch origin main
+                          git reset --hard origin/main
+                        fi
+            
+                        # 3. Dependency & Environment Check
+                        if [ ! -f ".env" ]; then
+                          echo "CRITICAL ERROR: .env file missing in $PROJECT_DIR"
+                          echo "Please SSH into the VPS and run: nano $PROJECT_DIR/.env"
+                          exit 1
+                        fi
+            
+                        # 4. Build and Deploy
+                        FILES="-f docker-compose.yml -f docker-compose.prod.yml"
+            
+                        echo "Starting Docker containers with Production Config..."
+                        
+                        if command -v docker-compose &> /dev/null; then
+                            docker-compose $FILES down --remove-orphans
+                            docker-compose $FILES up --build -d
+                        else
+                            docker compose $FILES down --remove-orphans
+                            docker compose $FILES up --build -d
+                        fi
+            
+                        # 5. Post-deployment cleanup
+                        docker image prune -f
+                        echo "Deployment successful! Site should be live at your VPS IP."
