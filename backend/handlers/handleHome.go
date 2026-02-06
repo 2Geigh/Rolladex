@@ -39,7 +39,6 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't marshal upcoming urgent friends data to JSON", http.StatusInternalServerError)
 			return
 		}
-		fmt.Println(urgentFriendsForTodayAndNextFiveDays)
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -108,15 +107,6 @@ func getUrgentFriendsForTodayAndNextFiveDays[U database.SqlId](user_id U) (map[i
 			friendsDueToExpire_FILTERED = append(friendsDueToExpire_FILTERED, friend)
 		}
 	}
-
-	for _, friend := range friendsDueToExpire {
-		fmt.Println(friend.Name)
-	}
-	fmt.Println()
-	for _, friend := range friendsDueToExpire_FILTERED {
-		fmt.Println(friend.Name)
-	}
-	fmt.Println()
 
 	// Assign birthday friends to respective birthday dates
 	for i := range totalDays {
