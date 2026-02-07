@@ -33,18 +33,10 @@ func main() {
 	http.HandleFunc("/home", handlers.Home)
 	http.HandleFunc("/friends", handlers.Friends)
 	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
-	http.HandleFunc("/friends/urgent", handlers.UrgentFriends)
 	http.HandleFunc("/friends/status", handlers.FriendsStatus)
 	http.HandleFunc("/friends/interactions", handlers.FriendsInteractions)
 	http.HandleFunc("/friends/notes", handlers.FriendsNotes)
 	http.HandleFunc("/interactions/", handlers.InteractionStandalonePage)
-
-	// UX
-	http.HandleFunc("/profile", handlers.Profile)
-	http.HandleFunc("/settings", handlers.Settings)
-
-	// Misc.
-	http.HandleFunc("/404", handlers.PageNotFound)
 
 	// Database
 	err := database.InitializeDB()

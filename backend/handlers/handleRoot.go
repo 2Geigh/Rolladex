@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"rolladex-backend/util"
-	"time"
 )
 
 func Root(w http.ResponseWriter, req *http.Request) {
@@ -19,9 +17,4 @@ func Root(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
 
-}
-
-func Profile(w http.ResponseWriter, req *http.Request) {
-	// Log request type
-	fmt.Printf("\n%v: %v\n%v\n\n", time.Now(), req.Method, req.Body)
 }
