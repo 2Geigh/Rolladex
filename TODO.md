@@ -1,28 +1,29 @@
-# myFriends To-Do List
+# To-Do
 
-## Front-end
+## Meta (design, ideas, etc.)
 
-- [x] 404 page
-- [x] Make it so the website ƒetches the user's data upon signing in
-- [ ] Add captcha to signup form
-- [ ] Make it so that /friends returns the friends assigned to the particular user
-- [ ] Convert all front-end references to dates and times to local datetime
+- [ ] Redesign the homepage to functionally resemble a rolodex (It should be like a contact list with a notification hub at the top)
 
-## Back-end
+## Web Client
 
-- [x] Create two dummy users with dummy friend data (for testing purposes) that auto-populate the database when its created
-  <!-- - [ ] Database pooling / whatever you need to do to get rid of the "SQLite Busy" error -->
-- [x] Replace all database functions with ACID-compliant transactions
-- [ ] Create terms of service text
-- [x] Create logout system
-- [ ] Add unit tests
-- [ ] Add integration tests
-- [ ] Add functional tests (probably for main.go but verify first)
-- [ ] Design acceptance tests
-- [ ] Add performance tests
-- [ ] (OPTIONAL) Add smoke tests
-- [ ] Convert all API and database references to dates and times to UTC
+- [ ] Remove container for deployed frontend; switch to just serving static files from a folder
+- [ ] Fix 405 error on deployment
+- [ ] Fix proportions of login and signup page forms to better fit mobile screen sizes
+- [ ] Add login/signup with OAuth
 
-## Other
+## Mobile Client
 
-- [ ] Add end-to-end tests
+- [ ] Create React Native project in its own directory in this repository
+- [ ] Create login/signup screen and a temporary home screen to show that you've successfully logged in/out
+
+## API & Database
+
+- [ ] Migrate MariaDB to Postgresql
+- [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
+    - [ ] Rate limiting/DDOS
+    - [ ] CORS
+    - [ ] SQL/NoSQL injection
+    - [ ] Firewalls
+    - [ ] VPNs
+    - [ ] CSRF
+    - [ ] XSS
