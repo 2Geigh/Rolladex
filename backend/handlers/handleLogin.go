@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	AreCookiesSecure             = false // "true" ensures HTTPS only
+	AreCookiesSecure             = true // "true" ensures HTTPS only
 	loginSessionLifetime_hours   = 24
 	loginSessionLifetime_seconds = loginSessionLifetime_hours * 60 * 60
 )

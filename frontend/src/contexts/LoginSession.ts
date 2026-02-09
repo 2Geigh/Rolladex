@@ -61,7 +61,6 @@ export async function GetSessionAndUserData(
 
 		if (parsed && parsed.id && typeof parsed.username === "string") {
 			const user: User = parsed as User
-			console.log(`user:`, user)
 			setLoginSessionData({
 				...loginSessionData,
 				user: user,
