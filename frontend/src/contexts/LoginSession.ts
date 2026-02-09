@@ -70,7 +70,9 @@ export async function GetSessionAndUserData(
 			return
 		}
 	} catch (err) {
-		throw new Error(`Invalid user data from /session/user: ${err}`)
+		throw new Error(
+			`Invalid user data from /session/user: ${err}.\nReceived instead: ${response.text}`,
+		)
 	}
 }
 
