@@ -62,6 +62,7 @@ func validateSession(req *http.Request) (string, error) {
 		user_id       string
 		err           error
 	)
+
 	sessionCookie, err = req.Cookie(LoginSessionCookieName)
 	if err != nil {
 		return user_id, fmt.Errorf("couldn't find session cookie: %w", err)

@@ -57,7 +57,7 @@ export async function GetSessionAndUserData(
 	console.log(permittedMessage_serverside)
 
 	try {
-		const parsed = await JSON.parse(await response.text())
+		const parsed = await response.json()
 
 		if (parsed && parsed.id && typeof parsed.username === "string") {
 			const user: User = parsed as User
