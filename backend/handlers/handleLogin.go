@@ -77,7 +77,7 @@ func attemptLogin(w http.ResponseWriter, req *http.Request) {
 		MaxAge:   loginSessionLifetime_seconds,
 		HttpOnly: true,
 		Secure:   AreCookiesSecure, // "true" ensures HTTPS only
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteLaxMode,
 	})
 
 	w.WriteHeader(http.StatusOK)
