@@ -167,8 +167,6 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		return <>Loading...</>
 	}
 
-	console.log(MostUrgentFriends)
-
 	return (
 		<div id="urgentFriendsSection" className="homeSection">
 			<h2>
@@ -321,17 +319,12 @@ const Home: React.FC = () => {
 				throw new Error(err)
 			})
 			.then((urgentFriendsForComingDays) => {
-				console.log(urgentFriendsForComingDays)
 				setUrgentFriendsByDay(urgentFriendsForComingDays)
 			})
 			.finally(() => {
 				setIsLoading(false)
 			})
 	}, [numberOfRerenders])
-
-	useEffect(() => {
-		console.log(daySelected)
-	}, [daySelected])
 
 	return (
 		<div id="homeContent">
