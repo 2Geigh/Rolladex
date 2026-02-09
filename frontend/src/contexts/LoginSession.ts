@@ -52,9 +52,10 @@ export async function GetSessionAndUserData(
 			isLoggedIn: false,
 			user: undefined,
 		})
-		throw new Error(`Error fetching session data: ${response.statusText}`)
+		throw new Error(`${redirectMessage_serverside}: ${response.statusText}`)
+	} else {
+		console.log(permittedMessage_serverside)
 	}
-	console.log(permittedMessage_serverside)
 
 	try {
 		const parsed = await response.json()
@@ -100,7 +101,7 @@ export async function GetSessionData(
 			...loginSessionData,
 			isLoggedIn: false,
 		})
-		throw new Error(`Error fetching session data: ${response.statusText}`)
+		throw new Error(`${redirectMessage_serverside}: ${response.statusText}`)
 	} else {
 		console.log(permittedMessage_serverside)
 		setLoginSessionData({
