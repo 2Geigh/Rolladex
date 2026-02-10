@@ -58,10 +58,12 @@ export async function GetSessionAndUserData(
 	}
 
 	try {
-		const parsed = await response.json()
+		const text = await response.text()
+		console.log("Raw response from server:", text)
 
-		if (parsed && parsed.id && typeof parsed.username === "string") {
-			const user: User = parsed as User
+		const user = JSON.parse(text) as User
+
+		if (user && user.id) {
 			setLoginSessionData({
 				...loginSessionData,
 				user: user,
