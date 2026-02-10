@@ -59,7 +59,7 @@ export async function GetSessionAndUserData(
 
 	try {
 		const text = await response.text()
-		console.log("Raw response from server:", text)
+		// console.log("Raw response from server:", text)
 
 		const user = JSON.parse(text) as User
 
