@@ -11,7 +11,7 @@
 - [ ] Fix proportions of login and signup page forms to better fit mobile screen sizes
 - [ ] Add login/signup with OAuth
 - [ ] Write a TOS for the signup
-- [ ] Make the TOS button a target="\_blank" anchor or a popup
+- [x] Make the TOS button a target="\_blank" anchor or a popup
 
 ## Mobile Client
 

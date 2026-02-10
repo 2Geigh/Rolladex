@@ -72,7 +72,9 @@ const SignUp = () => {
 							></input>
 							<label htmlFor="tos-agree">
 								I have read and agree to the{" "}
-								<a href="terms_of_service">terms of service</a>
+								<a href="terms_of_service" target="_blank">
+									terms of service
+								</a>
 							</label>
 						</div>
 
