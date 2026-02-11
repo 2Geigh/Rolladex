@@ -33,13 +33,12 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 	}, [])
 
 	return (
-		<>
-			{isLoggedIn ?
 				<nav className="navbar">
 					<a href="/home" className="logo">
 						Rolladex
 					</a>
-
+				
+				{isLoggedIn ?
 					<>
 						<div id="burgerAndMobileNav">
 							<div
@@ -63,13 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 							<a href="/logout">Logout</a>
 						</nav>
 					</>
-				</nav>
-			:	<>
-					<nav className="navbar"></nav>
-				</>
-			}
-		</>
-	)
-}
+			:	<></>}
+			</nav>)}
 
 export default Navbar
