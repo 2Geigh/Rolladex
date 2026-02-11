@@ -22,6 +22,8 @@ import Navbar from "./components/Navbar/Navbar"
 import Footer from "./components/Footer/Footer"
 import "../static/styles/app.scss"
 import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import TermsOfService from "./pages/TermsOfService/TermsOfService"
+import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy"
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -65,6 +67,16 @@ function App() {
 						<Route path="/login" element={<Login />} />
 						<Route path="/logout" element={<Logout />} />
 						<Route path="/signup" element={<SignUp />} />
+
+						<Route
+							path="/terms_of_service"
+							element={<TermsOfService />}
+						/>
+
+						<Route
+							path="/privacy_policy"
+							element={<PrivacyPolicy />}
+						/>
 
 						<Route element={<ProtectedRoutes />}>
 							<Route path="/" element={<Home />} />

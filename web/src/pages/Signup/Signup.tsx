@@ -46,22 +46,19 @@ const SignUp = () => {
 	return (
 		<>
 			<div id="signupContainer">
-					<form id="signupForm" onSubmit={handleSubmit}>
-						<label htmlFor="username">
-							Username{" "}
-							<input required name="username" type="text"></input>
-						</label>
+				<form id="signupForm" onSubmit={handleSubmit}>
+					<label htmlFor="username">
+						Username{" "}
+						<input required name="username" type="text"></input>
+					</label>
 
-						<label htmlFor="password">
-							Password{" "}
-							<input
-								required
-								name="password"
-								type="password"
-							></input>
-						</label>
+					<label htmlFor="password">
+						Password{" "}
+						<input required name="password" type="password"></input>
+					</label>
 
-						<div id="agreements">
+					<div id="agreements">
+						<div className="agreement">
 							<input
 								required
 								type="checkbox"
@@ -75,17 +72,32 @@ const SignUp = () => {
 								</a>
 							</label>
 						</div>
+						<div className="agreement" id="privacy_policy">
+							<input
+								required
+								type="checkbox"
+								id="privacy-agree"
+								name="privacy-agree"
+							></input>
+							<label htmlFor="privacy-agree">
+								I have read and agree to the{" "}
+								<a href="privacy_policy" target="_blank">
+									privacy policy
+								</a>
+							</label>
+						</div>
+					</div>
 
-						<input
-							id="signupButton"
-							type="submit"
-							value="Sign Up"
-						></input>
-					</form>
+					<input
+						id="signupButton"
+						type="submit"
+						value="Sign Up"
+					></input>
+				</form>
 
-					<span id="toLogin">
-						Already have an account? <a href="/login">Login now!</a>
-					</span>
+				<span id="toLogin">
+					Already have an account? <a href="/login">Login now!</a>
+				</span>
 			</div>
 		</>
 	)

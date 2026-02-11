@@ -70,7 +70,7 @@
 			border-radius: 3em;
 
 			font-size: 95%;
-			
+
 			color: black;
 			background-color: variables.$YELLOW;
 		}
@@ -81,9 +81,9 @@
 
 		#agreements {
 			display: flex;
-			flex-direction: row;
+			flex-direction: column;
 			justify-content: center;
-			align-items: center;
+			align-items: flex-start;
 
 			text-align: center;
 
@@ -92,30 +92,45 @@
 			color: black;
 			// background-color: red;
 
-			#tos-agree {
-				// background-color: blue;
-				width: auto;
-				height: auto;
-				margin: 0;
+			.agreement {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+
+				input {
+					width: 2rem;
+
+					margin: 0;
+				}
+
+				label {
+					display: inline;
+					flex-wrap: wrap;
+
+					width: 100%;
+
+					margin-left: 0.5em;
+
+					text-align: left;
+					text-wrap: wrap;
+					line-height: 1em;
+
+					color: rgb(74, 74, 74);
+					// background-color: pink;
+
+					a {
+						text-wrap: nowrap;
+						word-break: keep-all;
+						line-height: inherit;
+
+						color: variables.$VIOLET_DARK;
+					}
+				}
 			}
 
-			label {
-				display: inline;
-				flex-wrap: wrap;
-
-				width: 75%;
-				text-wrap: wrap;
-
-				margin-left: 0.5em;
-
-				text-align: left;
-
-				color: rgb(74, 74, 74);
-				// background-color: pink;
-
-				a {
-					color: variables.$VIOLET_DARK;
-				}
+			#privacy_policy {
+				margin-top: 1rem;
 			}
 		}
 	}

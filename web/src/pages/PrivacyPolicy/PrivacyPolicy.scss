@@ -1,0 +1,57 @@
+@use "/static/styles/variables";
+
+#legalContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	width: 100%;
+
+	background-color: variables.$VIOLET_BACKGROUND;
+
+	#legalText {
+		width: 90vw;
+		max-width: 45rem;
+
+		padding-top: min(5vw, 2rem);
+		padding-bottom: 2rem;
+
+		line-height: 2em;
+
+		// background-color: red;
+
+		h2,
+		h3 {
+			width: 100%;
+
+			text-align: center;
+
+			// background-color: blue;
+		}
+
+		ul {
+			margin-top: 0.33rem;
+
+			list-style-position: outside;
+
+			li {
+				margin-left: 2.5rem;
+				box-sizing: border-box;
+
+				// background-color: blue;
+			}
+		}
+
+		hr {
+			margin-top: 2rem;
+			margin-bottom: 2rem;
+
+			border: 1px solid black;
+		}
+
+		#wordmark {
+			text-align: center;
+		}
+	}
+}
