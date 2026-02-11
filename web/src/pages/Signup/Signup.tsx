@@ -46,8 +46,6 @@ const SignUp = () => {
 	return (
 		<>
 			<div id="signupContainer">
-				<div id="signupContent">
-					<h1>join Rolladex</h1>
 					<form id="signupForm" onSubmit={handleSubmit}>
 						<label htmlFor="username">
 							Username{" "}
@@ -79,7 +77,7 @@ const SignUp = () => {
 						</div>
 
 						<input
-							id="loginButton"
+							id="signupButton"
 							type="submit"
 							value="Sign Up"
 						></input>
@@ -88,7 +86,6 @@ const SignUp = () => {
 					<span id="toLogin">
 						Already have an account? <a href="/login">Login now!</a>
 					</span>
-				</div>
 			</div>
 		</>
 	)

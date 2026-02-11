@@ -70,8 +70,6 @@ const Login: React.FC = () => {
 	return (
 		<>
 			<div id="loginContainer">
-				<div id="loginContent">
-					<h1>Rolladex</h1>
 					<form id="loginForm" onSubmit={handleSubmit}>
 						<label htmlFor="username">
 							Username{" "}
@@ -98,7 +96,6 @@ const Login: React.FC = () => {
 						Don't have an account?{" "}
 						<a href="/signup">Register now!</a>
 					</span>
-				</div>
 			</div>
 		</>
 	)

@@ -17,7 +17,7 @@ const Footer = () => {
 				<span className="copyrightStatement">
 					Developed with love by{" "}
 					<a
-						href="https://www.github.com/2geigh"
+						href="https://nicholasgarcia.com"
 						target="blank_"
 						className="logo"
 					>

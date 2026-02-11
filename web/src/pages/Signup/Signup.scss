@@ -9,14 +9,7 @@
 	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
-	background-color: variables.$VIOLET;
-}
-
-#signupContent {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	background-color: variables.$VIOLET_BACKGROUND;
 
 	h1 {
 		display: flex;
@@ -43,13 +36,14 @@
 		padding-bottom: 1em;
 		box-sizing: border-box;
 
-		background-color: white;
+		// background-color: white;
 		color: darkslategrey;
 
 		$shadow_color: rgba(0, 0, 0, 0.283);
 		// box-shadow: 1px 1px 20px 1px $shadow_color;
 
 		max-width: 30em;
+		width: 90vw;
 		// height: 50vh;
 
 		input {
@@ -59,32 +53,43 @@
 			padding: 0.35em;
 			width: 100%;
 
-			border: 2px solid lightgray;
+			border: 2px solid rgb(198, 198, 198);
 			border-radius: 0.1em;
 			// border-color: gray;
 		}
 
-		#loginButton {
+		#signupButton {
 			margin-top: 1.25em;
-			margin-bottom: 0.7em;
+			margin-bottom: 0;
 
 			padding: 0.5em;
 
 			max-width: 11em;
 
+			border: 2px solid variables.$YELLOW_DARK;
+			border-radius: 3em;
+
 			font-size: 95%;
+			
+			color: black;
+			background-color: variables.$YELLOW;
+		}
+		#signupButton:hover {
+			cursor: pointer;
+			background-color: variables.$YELLOW_DARK;
 		}
 
 		#agreements {
 			display: flex;
 			flex-direction: row;
 			justify-content: center;
-			align-items: top;
+			align-items: center;
 
 			text-align: center;
 
-			width: 100%;
+			margin-bottom: 0.5rem;
 
+			color: black;
 			// background-color: red;
 
 			#tos-agree {
@@ -105,20 +110,26 @@
 
 				text-align: left;
 
+				color: rgb(74, 74, 74);
 				// background-color: pink;
+
+				a {
+					color: variables.$VIOLET_DARK;
+				}
 			}
 		}
 	}
 
 	#toLogin {
-		margin-top: 2.5em;
+		margin-top: min(5vw, 2em);
+		margin-bottom: 2rem;
 
-		color: white;
+		color: rgb(74, 74, 74);
 
 		a {
 			font-weight: bold;
 
-			color: variables.$YELLOW;
+			color: variables.$VIOLET;
 		}
 	}
 }

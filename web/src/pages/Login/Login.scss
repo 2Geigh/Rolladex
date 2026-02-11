@@ -9,29 +9,8 @@
 	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
-	background-color: variables.$VIOLET;
-}
+	background-color: variables.$VIOLET_BACKGROUND;
 
-#loginContent {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	h1 {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-
-		width: 100%;
-
-		font-size: 2.25rem;
-		padding-top: 0.75rem;
-		padding-bottom: 0.75rem;
-		margin-bottom: -0.25rem;
-		color: white;
-		background-color: variables.$FOOTER_DARK_GRAY;
-	}
 
 	#loginForm {
 		display: flex;
@@ -39,18 +18,21 @@
 		align-items: center;
 		flex-direction: column;
 
-		padding: 2em;
+		padding: min(5vw,2em);
 		padding-bottom: 1em;
 		box-sizing: border-box;
 
-		background-color: white;
-		color: darkslategrey;
 
 		$shadow_color: rgba(0, 0, 0, 0.283);
 		// box-shadow: 1px 1px 20px 1px $shadow_color;
 
 		max-width: 30em;
+		width: 90vw;
 		// height: 50vh;
+
+		// color: darkslategrey;
+		color: darkslategrey;
+		background-color: none;
 
 		input {
 			box-sizing: border-box;
@@ -59,9 +41,13 @@
 			padding: 0.35em;
 			width: 100%;
 
-			border: 2px solid lightgray;
+			border: 2px solid rgb(198, 198, 198);
 			border-radius: 0.1em;
 			// border-color: gray;
+		}
+		input:focus {
+			outline: none;
+			border: 4px solid variables.$VIOLET;
 		}
 
 		#loginButton {
@@ -72,19 +58,30 @@
 
 			max-width: 11em;
 
+			border: none;
+			border-radius: 3em;
+
 			font-size: 95%;
+			
+			color: white;
+			background-color: variables.$VIOLET;
+		}
+		#loginButton:hover {
+			cursor: pointer;
+			background-color: variables.$VIOLET_DARK;
 		}
 	}
 
 	#toSignup {
-		margin-top: 2.5em;
+		margin-top: min(2vh, 2.5em);
+		margin-bottom: min(5vh, 2.5em);
 
-		color: white;
+		color: black;
 
 		a {
 			font-weight: bold;
 
-			color: variables.$YELLOW;
+			color: variables.$VIOLET;
 		}
 	}
 }

@@ -8,7 +8,7 @@
 
 - [ ] Remove container for deployed frontend; switch to just serving static files from a folder
 - [x] Fix 405 error on deployment
-- [ ] Fix proportions of login and signup page forms to better fit mobile screen sizes
+- [x] Fix proportions of login and signup page forms to better fit mobile screen sizes
 - [ ] Add login/signup with OAuth
 - [ ] Write a TOS for the signup
 - [x] Make the TOS button a target="\_blank" anchor or a popup
