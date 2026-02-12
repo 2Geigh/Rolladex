@@ -9,6 +9,10 @@
 - [ ] Remove container for deployed frontend; switch to just serving static files from a folder
 - [x] Fix 405 error on deployment
 - [x] Fix proportions of login and signup page forms to better fit mobile screen sizes
+- [ ] Create email server for Rolladex.ca on VPS
+- [ ] Replace personal email in TOS with [frontdesk@rolladex.ca](mailto:frontdesk@rolladex.ca)
+- [ ] Add email field to signup (and thus usernames can no longer contain `@`) with email-sending to "finish setting up" an account
+- [ ] Add "Forgot my password" functionality
 - [ ] Add login/signup with OAuth
 - [x] Write a TOS for the signup
 - [x] Make the TOS button a target="\_blank" anchor or a popup
