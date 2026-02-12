@@ -20,12 +20,20 @@
 
 ## API & Database
 
+- [ ] Add automatic Sessions row deletion upon session expiration
 - [ ] Migrate MariaDB to Postgresql
-- [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
-    - [ ] Rate limiting/DDOS
-    - [ ] CORS
-    - [ ] SQL/NoSQL injection
-    - [ ] Firewalls
-    - [ ] VPNs
-    - [ ] CSRF
-    - [ ] XSS
+- [/] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
+  - [ ] Rate limiting/DDOS
+    - [ ] Add user-specific rate limiting to the API
+    - [ ] Add IP address-specific rate limiting to the API
+    - [ ] Add IP address-specific rate limiting to VPS' NGINX
+  - [ ] CORS
+    - [ ] Specify specific CORS headers for each handler instead of using a single global one
+  - [x] SQL/NoSQL injection
+    - [x] Prepare all SQL statements that rely on user inputs in some way
+  - [ ] Firewalls
+  - [ ] VPNs
+  - [ ] CSRF (cross-site request forgery)
+    - [ ] Add CSRF tokens to every session created
+  - [ ] XSS
+    - [ ] Sanitize all user inputs using github.com/microcosm-cc/bluemonday
