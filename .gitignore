@@ -1,5 +1,4 @@
-backend/database/myFriends.db
-backend/bin/main.out
+api/bin/main.out
 *.out
 /.vscode
 .vscode/settings.json
