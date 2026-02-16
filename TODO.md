@@ -39,6 +39,7 @@
 
 ## API & Database
 
+- [ ] [Rename functions that start with "get"/"Get"](https://google.github.io/styleguide/go/decisions#getters)
 - [ ] Replace pfps with emoji
 - [ ] Migrate MariaDB to Postgresql
 - [ ] Add "time zone" column to Users table
