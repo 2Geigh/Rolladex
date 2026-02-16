@@ -35,7 +35,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 	#homeSections {
 		display: flex;
 		flex-direction: row;
-		justify-content: space-evenly;
+		justify-content: center;
 		align-items: stretch;
 		flex-wrap: wrap;
 
@@ -49,8 +49,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 			justify-content: center;
 			align-items: center;
 
-			// min-width: 500px;
-			width: 100%;
+			min-width: min(100%, 30rem);
+			width: 48%;
 			height: 100%;
 
 			box-sizing: border-box;
@@ -335,101 +335,114 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 		#upcomingSection {
 			// background-color: greenyellow;
 
-			.notification {
+			margin-left: variables.$SCREEN_HORIZONTAL_PADDING;
+
+			#calendar {
 				display: flex;
-				flex-direction: row;
-				justify-content: space-between;
+				flex-direction: column;
+				justify-content: flex-start;
 				align-items: center;
 
-				min-width: 30rem;
 				width: 100%;
 
-				margin-bottom: 1rem;
+				// background-color: orange;
 
-				padding: 1rem;
-				box-sizing: border-box;
-
-				background-color: white;
-
-				input {
+				.notification {
 					display: flex;
-
-					width: 2rem;
-					height: 2rem;
-
-					margin-left: 0.25rem;
-					margin-right: 1rem;
-
-					border-radius: 100%;
-
-					background-color: red;
-				}
-
-				.body {
-					display: flex;
-					flex-direction: column;
-					justify-content: center;
-					align-items: flex-start;
+					flex-direction: row;
+					justify-content: space-between;
+					align-items: center;
 
 					width: 100%;
+					max-width: 30rem;
 
-					.top {
+					margin-bottom: 1rem;
+
+					padding: 1rem;
+					box-sizing: border-box;
+
+					background-color: white;
+
+					input {
 						display: flex;
-						flex-direction: row;
-						justify-content: space-between;
+
+						width: 2rem;
+						height: 2rem;
+
+						margin-left: 0.25rem;
+						margin-right: 1rem;
+
+						border-radius: 100%;
+
+						background-color: red;
+					}
+
+					.body {
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
 						align-items: flex-start;
 
 						width: 100%;
 
-						margin-bottom: 0.33em;
+						.top {
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: flex-start;
 
-						.date {
-							font-size: 1.15em;
-							font-weight: bold;
+							width: 100%;
 
-							span {
-								font-size: inherit;
-								font-weight: normal;
+							margin-bottom: 0.33em;
 
-								opacity: 50%;
+							.date {
+								font-size: 1.15em;
+								font-weight: bold;
+
+								span {
+									font-size: inherit;
+									font-weight: normal;
+
+									opacity: 50%;
+								}
 							}
 						}
 					}
 				}
 			}
 
-			#caughtUp {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
+			@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
+				.homeSection {
+					min-width: 30rem;
+					width: calc(50% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
 
-				width: 100%;
-				max-width: 25em;
-
-				padding: 1rem;
-				box-sizing: border-box;
-
-				font-size: 1rem;
-
-				background-color: white;
-
-				span {
-					font-size: 2rem;
-
-					margin-bottom: 0.5rem;
-
-					user-select: none;
+					margin-bottom: 0px;
 				}
 			}
 		}
 
-		@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
-			.homeSection {
-				min-width: 30rem;
-				width: calc(50% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
+		#caughtUp {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
 
-				margin-bottom: 0px;
+			width: 100%;
+			max-width: 25em;
+
+			padding: 1rem;
+			box-sizing: border-box;
+
+			font-size: 1rem;
+
+			background-color: white;
+
+			span {
+				font-size: 2rem;
+
+				margin-bottom: 0.5rem;
+
+				user-select: none;
 			}
 		}
 	}

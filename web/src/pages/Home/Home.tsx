@@ -224,7 +224,7 @@ const Home: React.FC = () => {
 					isLoading={isLoading}
 					friends={homepageContent.todaysFriends}
 				/>
-				{/* <Notifications notifications={homepageContent.notifications} /> */}
+				<Notifications notifications={homepageContent.notifications} />
 			</div>
 		</div>
 	)
