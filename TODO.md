@@ -31,7 +31,7 @@
 - [ ] Replace pfps with emoji
 - [ ] Remove birthdays from "urgent friends" section of Home
 - [ ] Add profile page that has name and user options fields (including time zone)
-- [ ] Scale homepage UI for laptop and mobile dimensions
+- [x] Scale homepage UI for laptop and mobile dimensions
 
 ## Mobile Client
 
