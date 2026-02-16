@@ -8,7 +8,10 @@
 	height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 
 	font-size: 5vh;
-	color: lightgray;
+
 	cursor: progress;
 	user-select: none;
+
+	color: lightgray;
+	background-color: variables.$VIOLET_BACKGROUND;
 }
