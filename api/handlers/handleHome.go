@@ -90,6 +90,7 @@ func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 			Friends.name AS friend_name,
 			Friends.birthday_day,
 			Friends.birthday_month,
+			Relationships.relationship_tier,
 			Images.filepath,
 			DATEDIFF (CURRENT_DATE, RecentInteractions.interaction_date) as daysSinceLastInteraction
 		FROM
@@ -127,11 +128,12 @@ func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 			name                     string
 			birthdayDay              sql.NullInt64
 			birthdayMonth            sql.NullInt64
+			relationshipTier         sql.NullInt64
 			pfpPath                  sql.NullString
 			daysSinceLastInteraction sql.NullInt64
 		)
 
-		err := rows.Scan(&id, &name, &birthdayDay, &birthdayMonth, &pfpPath, &daysSinceLastInteraction)
+		err := rows.Scan(&id, &name, &birthdayDay, &birthdayMonth, &relationshipTier, &pfpPath, &daysSinceLastInteraction)
 		if err != nil {
 			return todaysFriends, fmt.Errorf("couldn't scan row values to local variables: %w", err)
 		}
@@ -142,6 +144,9 @@ func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 		}
 		if birthdayMonth.Valid {
 			friend.BirthdayMonth = int(birthdayMonth.Int64)
+		}
+		if relationshipTier.Valid {
+			friend.RelationshipTier = uint(relationshipTier.Int64)
 		}
 		if pfpPath.Valid {
 			friend.ProfileImagePath = pfpPath.String
@@ -165,35 +170,32 @@ func getNotifications[U database.SqlId](user_id U, daysAhead int) ([]Notificatio
 	stmt, err := database.DB.Prepare(`
 		SELECT
 			f.id,
+			f.name,
 			f.birthday_month,
 			f.birthday_day
 		FROM
 			Friends f
-			JOIN Relationships r ON r.friend_id = f.id
+		JOIN Relationships r ON r.friend_id = f.id
 		WHERE
 			r.user_id = ?
 			AND (
 				-- Check current year instance
-				DATE(
-					CONCAT (
-						YEAR (CURRENT_DATE),
-						'-',
-						f.birthday_month,
-						'-',
-						f.birthday_day
-					)
-				) BETWEEN CURRENT_DATE AND DATE_ADD  (CURRENT_DATE, INTERVAL ? DAY)
+				DATE(CONCAT(
+					YEAR(CURRENT_DATE), 
+					'-', 
+					f.birthday_month, 
+					'-', 
+					f.birthday_day
+				)) BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL ? DAY)
 				OR
 				-- Check next year instance (handles Dec-Jan wrap)
-				DATE(
-					CONCAT (
-						YEAR (CURRENT_DATE) + 1,
-						'-',
-						f.birthday_month,
-						'-',
-						f.birthday_day
-					)
-				) BETWEEN CURRENT_DATE AND DATE_ADD  (CURRENT_DATE, INTERVAL ? DAY)
+				DATE(CONCAT(
+					YEAR(CURRENT_DATE) + 1, 
+					'-', 
+					f.birthday_month, 
+					'-', 
+					f.birthday_day
+				)) BETWEEN CURRENT_DATE AND DATE_ADD(CURRENT_DATE, INTERVAL ? DAY)
 			);
 	`)
 	if err != nil {
@@ -209,18 +211,26 @@ func getNotifications[U database.SqlId](user_id U, daysAhead int) ([]Notificatio
 		var (
 			notification Notification
 
-			date      time.Time
-			text      string = fmt.Sprintf("%s's birthday! 🎂")
-			friend_id uint
+			friend_id      uint
+			name           string
+			birthday_day   sql.NullInt64
+			birthday_month sql.NullInt64
+
+			date time.Time
+			text string
 		)
 
-		err := rows.Scan(&date, &friend_id)
+		err := rows.Scan(&friend_id, &name, &birthday_month, &birthday_day)
 		if err != nil {
-			return notifications, fmt.Errorf("couldn't scan row values to local variables: %w, err")
+			return notifications, fmt.Errorf("couldn't scan row values to local variables: %w", err)
+		}
+		text = fmt.Sprintf("%s's birthday! 🎂", name)
+		if birthday_month.Valid && birthday_day.Valid {
+			date = time.Date(time.Now().Year(), time.Month(birthday_month.Int64), int(birthday_day.Int64), 0, 0, 0, 0, time.Now().Location())
+			notification = Notification{Date: date, Text: text, Friend_id: int(friend_id)}
+			notifications = append(notifications, notification)
 		}
 
-		notification = Notification{Date: date, Text: text, Friend_id: int(friend_id)}
-		notifications = append(notifications, notification)
 	}
 
 	return notifications, nil
