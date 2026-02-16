@@ -55,13 +55,27 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 							}
 						</div>
 					</div>
-					<div className="middle">
-						Last interaction: {friend.days_since_last_interaction}{" "}
-						days ago
-					</div>
-					<div className="bottom">
-						<button>Update</button>
-					</div>
+					{friends.indexOf(friend) == 0 ?
+						<>
+							<div className="middle">
+								Last interaction:{" "}
+								{friend.days_since_last_interaction} days ago
+							</div>
+							<div className="bottom">
+								<button>Update</button>
+							</div>
+						</>
+					:	<>
+							<div className="bottom">
+								<span>
+									Last interaction:{" "}
+									{friend.days_since_last_interaction} days
+									ago
+								</span>
+								<button>Update</button>
+							</div>
+						</>
+					}
 				</div>
 			</div>
 		)
@@ -96,7 +110,9 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 				</>
 			}
 
-			<a href="/friends">View all friends</a>
+			<a id="toFriends" href="/friends">
+				View all friends
+			</a>
 		</div>
 	)
 }

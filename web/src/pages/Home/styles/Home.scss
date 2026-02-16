@@ -190,6 +190,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 							display: flex;
 							flex-direction: row;
 							justify-content: space-between;
+							align-items: flex-start;
 
 							.name {
 								text-align: left;
@@ -208,16 +209,26 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 							}
 						}
 
-						.middle {
-						}
-
 						.bottom {
-							button {
-								width: 100%;
+							display: flex;
+							flex-direction: row;
+							justify-content: space-between;
+							align-items: flex-end;
 
+							span {
+								flex-wrap: nowrap;
+
+								text-wrap: none;
+								word-break: keep-all;
+							}
+
+							button {
 								padding-top: 0.3em;
 								padding-bottom: 0.3em;
 								box-sizing: border-box;
+
+								width: 100%;
+								max-width: 7.5em;
 
 								border: none;
 
@@ -246,7 +257,36 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 
 						border-radius: 0;
 					}
+
+					.body {
+						.bottom {
+							button {
+								max-width: none;
+							}
+						}
+					}
 				}
+			}
+
+			#toFriends {
+				margin-top: 0.5rem;
+
+				padding: 1rem;
+				padding-top: 0.5rem;
+				padding-bottom: 0.5rem;
+				box-sizing: border-box;
+
+				border-radius: 0.33rem;
+				text-decoration: none;
+
+				color: rgb(72, 72, 72);
+				background-color: variables.$YELLOW;
+			}
+			#toFriends:hover {
+				color: black;
+			}
+			#toFriends:active {
+				background-color: variables.$YELLOW_DARK;
 			}
 		}
 
