@@ -27,6 +27,7 @@ const PageNotFoundWithoutHeaderAndFooter: React.FC = () => {
 					<img
 						alt="₍˄·͈༝·͈˄₍˄·͈༝·͈˄( ͒ ु•·̫• ू ͒)˄·͈༝·͈˄₎˄·͈༝·͈˄₎"
 						id="cuteness"
+						draggable="false"
 					/>
 				</div>
 				<a href="/home" id="go-home">

@@ -8,19 +8,20 @@ import (
 )
 
 type Friend struct {
-	ID                 uint        `json:"id"`
-	Name               string      `json:"name"`
-	LastMeetup         Interaction `json:"last_meetup"`
-	LastInteraction    Interaction `json:"last_interaction"`
-	BirthdayMonth      int         `json:"birthday_month"`
-	BirthdayDay        int         `json:"birthday_day"`
-	ProfileImagePath   string      `json:"profile_image_path"`
-	RelationshipTier   uint        `json:"relationship_tier"`
-	RelationshipHealth float64     `json:"relationship_health"`
-	Urgency            float64     `json:"urgency"`
-	Notes              string      `json:"notes"`
-	CreatedAt          time.Time   `json:"created_at"`
-	UpdatedAt          time.Time   `json:"updated_at"`
+	ID                       uint        `json:"id"`
+	Name                     string      `json:"name"`
+	LastMeetup               Interaction `json:"last_meetup"`
+	LastInteraction          Interaction `json:"last_interaction"`
+	BirthdayMonth            int         `json:"birthday_month"`
+	BirthdayDay              int         `json:"birthday_day"`
+	ProfileImagePath         string      `json:"profile_image_path"`
+	RelationshipTier         uint        `json:"relationship_tier"`
+	RelationshipHealth       float64     `json:"relationship_health"`
+	DaysSinceLastInteraction int         `json:"days_since_last_interaction"`
+	Urgency                  float64     `json:"urgency"`
+	Notes                    string      `json:"notes"`
+	CreatedAt                time.Time   `json:"created_at"`
+	UpdatedAt                time.Time   `json:"updated_at"`
 }
 
 func GetRelationshipTier(friend_id int, user_id string) (int, error) {
