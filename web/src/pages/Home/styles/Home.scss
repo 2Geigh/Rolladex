@@ -2,7 +2,7 @@
 
 $COLUMN_BORDER_WIDTH: 3px;
 $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
-	1000px + 2 * variables.$SCREEN_HORIZONTAL_PADDING
+	63rem + 2 * variables.$SCREEN_HORIZONTAL_PADDING
 );
 
 #homeContent {
@@ -40,6 +40,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 		flex-wrap: wrap;
 
 		width: 100%;
+		max-width: 75rem;
 
 		// background-color: red;
 
@@ -337,7 +338,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 
 			margin-left: variables.$SCREEN_HORIZONTAL_PADDING;
 
-			#calendar {
+			#notifications {
 				display: flex;
 				flex-direction: column;
 				justify-content: flex-start;
@@ -413,9 +414,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 
 			@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
 				.homeSection {
-					min-width: 30rem;
-					width: calc(50% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
-
 					margin-bottom: 0px;
 				}
 			}

@@ -132,9 +132,9 @@ type NotificationsProps = {
 	notifications: Notification[]
 }
 const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
-	let CalendarColumns: JSX.Element[] = []
+	let notificationElements: JSX.Element[] = []
 	if (notifications) {
-		CalendarColumns = notifications.map((notification, key) => {
+		notificationElements = notifications.map((notification, key) => {
 			return (
 				<div className='notification' key={key}>
 					<input type='checkbox' name='dismissed' id='dismissed' />
@@ -165,12 +165,12 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 		<div id='upcomingSection' className='homeSection'>
 			<h2>Upcoming&hellip;</h2>
 
-			{CalendarColumns.length < 1 ?
+			{notificationElements.length < 1 ?
 				<div id='caughtUp'>
 					<span>🥂</span>
 					All caught up!
 				</div>
-			:	<div id='calendar'>{CalendarColumns}</div>}
+			:	<div id='notifications'>{notificationElements}</div>}
 		</div>
 	)
 }
