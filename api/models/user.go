@@ -25,14 +25,15 @@ const (
 type Email string
 
 type User struct {
-	ID             uint      `json:"id"`
-	Username       string    `json:"username"`
-	PasswordHash   string    `json:"password_hash"`
-	PasswordSalt   string    `json:"password_salt"`
-	Email          Email     `json:"email"`
-	ProfileImageID uint      `json:"profile_image_id"`
-	BirthdayMonth  int       `json:"birthday_month"`
-	BirthdayDay    int       `json:"birthday_day"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
+	ID             uint          `json:"id"`
+	Username       string        `json:"username"`
+	PasswordHash   string        `json:"password_hash"`
+	PasswordSalt   string        `json:"password_salt"`
+	Email          Email         `json:"email"`
+	ProfileImageID uint          `json:"profile_image_id"`
+	BirthdayMonth  int           `json:"birthday_month"`
+	BirthdayDay    int           `json:"birthday_day"`
+	TimeZone       time.Location `json:"time_zone"`
+	CreatedAt      time.Time     `json:"created_at"`
+	UpdatedAt      time.Time     `json:"updated_at"`
 }

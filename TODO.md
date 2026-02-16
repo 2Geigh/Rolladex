@@ -16,7 +16,7 @@
 - [ ] Add "edit" and "delete" functionality to interactions pages
 - [ ] Add the ability to set emoji as the pfp
 - [ ] Remove birthdays from "urgent friends" section of Home
-- [ ] Add profile page that has name and user options fields
+- [ ] Add profile page that has name and user options fields (including time zone)
 
 ## Mobile Client
 
@@ -26,6 +26,7 @@
 ## API & Database
 
 - [ ] Migrate MariaDB to Postgresql
+- [ ] Add "time zone" column to Users table
 - [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
 - [ ] Remove birthdays from "urgent friends" section of Home
     - [ ] Rate limiting/DDOS
