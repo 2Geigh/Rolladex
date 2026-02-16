@@ -6,6 +6,17 @@ import { backend_base_url } from "../../util/url"
 import type { JSX, SetStateAction } from "react"
 import { TimeAgo, addDays } from "../../util/dates"
 
+type Notification = {
+	date: Date
+	text: string
+	friend_id: number
+}
+
+type HomepageContent = {
+	todaysFriends: Friend[]
+	notifications: Notification[]
+}
+
 type UrgentFriendsProps = {
 	urgentFriendsByDay: Record<number, Friend[]>
 	daySelected: number
