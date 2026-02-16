@@ -117,102 +117,49 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	)
 }
 
-// type UpcomingProps = {
-// 	daySelected: number
-// 	setDaySelected: React.Dispatch<SetStateAction<number>>
-// 	urgentFriendsByDay: Record<number, Friend[]>
-// }
-// const Upcoming: React.FC<UpcomingProps> = ({
-// 	daySelected,
-// 	setDaySelected,
-// 	urgentFriendsByDay,
-// }) => {
-// 	if (!urgentFriendsByDay) {
-// 		return <>Nothing...</>
-// 	}
+type NotificationsProps = {
+	notifications: Notification[]
+}
+const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
+	let CalendarColumns: JSX.Element[] = []
+	if (notifications) {
+		CalendarColumns = notifications.map((notification, key) => {
+			return (
+				<div className="notification" key={key}>
+					<input type="checkbox" name="dismissed" id="dismissed" />
+					<div className="body">
+						<div className="top">
+							<div className="date">
+								{String(notification.date)}
+								<span className="proximity">(3 days)</span>
+							</div>
+							<div className="emoji">
+								{(
+									notification.text
+										.toLowerCase()
+										.includes("birthday")
+								) ?
+									"🎉"
+								:	"👤"}
+							</div>
+						</div>
+						<div className="bottom">{notification.text}</div>
+					</div>
+				</div>
+			)
+		})
+	}
 
-// 	const CalendarColumns = Object.values(urgentFriendsByDay).map(
-// 		(friends, i) => {
-// 			const date = new Date()
-// 			date.setDate(date.getDate() + i)
+	return (
+		<div id="upcomingSection" className="homeSection">
+			<h2>Upcoming....</h2>
 
-// 			let todayIsBirthday = false
-// 			let closestRelationshipTier = 99
-// 			for (const friend of friends) {
-// 				const today = new Date()
-// 				const isBirthdayToday =
-// 					friend.birthday_day === today.getDate() &&
-// 					friend.birthday_month === today.getMonth() + 1
-// 				if (isBirthdayToday) {
-// 					todayIsBirthday = true
-// 				}
-// 				if (friend.relationship_tier < closestRelationshipTier) {
-// 					closestRelationshipTier = friend.relationship_tier
-// 				}
-// 			}
-
-// 			function onClickColumn(e: React.MouseEvent<HTMLDivElement>) {
-// 				e.preventDefault()
-
-// 				const allColumns = document.getElementsByClassName("column")
-// 				for (const column of allColumns) {
-// 					column.classList.remove("selected")
-// 				}
-
-// 				const selectedColumn = e.currentTarget
-// 				selectedColumn.classList.add("selected")
-
-// 				const selectedDay = parseInt(selectedColumn.id)
-// 				setDaySelected(selectedDay)
-// 			}
-
-// 			const CalendarColumnImages = friends.map((friend) => (
-// 				<img
-// 					className="icon"
-// 					src={friend.profile_image_path}
-// 					alt={friend.name}
-// 					key={friend.id}
-// 				/>
-// 			))
-
-// 			return (
-// 				<>
-// 					<div
-// 						className={
-// 							i === daySelected ? "column selected" : "column"
-// 						}
-// 						id={String(i)}
-// 						onClickCapture={onClickColumn}
-// 					>
-// 						<div className="day_header">{date.getDate()}</div>
-// 						<div className="body">
-// 							<div className="icons">{CalendarColumnImages}</div>
-
-// 							<div className="emoji">
-// 								{friends.length < 1 ?
-// 									"🫥"
-// 								: todayIsBirthday ?
-// 									"🎂"
-// 								:	GetRelationshipTierInfo(
-// 										closestRelationshipTier,
-// 									).emoji
-// 								}
-// 							</div>
-// 						</div>
-// 					</div>
-// 				</>
-// 			)
-// 		},
-// 	)
-
-// 	return (
-// 		<div id="upcomingSection" className="homeSection">
-// 			<h2>Upcoming....</h2>
-
-// 			<div id="calendar">{CalendarColumns}</div>
-// 		</div>
-// 	)
-// }
+			{!CalendarColumns ?
+				<>Nothing...</>
+			:	<div id="calendar">{CalendarColumns}</div>}
+		</div>
+	)
+}
 
 const Home: React.FC = () => {
 	const loginSessionContext = useLoginSessionContext()
@@ -263,11 +210,7 @@ const Home: React.FC = () => {
 					isLoading={isLoading}
 					friends={homepageContent.todaysFriends}
 				/>
-				{/* <Upcoming
-					daySelected={daySelected}
-					setDaySelected={setDaySelected}
-					urgentFriendsByDay={urgentFriendsByDay}
-				/> */}
+				<Notifications notifications={homepageContent.notifications} />
 			</div>
 		</div>
 	)
