@@ -38,13 +38,13 @@ func Home(w http.ResponseWriter, req *http.Request) {
 
 		homepageContent, err := getHomepageContent(user_id)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't get upcoming urgent friends data", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "couldn't get homepage content", http.StatusInternalServerError)
 			return
 		}
 
 		homepageContentJson, err := json.Marshal(homepageContent)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal upcoming urgent friends data to JSON", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "couldn't marshal homepage content to JSON", http.StatusInternalServerError)
 			return
 		}
 
@@ -131,9 +131,9 @@ func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 			daysSinceLastInteraction sql.NullInt64
 		)
 
-		err := rows.Scan(&id, &name, birthdayDay, &birthdayMonth, &pfpPath, &daysSinceLastInteraction)
+		err := rows.Scan(&id, &name, &birthdayDay, &birthdayMonth, &pfpPath, &daysSinceLastInteraction)
 		if err != nil {
-			return todaysFriends, fmt.Errorf("couldn't scan row values to local variables: %w, err")
+			return todaysFriends, fmt.Errorf("couldn't scan row values to local variables: %w", err)
 		}
 
 		friend = models.Friend{ID: uint(id), Name: name}
