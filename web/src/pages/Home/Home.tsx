@@ -25,67 +25,71 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	isLoading,
 }) => {
 	let MostUrgentFriends: JSX.Element[] = []
-	MostUrgentFriends = friends.map((friend) => {
-		return (
-			<div
-				className="urgent_friend"
-				id={friends.indexOf(friend) == 0 ? "mostUrgent" : ""}
-				key={friend.id}
-			>
-				<a className="image_a" href={`/friends/${friend.id}`}>
-					<img
-						src={friend.profile_image_path}
-						alt={
-							GetRelationshipTierInfo(friend.relationship_tier)
-								.emoji
-						}
-					/>
-				</a>
-
-				<div className="body">
-					<div className="top">
-						<a className="name" href={`/friends/${friend.id}`}>
-							{friend.name}
-						</a>
-						<div className="relationship_tier_emoji">
-							{
+	if (friends) {
+		MostUrgentFriends = friends.map((friend) => {
+			return (
+				<div
+					className="urgent_friend"
+					id={friends.indexOf(friend) == 0 ? "mostUrgent" : ""}
+					key={friend.id}
+				>
+					<a className="image_a" href={`/friends/${friend.id}`}>
+						<img
+							src={friend.profile_image_path}
+							alt={
 								GetRelationshipTierInfo(
 									friend.relationship_tier,
 								).emoji
 							}
+						/>
+					</a>
+
+					<div className="body">
+						<div className="top">
+							<a className="name" href={`/friends/${friend.id}`}>
+								{friend.name}
+							</a>
+							<div className="relationship_tier_emoji">
+								{
+									GetRelationshipTierInfo(
+										friend.relationship_tier,
+									).emoji
+								}
+							</div>
 						</div>
-					</div>
-					{friends.indexOf(friend) == 0 ?
-						<>
-							<div className="middle">
-								Last interaction:{" "}
-								{friend.days_since_last_interaction} days ago
-							</div>
-							<div className="bottom">
-								<button>Update</button>
-							</div>
-						</>
-					:	<>
-							<div className="bottom">
-								<span>
+						{friends.indexOf(friend) == 0 ?
+							<>
+								<div className="middle">
 									Last interaction:{" "}
 									{friend.days_since_last_interaction} days
 									ago
-								</span>
-								<button>Update</button>
-							</div>
-						</>
-					}
+								</div>
+								<div className="bottom">
+									<button>Update</button>
+								</div>
+							</>
+						:	<>
+								<div className="bottom">
+									<span>
+										Last interaction:{" "}
+										{friend.days_since_last_interaction}{" "}
+										days ago
+									</span>
+									<button>Update</button>
+								</div>
+							</>
+						}
+					</div>
 				</div>
-			</div>
-		)
-	})
+			)
+		})
+	}
 
 	const NoFriends = (
 		<div id="noFriends">
 			<span className="emoji">🗿</span>
 			<span>No pending communications.</span>
-			<a href="/addfriend">Add a friend</a>
+			<a href="/addfriend">View all friends</a>
 		</div>
 	)
 
@@ -103,16 +107,19 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 				})}
 			</h2>
 
-			{friends.length === 0 ?
+			{MostUrgentFriends.length < 1 ?
 				NoFriends
 			:	<>
 					<div id="urgentCards">{MostUrgentFriends}</div>
 				</>
 			}
 
-			<a id="toFriends" href="/friends">
-				View all friends
-			</a>
+			{MostUrgentFriends.length < 1 ?
+				<></>
+			:	<a id="toFriends" href="/friends">
+					View all friends
+				</a>
+			}
 		</div>
 	)
 }
@@ -130,7 +137,7 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 					<div className="body">
 						<div className="top">
 							<div className="date">
-								{String(notification.date)}
+								Jan. 31{" "}
 								<span className="proximity">(3 days)</span>
 							</div>
 							<div className="emoji">
@@ -152,10 +159,13 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 
 	return (
 		<div id="upcomingSection" className="homeSection">
-			<h2>Upcoming....</h2>
+			<h2>Upcoming&hellip;</h2>
 
-			{!CalendarColumns ?
-				<>Nothing...</>
+			{CalendarColumns.length < 1 ?
+				<div id="caughtUp">
+					<span>🥂</span>
+					All caught up!
+				</div>
 			:	<div id="calendar">{CalendarColumns}</div>}
 		</div>
 	)
