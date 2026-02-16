@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { useLoginSessionContext } from "../../contexts/LoginSession"
-import "./styles/Home.scss"
-import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
-import { backend_base_url } from "../../util/url"
-import type { JSX } from "react"
+import React, { useEffect, useState } from 'react'
+import { useLoginSessionContext } from '../../contexts/LoginSession'
+import './styles/Home.scss'
+import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
+import { backend_base_url } from '../../util/url'
+import type { JSX } from 'react'
 
 type Notification = {
 	date: Date
@@ -29,51 +29,55 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		MostUrgentFriends = friends.map((friend) => {
 			return (
 				<div
-					className="urgent_friend"
-					id={friends.indexOf(friend) == 0 ? "mostUrgent" : ""}
+					className='urgent_friend'
+					id={friends.indexOf(friend) == 0 ? 'mostUrgent' : ''}
 					key={friend.id}
 				>
-					<a className="image_a" href={`/friends/${friend.id}`}>
+					<a className='image_a' href={`/friends/${friend.id}`}>
 						<img
 							src={friend.profile_image_path}
 							alt={
 								GetRelationshipTierInfo(
-									friend.relationship_tier,
+									friend.relationship_tier
 								).emoji
 							}
 						/>
 					</a>
 
-					<div className="body">
-						<div className="top">
-							<a className="name" href={`/friends/${friend.id}`}>
+					<div className='body'>
+						<div className='top'>
+							<a className='name' href={`/friends/${friend.id}`}>
 								{friend.name}
 							</a>
-							<div className="relationship_tier_emoji">
+							<div className='relationship_tier_emoji'>
 								{
 									GetRelationshipTierInfo(
-										friend.relationship_tier,
+										friend.relationship_tier
 									).emoji
 								}
 							</div>
 						</div>
 						{friends.indexOf(friend) == 0 ?
 							<>
-								<div className="middle">
-									Last interaction:{" "}
-									{friend.days_since_last_interaction} days
-									ago
+								<div className='middle'>
+									Last interaction:&nbsp;
+									<span className='time_ago'>
+										{friend.days_since_last_interaction}{' '}
+										days ago
+									</span>
 								</div>
-								<div className="bottom">
+								<div className='bottom'>
 									<button>Update</button>
 								</div>
 							</>
 						:	<>
-								<div className="bottom">
+								<div className='bottom'>
 									<span>
-										Last interaction:{" "}
-										{friend.days_since_last_interaction}{" "}
-										days ago
+										Last interaction:&nbsp;
+										<span className='time_ago'>
+											{friend.days_since_last_interaction}{' '}
+											days ago
+										</span>
 									</span>
 									<button>Update</button>
 								</div>
@@ -86,10 +90,10 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	}
 
 	const NoFriends = (
-		<div id="noFriends">
-			<span className="emoji">🗿</span>
+		<div id='noFriends'>
+			<span className='emoji'>🗿</span>
 			<span>No pending communications.</span>
-			<a href="/addfriend">View all friends</a>
+			<a href='/addfriend'>View all friends</a>
 		</div>
 	)
 
@@ -98,25 +102,25 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	}
 
 	return (
-		<div id="urgentFriendsSection" className="homeSection">
+		<div id='urgentFriendsSection' className='homeSection'>
 			<h2>
-				{new Date().toLocaleDateString("en-CA", {
-					month: "long",
-					day: "numeric",
-					weekday: "long",
+				{new Date().toLocaleDateString('en-CA', {
+					month: 'long',
+					day: 'numeric',
+					weekday: 'long',
 				})}
 			</h2>
 
 			{MostUrgentFriends.length < 1 ?
 				NoFriends
 			:	<>
-					<div id="urgentCards">{MostUrgentFriends}</div>
+					<div id='urgentCards'>{MostUrgentFriends}</div>
 				</>
 			}
 
 			{MostUrgentFriends.length < 1 ?
 				<></>
-			:	<a id="toFriends" href="/friends">
+			:	<a id='toFriends' href='/friends'>
 					View all friends
 				</a>
 			}
@@ -132,25 +136,25 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 	if (notifications) {
 		CalendarColumns = notifications.map((notification, key) => {
 			return (
-				<div className="notification" key={key}>
-					<input type="checkbox" name="dismissed" id="dismissed" />
-					<div className="body">
-						<div className="top">
-							<div className="date">
-								Jan. 31{" "}
-								<span className="proximity">(3 days)</span>
+				<div className='notification' key={key}>
+					<input type='checkbox' name='dismissed' id='dismissed' />
+					<div className='body'>
+						<div className='top'>
+							<div className='date'>
+								Jan. 31{' '}
+								<span className='proximity'>(3 days)</span>
 							</div>
-							<div className="emoji">
+							<div className='emoji'>
 								{(
 									notification.text
 										.toLowerCase()
-										.includes("birthday")
+										.includes('birthday')
 								) ?
-									"🎉"
-								:	"👤"}
+									'🎉'
+								:	'👤'}
 							</div>
 						</div>
-						<div className="bottom">{notification.text}</div>
+						<div className='bottom'>{notification.text}</div>
 					</div>
 				</div>
 			)
@@ -158,15 +162,15 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 	}
 
 	return (
-		<div id="upcomingSection" className="homeSection">
+		<div id='upcomingSection' className='homeSection'>
 			<h2>Upcoming&hellip;</h2>
 
 			{CalendarColumns.length < 1 ?
-				<div id="caughtUp">
+				<div id='caughtUp'>
 					<span>🥂</span>
 					All caught up!
 				</div>
-			:	<div id="calendar">{CalendarColumns}</div>}
+			:	<div id='calendar'>{CalendarColumns}</div>}
 		</div>
 	)
 }
@@ -181,8 +185,8 @@ const Home: React.FC = () => {
 
 	async function getUpcomingUrgentFriends(): Promise<HomepageContent> {
 		const response = await fetch(`${backend_base_url}/home`, {
-			method: "GET",
-			credentials: "include",
+			method: 'GET',
+			credentials: 'include',
 		})
 
 		if (!response.ok) {
@@ -210,17 +214,17 @@ const Home: React.FC = () => {
 	}, [])
 
 	return (
-		<div id="homeContent">
+		<div id='homeContent'>
 			{loginSessionContext.user ?
 				<h1>Hello, {loginSessionContext.user?.username}.</h1>
 			:	<h1>Good afternoon.</h1>}
 
-			<div id="homeSections">
+			<div id='homeSections'>
 				<UrgentFriends
 					isLoading={isLoading}
 					friends={homepageContent.todaysFriends}
 				/>
-				<Notifications notifications={homepageContent.notifications} />
+				{/* <Notifications notifications={homepageContent.notifications} /> */}
 			</div>
 		</div>
 	)

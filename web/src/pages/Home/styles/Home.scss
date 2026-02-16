@@ -1,9 +1,8 @@
-@use "../../../../static/styles/variables";
+@use '../../../../static/styles/variables';
 
 $COLUMN_BORDER_WIDTH: 3px;
-$HOMEPAGE_HORIZONTAL_PADDING: 1.5rem;
 $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
-	1000px + 2 * $HOMEPAGE_HORIZONTAL_PADDING
+	1000px + 2 * variables.$SCREEN_HORIZONTAL_PADDING
 );
 
 #homeContent {
@@ -15,7 +14,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 	width: 100%;
 
-	padding: $HOMEPAGE_HORIZONTAL_PADDING;
+	padding: variables.$SCREEN_HORIZONTAL_PADDING;
 	padding-top: min(5.5vh, 30px);
 	padding-bottom: 0px;
 	box-sizing: border-box;
@@ -23,7 +22,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 	text-align: center;
 
 	font-size: 1rem;
-	font-family: "Inter";
+	font-family: 'Inter';
 
 	background-color: variables.$VIOLET_BACKGROUND;
 
@@ -133,9 +132,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 				justify-content: center;
 				align-items: stretch;
 
-				// width: 100%;
-				min-width: 30rem;
-				max-width: 100%;
+				width: 100%;
+				max-width: 30rem;
 
 				// background-color: bisque;
 
@@ -219,6 +217,26 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 							}
 						}
 
+						.middle {
+							display: flex;
+							flex-direction: row;
+							justify-content: flex-start;
+							align-items: flex-end;
+							flex-wrap: wrap;
+
+							text-wrap: none;
+							word-break: keep-all;
+
+							// background-color: orange;
+
+							.time_ago {
+								text-wrap: nowrap;
+								word-break: keep-all;
+
+								// background-color: red;
+							}
+						}
+
 						.bottom {
 							display: flex;
 							flex-direction: row;
@@ -226,10 +244,23 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 							align-items: flex-end;
 
 							span {
-								flex-wrap: nowrap;
+								display: flex;
+								flex-direction: row;
+								justify-content: flex-start;
+								align-items: flex-end;
+								flex-wrap: wrap;
 
 								text-wrap: none;
 								word-break: keep-all;
+
+								// background-color: orange;
+
+								.time_ago {
+									text-wrap: nowrap;
+									word-break: keep-all;
+
+									// background-color: red;
+								}
 							}
 
 							button {
@@ -238,7 +269,9 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 								box-sizing: border-box;
 
 								width: 100%;
-								max-width: 7.5em;
+								max-width: min(25vw, 7.5em);
+
+								margin-left: 1rem;
 
 								border: none;
 
@@ -270,9 +303,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 
 					.body {
 						.bottom {
-							button {
-								max-width: none;
-							}
+							justify-content: flex-end;
 						}
 					}
 				}
@@ -396,7 +427,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
 		@media screen and (min-width: $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH) {
 			.homeSection {
 				min-width: 30rem;
-				width: calc(50% - 2 * $HOMEPAGE_HORIZONTAL_PADDING);
+				width: calc(50% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
 
 				margin-bottom: 0px;
 			}
