@@ -1,9 +1,10 @@
 @use "../../../../static/styles/variables";
 
-
 $COLUMN_BORDER_WIDTH: 3px;
 $HOMEPAGE_HORIZONTAL_PADDING: 1.5rem;
-$HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PADDING);
+$HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(
+	1000px + 2 * $HOMEPAGE_HORIZONTAL_PADDING
+);
 
 #homeContent {
 	display: flex;
@@ -22,6 +23,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 	text-align: center;
 
 	font-size: 1rem;
+	font-family: "Inter";
+
 	background-color: variables.$VIOLET_BACKGROUND;
 
 	h1 {
@@ -29,7 +32,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 
 		margin-bottom: min(5vh, 3rem);
 	}
-
 
 	#homeSections {
 		display: flex;
@@ -69,8 +71,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 			}
 		}
 
-
-
 		#urgentFriendsSection {
 			display: flex;
 			flex-direction: column;
@@ -104,8 +104,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 					margin-top: 1rem;
 
 					padding: 1.25rem;
-					padding-top: .5rem;
-					padding-bottom: .5rem;
+					padding-top: 0.5rem;
+					padding-bottom: 0.5rem;
 					box-sizing: border-box;
 
 					border-radius: 5px;
@@ -123,207 +123,128 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 				justify-content: center;
 				align-items: stretch;
 
-				width: 100%;
+				// width: 100%;
+				min-width: 30rem;
+				max-width: 100%;
 
 				// background-color: bisque;
 
 				.urgent_friend {
+					$PADDING: 0.5rem;
+
 					display: flex;
 					flex-direction: row;
+					justify-content: space-between;
 					align-items: stretch;
 
-					width: 100%;
-					max-width: 47.5rem;
+					margin-bottom: 1rem;
 
-					margin-left: auto;
-					margin-right: auto;
-					margin-bottom: min(22.5px, max(3vh, 1rem));
-
-					padding: 1rem;
+					padding: $PADDING;
 					box-sizing: border-box;
 
-					overflow: hidden;
+					font-size: inherit;
 
 					background-color: white;
-					// background-color: pink;
 
-					a {
+					.image_a {
 						display: flex;
-						align-self: stretch;
+						justify-content: center;
+						align-items: center;
 
 						text-decoration: none;
 
+						// background-color: yellow;
+
 						img {
 							display: flex;
-							flex-direction: row;
 							justify-content: center;
 							align-items: center;
-							align-self: stretch;
 
-							padding: 1rem;
-							box-sizing: border-box;
+							width: auto;
+							height: 3.25rem;
+							aspect-ratio: 1 / 1;
 
-							$DIMENSION: min(16vw, 8rem);
-							// height: $DIMENSION;
-							width: $DIMENSION;
-							// aspect-ratio: 1 / 1;
+							margin-right: $PADDING;
 
-							text-align: center;
-							text-wrap: wrap;
-							overflow: hidden;
-							word-break: normal;
+							border-radius: 100%;
 
+							font-size: 1.66rem;
 							text-decoration: none;
+							user-select: none;
 
-							font-family: cursive;
-
-							color: gray;
-							background-color: variables.$LIGHT_GRAY;
-						}
-
-						@media screen and (max-width: 400px) {
-							img {
-								display: none;
-								// background-color: red;
-							}
+							background-color: #d9d9d9;
 						}
 					}
 
 					.body {
 						display: flex;
 						flex-direction: column;
-						justify-content: start;
+						justify-content: space-between;
 						align-items: stretch;
 
 						width: 100%;
-						overflow-wrap: break-word;
 
-						padding-left: 0.75rem;
+						// background-color: orange;
 
-						// background-color: violet;
-
-						.text {
-							display: flex;
-							flex-direction: column;
-							justify-content: space-between;
-
-							width: 100%;
-							height: 100%;
-
-							text-wrap: wrap;
-							word-wrap: break-word;
-							overflow-wrap: break-word;
-							word-break: break-all;
-
-							// background-color: teal;
-
-							.name_and_relationship_tier {
-								display: flex;
-								flex-direction: row;
-								justify-content: space-between;
-								align-items: start;
-
-								// background-color: orange;
-
-								.name {
-									text-decoration: none;
-
-									font-size: 1.33rem;
-									font-weight: bold;
-
-									color: black;
-									// background-color: magenta;
-								}
-
-								.relationship_icon {
-									display: flex;
-									flex-direction: column;
-									justify-content: start;
-									align-items: end;
-
-									margin-top: -0.33rem;
-									margin-left: 0.75rem;
-
-									font-size: 1.5em;
-
-									user-select: none;
-
-									// background-color: red;
-								}
-							}
-
-							.under_name {
-								display: inline-flex;
-								flex-direction: row;
-								justify-content: center;
-								align-items: center;
-
-								text-align: center;
-
-								height: 100%;
-
-								// background-color: yellow;
-
-								.time_ago {
-									margin-left: 0.33rem;
-								}
-							}
-
-							.birthday {
-								flex-direction: column;
-
-								.emoji {
-									margin-top: 0.5rem;
-								}
-							}
-						}
-
-						.buttons {
+						.top {
 							display: flex;
 							flex-direction: row;
 							justify-content: space-between;
-							align-items: center;
 
-							width: 100%;
+							.name {
+								text-align: left;
+								text-wrap: wrap;
+								word-break: break-all;
 
-							margin-top: 0.66rem;
+								font-size: 1.15em;
+								font-weight: bold;
+								text-decoration: none;
 
-							// background-color: red;
+								color: black;
+								background-color: none;
+							}
+							.relationship_tier_emoji {
+								user-select: none;
+							}
+						}
 
+						.middle {
+						}
+
+						.bottom {
 							button {
-								padding: 0.25rem;
-								padding-left: 0.75rem;
-								padding-right: 0.75rem;
+								width: 100%;
+
+								padding-top: 0.3em;
+								padding-bottom: 0.3em;
+								box-sizing: border-box;
 
 								border: none;
 
-								color: white;
-								background-color: variables.$DARK_GRAY;
-							}
+								font-size: 0.95em;
 
+								color: white;
+								background-color: #9f9f9f;
+							}
 							button:hover {
 								cursor: pointer;
-								background-color: gray;
+
+								background-color: #767676;
 							}
-
-							.mark_completed {
-								width: 100%;
-
-								margin-left: 0.5rem;
-
-								background-color: variables.$VIOLET;
-							}
-
-							.mark_completed:hover {
-								background-color: variables.$VIOLET_DARK;
+							button:active {
+								background-color: rgb(80, 80, 80);
 							}
 						}
 					}
+				}
 
-					@media screen and (max-width: 400px) {
-						.body {
-							padding-left: 0;
-						}
+				#mostUrgent {
+					img {
+						height: 6rem;
+
+						font-size: 4.25rem;
+
+						border-radius: 0;
 					}
 				}
 			}
@@ -331,7 +252,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 
 		#upcomingSection {
 			// background-color: greenyellow;
-
 
 			#calendar {
 				display: flex;
@@ -343,7 +263,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 				max-width: 47.5rem;
 
 				box-sizing: border-box;
-
 
 				// background-color: turquoise;
 
@@ -404,8 +323,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 							height: 100%;
 							width: 100%;
 
-							padding-left: .5rem;
-							padding-right: .5rem;
+							padding-left: 0.5rem;
+							padding-right: 0.5rem;
 							box-sizing: border-box;
 
 							// background-color: orange;
@@ -419,9 +338,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 								width: 3rem;
 								aspect-ratio: 1 / 1;
 
-								margin: .25rem;
+								margin: 0.25rem;
 								box-sizing: border-box;
-
 
 								border: 2px solid blue;
 								border: none;
@@ -445,8 +363,8 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 							width: 2.5rem;
 							height: 100%;
 
-							padding-left: .25rem;
-							padding-right: .25rem;
+							padding-left: 0.25rem;
+							padding-right: 0.25rem;
 							box-sizing: border-box;
 
 							font-size: 1.5em;
@@ -458,10 +376,7 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 					}
 				}
 
-
-
 				.selected {
-
 					border: $COLUMN_BORDER_WIDTH solid variables.$VIOLET;
 
 					.day_header {
@@ -488,7 +403,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 					flex-direction: row;
 
 					min-height: 20rem;
-
 
 					.column {
 						flex-direction: column;
@@ -530,7 +444,6 @@ $HOMEPAGE_SECTIONS_WRAP_SCREEN_WIDTH: calc(1000px + 2 * $HOMEPAGE_HORIZONTAL_PAD
 					}
 
 					.column:hover {
-
 						border: $COLUMN_BORDER_WIDTH solid variables.$DARK_GRAY;
 
 						cursor: pointer;

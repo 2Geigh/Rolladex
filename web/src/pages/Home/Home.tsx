@@ -32,7 +32,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 				id={friends.indexOf(friend) == 0 ? "mostUrgent" : ""}
 				key={friend.id}
 			>
-				<a href={`/friends/${friend.id}`}>
+				<a className="image_a" href={`/friends/${friend.id}`}>
 					<img
 						src={friend.profile_image_path}
 						alt={
