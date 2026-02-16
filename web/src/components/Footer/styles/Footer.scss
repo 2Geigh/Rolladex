@@ -1,4 +1,4 @@
-@use "../../../../static/styles/variables";
+@use '../../../../static/styles/variables';
 
 .footer {
 	display: flex;
@@ -11,9 +11,10 @@
 
 	margin: 0px;
 
-	padding: 0px;
-	padding-left: 1rem;
-	padding-right: 1rem;
+	padding: 0rem;
+	padding-bottom: 0.25rem;
+	padding-left: variables.$SCREEN_HORIZONTAL_PADDING;
+	padding-right: variables.$SCREEN_HORIZONTAL_PADDING;
 	box-sizing: border-box;
 
 	text-align: center;
@@ -22,7 +23,15 @@
 	background-color: none;
 	background-color: variables.$FOOTER_DARK_GRAY;
 
-	a {
-		color: variables.$YELLOW;
+	.copyrightStatement {
+		a {
+			color: variables.$YELLOW;
+
+			font-family: inherit;
+		}
+
+		.year {
+			font-size: 0.975em;
+		}
 	}
 }
