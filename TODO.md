@@ -2,6 +2,7 @@
 
 ## Meta (design, ideas, etc.)
 
+- [ ] Add passwordless sign-in requirement to VPS
 - [ ] Update README.md to revise the dev and deployment environment instantiation to just `docker-compose` and list Docker engine as a dependency for the project
 - [x] Redesign the homepage to make it less confusing for the end user
 - [ ] Redesign friend standalone page to make it less confusing for the end user
