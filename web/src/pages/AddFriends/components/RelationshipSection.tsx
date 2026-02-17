@@ -1,5 +1,5 @@
-import type { FormData } from '../AddFriends'
-import { useState } from 'react'
+import type { AddFriendsInputState, FormData } from '../AddFriends'
+import React, { useState } from 'react'
 import RelationshipTierDescription from './RelationshipTierDescription'
 import RelationshipTierSelectOptions from './RelationshipTierSelect'
 
@@ -7,30 +7,16 @@ type RelationshipSectionProps = {
 	formData: FormData
 	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	friendName: string
-	hasInputtedRelationshipTier: boolean
-	setHasInputtedRelationshipTier: React.Dispatch<
-		React.SetStateAction<boolean>
-	>
-	currentlySelectedRelationshipTier: number | undefined
-	setCurrentlySelectedRelationshipTier: React.Dispatch<
-		React.SetStateAction<number | undefined>
-	>
-	lastHoveredRelationshipTier: number | undefined
-	setLastHoveredRelationshipTier: React.Dispatch<
-		React.SetStateAction<number | undefined>
-	>
+	input: AddFriendsInputState
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
 }
 
 const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 	formData,
 	setFormData,
 	friendName,
-	hasInputtedRelationshipTier,
-	setHasInputtedRelationshipTier,
-	currentlySelectedRelationshipTier,
-	setCurrentlySelectedRelationshipTier,
-	lastHoveredRelationshipTier,
-	setLastHoveredRelationshipTier,
+	input,
+	setInput,
 }) => {
 	const [wantsToKnowWhy, setWantsToKnowWhy] = useState<boolean>(false)
 
@@ -39,9 +25,11 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 			<div
 				className='fieldset_content'
 				onMouseLeave={() => {
-					setLastHoveredRelationshipTier(
-						currentlySelectedRelationshipTier
-					)
+					setInput({
+						...input,
+						lastHoveredRelationshipTier:
+							input.currentlySelectedRelationshipTier,
+					})
 				}}
 			>
 				<label className='selectionPrompt'>
@@ -92,29 +80,15 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 				:	<></>}
 				<div className='tiersAndInfo'>
 					<RelationshipTierDescription
-						relationship_tier_code={lastHoveredRelationshipTier}
+						relationship_tier_code={
+							input.lastHoveredRelationshipTier
+						}
 					/>
 					<RelationshipTierSelectOptions
 						formData={formData}
 						setFormData={setFormData}
-						hasInputtedRelationshipTier={
-							hasInputtedRelationshipTier
-						}
-						setHasInputtedRelationshipTier={
-							setHasInputtedRelationshipTier
-						}
-						currentlySelectedRelationshipTier={
-							currentlySelectedRelationshipTier
-						}
-						setCurrentlySelectedRelationshipTier={
-							setCurrentlySelectedRelationshipTier
-						}
-						lastHoveredRelationshipTier={
-							lastHoveredRelationshipTier
-						}
-						setLastHoveredRelationshipTier={
-							setLastHoveredRelationshipTier
-						}
+						input={input}
+						setInput={setInput}
 					/>
 				</div>
 			</div>

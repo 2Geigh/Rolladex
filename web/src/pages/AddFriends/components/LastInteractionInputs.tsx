@@ -1,36 +1,27 @@
-import type { FormData } from '../AddFriends'
+import type React from 'react'
+import type { AddFriendsInputState, FormData } from '../AddFriends'
 
 type LastInteractionInputsProps = {
 	formData: FormData
 	setFormData: React.Dispatch<React.SetStateAction<FormData>>
 	friendName: string
-	knowsApproximateLastInteraction: boolean | undefined
-	setKnowsApproximateLastInteraction: React.Dispatch<
-		React.SetStateAction<boolean | undefined>
-	>
-	knowsAbsoluteLastInteraction: boolean | undefined
-	setKnowsAbsoluteLastInteraction: React.Dispatch<
-		React.SetStateAction<boolean | undefined>
-	>
-	hasInputtedLastInteractionDate: boolean
-	setHasInputtedLastInteractionDate: React.Dispatch<
-		React.SetStateAction<boolean>
-	>
+	input: AddFriendsInputState
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
 }
 
 const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 	formData,
 	setFormData,
 	friendName,
-	knowsApproximateLastInteraction,
-	setKnowsApproximateLastInteraction,
-	knowsAbsoluteLastInteraction,
-	setKnowsAbsoluteLastInteraction,
-	setHasInputtedLastInteractionDate,
+	input,
+	setInput,
 }) => {
 	function onChangeAbsoluteDate(e: React.ChangeEvent<HTMLInputElement>) {
-		setKnowsAbsoluteLastInteraction(true)
-		setKnowsApproximateLastInteraction(false)
+		setInput({
+			...input,
+			knowsAbsoluteLastInteraction: true,
+			knowsApproximateLastInteraction: false,
+		})
 
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			'time_unit_multiple'
@@ -49,20 +40,23 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 		) {
 			const date = new Date(e.target.value).toISOString()
 
-			setHasInputtedLastInteractionDate(true)
+			setInput({ ...input, hasInputtedLastInteractionDate: true })
 			setFormData({
 				...formData,
 				last_interaction_date: date,
 			})
 		} else {
-			setHasInputtedLastInteractionDate(false)
+			setInput({ ...input, hasInputtedLastInteractionDate: false })
 			setFormData({ ...formData, last_interaction_date: null })
 		}
 	}
 
 	function onChangeApproximateDate() {
-		setKnowsAbsoluteLastInteraction(false)
-		setKnowsApproximateLastInteraction(true)
+		setInput({
+			...input,
+			knowsAbsoluteLastInteraction: false,
+			knowsApproximateLastInteraction: true,
+		})
 
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			'time_unit_multiple'
@@ -114,7 +108,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			inputtedTimeAgoUnitElement.value.trim() !== ''
 		) {
 			inputtedAbsoluteLastInteractionDate.value = ''
-			setHasInputtedLastInteractionDate(true)
+			setInput({ ...input, hasInputtedLastInteractionDate: true })
 
 			const timeUnit = inputtedTimeAgoUnitElement.value.trim()
 			const numberOf = parseInt(
@@ -123,7 +117,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			const pastDate = calculatePastDate(numberOf, timeUnit)
 			setFormData({ ...formData, last_interaction_date: pastDate })
 		} else {
-			setHasInputtedLastInteractionDate(false)
+			setInput({ ...input, hasInputtedLastInteractionDate: false })
 			setFormData({ ...formData, last_interaction_date: null })
 		}
 	}
@@ -136,9 +130,9 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			<div className='answerContent'>
 				<div
 					className={
-						knowsApproximateLastInteraction ? 'absolute ignored' : (
-							'absolute'
-						)
+						input.knowsApproximateLastInteraction ?
+							'absolute ignored'
+						:	'absolute'
 					}
 				>
 					<label htmlFor='last_interaction_date_absolute'>
@@ -156,7 +150,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 				<span className='or'>or</span>
 				<div
 					className={
-						knowsAbsoluteLastInteraction ?
+						input.knowsAbsoluteLastInteraction ?
 							'approximate ignored'
 						:	'approximate'
 					}

@@ -1,31 +1,19 @@
-import type { FormData } from '../AddFriends'
+import type { AddFriendsInputState, FormData } from '../AddFriends'
 import { DefaultRelationshipTiers } from '../../../types/models/Friend'
+import type React from 'react'
 
 type RelationshipTierSelectOptionsProps = {
 	formData: FormData
 	setFormData: React.Dispatch<React.SetStateAction<FormData>>
-	hasInputtedRelationshipTier: boolean
-	setHasInputtedRelationshipTier: React.Dispatch<
-		React.SetStateAction<boolean>
-	>
-	currentlySelectedRelationshipTier: number | undefined
-	setCurrentlySelectedRelationshipTier: React.Dispatch<
-		React.SetStateAction<number | undefined>
-	>
-	lastHoveredRelationshipTier: number | undefined
-	setLastHoveredRelationshipTier: React.Dispatch<
-		React.SetStateAction<number | undefined>
-	>
+	input: AddFriendsInputState
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
 }
 
 const RelationshipTierSelectOptions = ({
 	formData,
 	setFormData,
-	hasInputtedRelationshipTier,
-	setHasInputtedRelationshipTier,
-	currentlySelectedRelationshipTier,
-	setCurrentlySelectedRelationshipTier,
-	setLastHoveredRelationshipTier,
+	input,
+	setInput,
 }: RelationshipTierSelectOptionsProps) => {
 	const options = Object.values(DefaultRelationshipTiers).map(
 		(relationship_tier) => {
@@ -44,8 +32,11 @@ const RelationshipTierSelectOptions = ({
 						value={relationship_tier.code}
 						id={inputId}
 						onChange={() => {
-							if (!hasInputtedRelationshipTier) {
-								setHasInputtedRelationshipTier(true)
+							if (!input.hasInputtedRelationshipTier) {
+								setInput({
+									...input,
+									hasInputtedRelationshipTier: true,
+								})
 								setFormData({
 									...formData,
 									relationship_tier_code: null,
@@ -53,9 +44,11 @@ const RelationshipTierSelectOptions = ({
 							}
 
 							if (relationship_tier.code !== undefined) {
-								setCurrentlySelectedRelationshipTier(
-									relationship_tier.code
-								)
+								setInput({
+									...input,
+									currentlySelectedRelationshipTier:
+										relationship_tier.code,
+								})
 								setFormData({
 									...formData,
 									relationship_tier_code:
@@ -74,27 +67,33 @@ const RelationshipTierSelectOptions = ({
 						tabIndex={0}
 						htmlFor={labelFor}
 						onMouseEnter={() => {
-							setLastHoveredRelationshipTier(
-								relationship_tier.code
-							)
+							setInput({
+								...input,
+								lastHoveredRelationshipTier:
+									relationship_tier.code,
+							})
 						}}
 						onClick={() => {
-							setLastHoveredRelationshipTier(
-								relationship_tier.code
-							)
+							setInput({
+								...input,
+								lastHoveredRelationshipTier:
+									relationship_tier.code,
+							})
 						}}
 						onKeyDown={(e) =>
 							e.key === 'Enter' ?
-								setLastHoveredRelationshipTier(
-									relationship_tier.code
-								)
+								setInput({
+									...input,
+									lastHoveredRelationshipTier:
+										relationship_tier.code,
+								})
 							:	<></>
 						}
 						className={
 							(
-								currentlySelectedRelationshipTier !==
+								input.currentlySelectedRelationshipTier !==
 									undefined &&
-								currentlySelectedRelationshipTier ===
+								input.currentlySelectedRelationshipTier ===
 									relationship_tier.code
 							) ?
 								'selected'

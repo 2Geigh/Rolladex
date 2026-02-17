@@ -20,6 +20,15 @@ type OptionalFormData = {
 
 export type FormData = RequiredFormData & OptionalFormData
 
+export type AddFriendsInputState = {
+	knowsApproximateLastInteraction: boolean | undefined
+	knowsAbsoluteLastInteraction: boolean | undefined
+	hasInputtedLastInteractionDate: boolean
+	hasInputtedRelationshipTier: boolean
+	currentlySelectedRelationshipTier: number | undefined
+	lastHoveredRelationshipTier: number | undefined
+}
+
 const AddFriends: React.FC = () => {
 	const [formData, setFormData] = useState<FormData>({
 		name: undefined,
@@ -28,22 +37,15 @@ const AddFriends: React.FC = () => {
 		birthday_month: undefined,
 		birthday_day: undefined,
 	})
-	const [
-		knowsApproximateLastInteraction,
-		setKnowsApproximateLastInteraction,
-	] = useState<boolean | undefined>(undefined)
-	const [knowsAbsoluteLastInteraction, setKnowsAbsoluteLastInteraction] =
-		useState<boolean | undefined>(undefined)
-	const [hasInputtedLastInteractionDate, setHasInputtedLastInteractionDate] =
-		useState<boolean>(false)
-	const [hasInputtedRelationshipTier, setHasInputtedRelationshipTier] =
-		useState<boolean>(false)
-	const [
-		currentlySelectedRelationshipTier,
-		setCurrentlySelectedRelationshipTier,
-	] = useState<number | undefined>(undefined)
-	const [lastHoveredRelationshipTier, setLastHoveredRelationshipTier] =
-		useState<number | undefined>(undefined)
+
+	const [input, setInput] = useState<AddFriendsInputState>({
+		knowsApproximateLastInteraction: undefined,
+		knowsAbsoluteLastInteraction: undefined,
+		hasInputtedLastInteractionDate: false,
+		hasInputtedRelationshipTier: false,
+		currentlySelectedRelationshipTier: undefined,
+		lastHoveredRelationshipTier: undefined,
+	})
 
 	const navigate = useNavigate()
 
@@ -108,24 +110,8 @@ const AddFriends: React.FC = () => {
 								formData={formData}
 								setFormData={setFormData}
 								friendName={formData.name}
-								knowsApproximateLastInteraction={
-									knowsApproximateLastInteraction
-								}
-								setKnowsApproximateLastInteraction={
-									setKnowsApproximateLastInteraction
-								}
-								knowsAbsoluteLastInteraction={
-									knowsAbsoluteLastInteraction
-								}
-								setKnowsAbsoluteLastInteraction={
-									setKnowsAbsoluteLastInteraction
-								}
-								hasInputtedLastInteractionDate={
-									hasInputtedLastInteractionDate
-								}
-								setHasInputtedLastInteractionDate={
-									setHasInputtedLastInteractionDate
-								}
+								input={input}
+								setInput={setInput}
 							/>
 
 							{formData.last_interaction_date !== undefined && (
@@ -134,24 +120,8 @@ const AddFriends: React.FC = () => {
 										formData={formData}
 										setFormData={setFormData}
 										friendName={formData.name}
-										hasInputtedRelationshipTier={
-											hasInputtedRelationshipTier
-										}
-										setHasInputtedRelationshipTier={
-											setHasInputtedRelationshipTier
-										}
-										currentlySelectedRelationshipTier={
-											currentlySelectedRelationshipTier
-										}
-										setCurrentlySelectedRelationshipTier={
-											setCurrentlySelectedRelationshipTier
-										}
-										lastHoveredRelationshipTier={
-											lastHoveredRelationshipTier
-										}
-										setLastHoveredRelationshipTier={
-											setLastHoveredRelationshipTier
-										}
+										input={input}
+										setInput={setInput}
 									/>
 
 									{formData.relationship_tier_code !==
