@@ -36,7 +36,7 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		homepageContent, err := getHomepageContent(user_id)
+		homepageContent, err := homepageContent(user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't get homepage content", http.StatusInternalServerError)
 			return
@@ -61,17 +61,17 @@ func Home(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getHomepageContent[U database.SqlId](user_id U) (HomepageContent, error) {
+func homepageContent[U database.SqlId](user_id U) (HomepageContent, error) {
 	var (
 		daysAheadForNotifications = 14
 	)
 
-	todaysFriends, err := getTodaysFriends(user_id)
+	todaysFriends, err := todaysFriends(user_id)
 	if err != nil {
 		return HomepageContent{}, fmt.Errorf("couldn't get today's friends: %w", err)
 	}
 
-	notifications, err := getNotifications(user_id, daysAheadForNotifications)
+	notifications, err := notifications(user_id, daysAheadForNotifications)
 	if err != nil {
 		return HomepageContent{TodaysFriends: todaysFriends}, fmt.Errorf("couldn't get notifications for the next %d days: %w", daysAheadForNotifications, err)
 	}
@@ -79,7 +79,7 @@ func getHomepageContent[U database.SqlId](user_id U) (HomepageContent, error) {
 	return HomepageContent{TodaysFriends: todaysFriends, Notifications: notifications}, nil
 }
 
-func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
+func todaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 	var (
 		todaysFriends []models.Friend
 	)
@@ -161,7 +161,7 @@ func getTodaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 	return todaysFriends, nil
 }
 
-func getNotifications[U database.SqlId](user_id U, daysAhead int) ([]Notification, error) {
+func notifications[U database.SqlId](user_id U, daysAhead int) ([]Notification, error) {
 	var (
 		notifications []Notification
 	)

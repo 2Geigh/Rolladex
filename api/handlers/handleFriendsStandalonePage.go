@@ -52,7 +52,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		friend, err := getFriend(friendId, user_id)
+		friend, err := friend(friendId, user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't get friend", http.StatusInternalServerError)
 			return
@@ -126,7 +126,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getFriend(friend_id int, user_id string) (models.Friend, error) {
+func friend(friend_id int, user_id string) (models.Friend, error) {
 	var (
 		friend models.Friend
 

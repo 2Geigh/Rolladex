@@ -69,7 +69,7 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 			sortBy: req.URL.Query().Get("sortby"),
 		}
 
-		friends, err := getFriendsSortedByColumn(user_id, getFriendsSortedByColumnParams.sortBy)
+		friends, err := friendsSortedByColumn(user_id, getFriendsSortedByColumnParams.sortBy)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't get list of friends", http.StatusInternalServerError)
 			return
@@ -235,7 +235,7 @@ func addFriend(user_id string, formData AddFriendFormData) (int, error) {
 	return http.StatusOK, err
 }
 
-func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, error) {
+func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, error) {
 	var (
 		friends  []models.Friend
 		sqlQuery string
@@ -389,7 +389,7 @@ func getFriendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, e
 	return friends, err
 }
 
-func getFriends(user_id string) ([]models.Friend, error) {
+func friends(user_id string) ([]models.Friend, error) {
 	var friends []models.Friend
 
 	tx, err := database.DB.Begin()

@@ -30,7 +30,7 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		user, err := getSessionUser(user_id)
+		user, err := sessionUser(user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't find user data", http.StatusInternalServerError)
 			return
@@ -142,7 +142,7 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	return err
 }
 
-func getSessionUser(user_id string) (models.User, error) {
+func sessionUser(user_id string) (models.User, error) {
 	var (
 		user models.User
 
