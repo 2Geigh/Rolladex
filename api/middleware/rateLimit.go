@@ -2,15 +2,18 @@ package middleware
 
 import (
 	"log"
+	"net"
 	"net/http"
 	"sync"
+	"time"
 
 	"golang.org/x/time/rate"
 )
 
 // A type to hold each client's rate limiter
 type Client struct {
-	limiter *rate.Limiter
+	limiter      *rate.Limiter
+	blockedUntil time.Time
 }
 
 var (
@@ -18,9 +21,9 @@ var (
 	mu      sync.Mutex // Used as a locking mechanism to prevent race conditions
 )
 
-func clientLimiter(ip string) *rate.Limiter {
+func client(ip string) *Client {
 	var (
-		requestsPerMinute rate.Limit = 5
+		requestsPerSecond rate.Limit = 3
 		tokensPerBurst    int        = 1
 	)
 
@@ -29,24 +32,43 @@ func clientLimiter(ip string) *rate.Limiter {
 
 	client, clientExists := clients[ip]
 	if clientExists {
-		return client.limiter
+		return client
 	}
 
-	limiter := rate.NewLimiter(requestsPerMinute, tokensPerBurst)
+	limiter := rate.NewLimiter(requestsPerSecond, tokensPerBurst)
 	newClient := Client{limiter: limiter}
 	clients[ip] = &newClient
-	return limiter
+	return &newClient
 }
 
 func RateLimit(next http.Handler) http.Handler {
 	handler := func(w http.ResponseWriter, req *http.Request) {
-		ip := req.RemoteAddr
-		limiter := clientLimiter(ip)
+		host, _, err := net.SplitHostPort(req.RemoteAddr)
+		if err != nil {
+			// Fallback if SplitHostPort fails (e.g., no port present)
+			host = req.RemoteAddr
+		}
+		client := client(host)
 
-		isRequestAllowed := limiter.Allow()
+		mu.Lock()
+		if time.Now().Before(client.blockedUntil) {
+			mu.Unlock()
+
+			// Return without logging to suppress terminal noise
+			w.WriteHeader(http.StatusForbidden)
+
+			return
+		}
+		mu.Unlock()
+
+		isRequestAllowed := client.limiter.Allow()
 		if !isRequestAllowed {
+			mu.Lock()
+			client.blockedUntil = time.Now().Add(5 * time.Minute)
+			mu.Unlock()
+
 			http.Error(w, "Too many requests", http.StatusTooManyRequests)
-			log.Printf("Suspected DOS from %s", ip)
+			log.Printf("Suspected DOS from %s", host)
 			return
 		}
 
