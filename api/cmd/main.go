@@ -47,6 +47,8 @@ func main() {
 		log.Fatal(fmt.Errorf("couldn't initialize database: %w", err))
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
+	go middleware.CleanupClients()
+
 	// Server
 	log.Printf("Listening on http://0.0.0.0:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil))

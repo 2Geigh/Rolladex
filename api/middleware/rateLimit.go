@@ -14,6 +14,7 @@ import (
 type Client struct {
 	limiter      *rate.Limiter
 	blockedUntil time.Time
+	lastSeen     time.Time
 }
 
 var (
@@ -76,4 +77,17 @@ func RateLimit(next http.Handler) http.Handler {
 	}
 
 	return http.HandlerFunc(handler)
+}
+
+func CleanupClients() {
+	for {
+		time.Sleep(15 * time.Minute)
+
+		mu.Lock()
+		for ip, client := range clients {
+			if time.Since(client.lastSeen) > 24*time.Hour {
+				delete(clients, ip)
+			}
+		}
+	}
 }
