@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rolladex-backend/database"
 	"rolladex-backend/handlers"
+	"rolladex-backend/middleware"
 
 	"github.com/joho/godotenv"
 )
@@ -19,7 +20,11 @@ func main() {
 
 	// Meta
 	http.HandleFunc("/", handlers.Root)
-	http.HandleFunc("/api_sanity_check", handlers.ApiSanityCheck)
+	http.Handle("/api_sanity_check",
+		middleware.RateLimit(
+			http.HandlerFunc(handlers.ApiSanityCheck),
+		),
+	)
 
 	// Authentication
 	http.HandleFunc("/login", handlers.Login)

@@ -12,7 +12,7 @@
     - [ ] Side effects must run outside of render
     - [ ] Props and state are immutable
     - [ ] Return values and arguments to Hooks are immutable
-    - [ ] Values are immutable after being passed to JSX
+    - [ ] Values are immutable after being passed to JSX  
   - [ ] React calls Components and Hooks
     - [ ] Never call component functions directly
     - [ ] Never pass around Hooks as regular values
@@ -45,8 +45,8 @@
 - [ ] Replace pfps with emoji
 - [ ] Migrate MariaDB to Postgresql
 - [ ] Add "time zone" column to Users table
+- [x] Remove birthdays from "urgent friends" section of Home
 - [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
-- [ ] Remove birthdays from "urgent friends" section of Home
   - [ ] Rate limiting/DDOS
   - [ ] CORS
   - [ ] SQL/NoSQL injection
