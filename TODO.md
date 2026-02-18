@@ -47,7 +47,7 @@
 - [ ] Add "time zone" column to Users table
 - [x] Remove birthdays from "urgent friends" section of Home
 - [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
-  - [ ] Rate limiting/DDOS
+  - [x] Rate limiting/DDOS
   - [ ] CORS
   - [ ] SQL/NoSQL injection
   - [ ] Firewalls
