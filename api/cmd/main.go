@@ -19,29 +19,27 @@ func main() {
 	godotenv.Load()
 
 	// Meta
-	http.HandleFunc("/", handlers.Root)
-	http.Handle("/api_sanity_check",
-		middleware.RateLimit(
-			http.HandlerFunc(handlers.ApiSanityCheck),
-		),
-	)
+	registerRoute("/api_sanity_check", handlers.ApiSanityCheck)
+
+	// Root
+	registerRoute("/", handlers.Root)
 
 	// Authentication
-	http.HandleFunc("/login", handlers.Login)
-	http.HandleFunc("/signup", handlers.Signup)
-	http.HandleFunc("/logout", handlers.Logout)
+	registerRoute("/login", handlers.Login)
+	registerRoute("/signup", handlers.Signup)
+	registerRoute("/logout", handlers.Logout)
 
 	// Authorization
-	http.HandleFunc("/session/valid", handlers.SessionValid)
+	registerRoute("/session/valid", handlers.SessionValid)
 
 	// Features
-	http.HandleFunc("/home", handlers.Home)
-	http.HandleFunc("/friends", handlers.Friends)
-	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
-	http.HandleFunc("/friends/status", handlers.FriendsStatus)
-	http.HandleFunc("/friends/interactions", handlers.FriendsInteractions)
-	http.HandleFunc("/friends/notes", handlers.FriendsNotes)
-	http.HandleFunc("/interactions/", handlers.InteractionStandalonePage)
+	registerRoute("/home", handlers.Home)
+	registerRoute("/friends", handlers.Friends)
+	registerRoute("/friends/", handlers.FriendStandalonePage)
+	registerRoute("/friends/status", handlers.FriendsStatus)
+	registerRoute("/friends/interactions", handlers.FriendsInteractions)
+	registerRoute("/friends/notes", handlers.FriendsNotes)
+	registerRoute("/interactions/", handlers.InteractionStandalonePage)
 
 	// Database
 	err := database.InitializeDB()
@@ -52,4 +50,12 @@ func main() {
 	// Server
 	log.Printf("Listening on http://0.0.0.0:%d\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil))
+}
+
+func registerRoute(path string, handler http.HandlerFunc) {
+	http.Handle(path,
+		middleware.RateLimit(
+			http.HandlerFunc(handler),
+		),
+	)
 }
