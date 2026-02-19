@@ -41,3 +41,4 @@
     - [ ] Make very API request require validating the CSRF token according to the database
   - [ ] XSS
     - [ ] Sanitize all user inputs using github.com/microcosm-cc/bluemonday
+- [ ] Add HTTP secure transport security to VPS' Nginx
