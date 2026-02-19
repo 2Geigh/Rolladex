@@ -24,8 +24,8 @@ var (
 
 func client(ip string) *Client {
 	var (
-		requestsPerSecond rate.Limit = 3
-		tokensPerBurst    int        = 1
+		rateLimit  rate.Limit = 10
+		burstLimit int        = 5
 	)
 
 	mu.Lock()
@@ -36,7 +36,7 @@ func client(ip string) *Client {
 		return client
 	}
 
-	limiter := rate.NewLimiter(requestsPerSecond, tokensPerBurst)
+	limiter := rate.NewLimiter(rateLimit, burstLimit)
 	newClient := Client{limiter: limiter}
 	clients[ip] = &newClient
 	return &newClient
@@ -44,6 +44,10 @@ func client(ip string) *Client {
 
 func RateLimit(next http.Handler) http.Handler {
 	handler := func(w http.ResponseWriter, req *http.Request) {
+		var (
+			penalty time.Duration = 2 * time.Minute
+		)
+
 		host, _, err := net.SplitHostPort(req.RemoteAddr)
 		if err != nil {
 			// Fallback if SplitHostPort fails (e.g., no port present)
@@ -65,11 +69,11 @@ func RateLimit(next http.Handler) http.Handler {
 		isRequestAllowed := client.limiter.Allow()
 		if !isRequestAllowed {
 			mu.Lock()
-			client.blockedUntil = time.Now().Add(5 * time.Minute)
+			client.blockedUntil = time.Now().Add(penalty)
 			mu.Unlock()
 
 			http.Error(w, "Too many requests", http.StatusTooManyRequests)
-			log.Printf("Suspected DOS from %s", host)
+			log.Printf("Suspected DoS attack from %s", host)
 			return
 		}
 

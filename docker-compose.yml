@@ -12,12 +12,12 @@ services:
         healthcheck:
             test:
                 [
-                    "CMD-SHELL",
-                    "mariadb-admin ping -h localhost -u root -p$$MARIADB_ROOT_PASSWORD",
+                    'CMD-SHELL',
+                    'mariadb-admin ping -h localhost -u root -p$$MARIADB_ROOT_PASSWORD',
                 ]
-            interval: 0m10s
+            interval: 0m5s
             timeout: 1m0s
-            retries: 5
+            retries: 12
             start_period: 10s
 
     backend:
@@ -32,7 +32,7 @@ services:
         env_file:
             - .env
         ports:
-            - "3001:3001"
+            - '3001:3001'
         environment:
             - DB_HOST=${DB_HOST}
             - DB_PORT=${DB_PORT}
