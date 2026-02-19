@@ -52,6 +52,10 @@
     - [ ] Add rate limiting to Nginx
   - [ ] CORS
   - [ ] SQL/NoSQL injection
+- [ ] Remove birthdays from "urgent friends" section of Home
+  - [ ] Rate limiting/DDOS
+  - [x] CORS
+  - [x] SQL/NoSQL injection
   - [ ] Firewalls
   - [ ] VPNs
   - [ ] CSRF
