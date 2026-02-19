@@ -48,8 +48,8 @@
 - [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
 - [ ] Remove birthdays from "urgent friends" section of Home
   - [ ] Rate limiting/DDOS
-  - [ ] CORS
-  - [ ] SQL/NoSQL injection
+  - [x] CORS
+  - [x] SQL/NoSQL injection
   - [ ] Firewalls
   - [ ] VPNs
   - [ ] CSRF
