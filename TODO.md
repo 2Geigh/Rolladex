@@ -12,7 +12,7 @@
     - [ ] Side effects must run outside of render
     - [ ] Props and state are immutable
     - [ ] Return values and arguments to Hooks are immutable
-    - [ ] Values are immutable after being passed to JSX
+    - [ ] Values are immutable after being passed to JSX  
   - [ ] React calls Components and Hooks
     - [ ] Never call component functions directly
     - [ ] Never pass around Hooks as regular values
@@ -41,11 +41,17 @@
 
 ## API & Database
 
+- [ ] Add autodeletion of sessions to clear database
 - [x] [Rename functions that start with "get"/"Get"](https://google.github.io/styleguide/go/decisions#getters)
 - [ ] Replace pfps with emoji
 - [ ] Migrate MariaDB to Postgresql
 - [ ] Add "time zone" column to Users table
+- [x] Remove birthdays from "urgent friends" section of Home
 - [ ] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
+  - [x] Rate limiting/DDOS
+    - [ ] Add rate limiting to Nginx
+  - [ ] CORS
+  - [ ] SQL/NoSQL injection
 - [ ] Remove birthdays from "urgent friends" section of Home
   - [ ] Rate limiting/DDOS
   - [x] CORS

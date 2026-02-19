@@ -6,16 +6,16 @@ services:
             target: dev
         command: go run ./cmd/main.go
         ports:
-            - "3001:3001"
+            - '3001:3001'
 
     frontend:
         build:
             target: dev
         ports:
-            - "8080:5173"
+            - '8080:5173'
         volumes:
-            - ./web:/app                # Maps your code
-            - /app/node_modules         # "Anonymous volume" to protect container modules
+            - ./web:/app # Maps your code
+            - /app/node_modules # "Anonymous volume" to protect container modules
 
 volumes:
     db_data:
