@@ -12,6 +12,8 @@
 - [ ] Add login/signup with OAuth
 - [x] Write a TOS for the signup
 - [x] Make the TOS button a target="\_blank" anchor or a popup
+- [ ] Add CSRF token to loginSessionContext
+- [ ] Add CSRF tokens to every API request
 
 ## Mobile Client
 
@@ -21,7 +23,6 @@
 ## API & Database
 
 - [ ] Add automatic Sessions row deletion upon session expiration
-- [ ] Migrate MariaDB to Postgresql
 - [/] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
   - [ ] Rate limiting/DDOS
     - [ ] Add user-specific rate limiting to the API
@@ -34,6 +35,9 @@
   - [ ] Firewalls
   - [ ] VPNs
   - [ ] CSRF (cross-site request forgery)
-    - [ ] Add CSRF tokens to every session created
+    - [ ] Create a database table called "CsrfTokens"
+    - [ ] Add CSRF token generation to user session validation
+      - [ ] The token should be sent in the response with the user data
+    - [ ] Make very API request require validating the CSRF token according to the database
   - [ ] XSS
     - [ ] Sanitize all user inputs using github.com/microcosm-cc/bluemonday
