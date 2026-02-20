@@ -541,7 +541,7 @@ const FriendStandalonePage: React.FC = () => {
 					setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
 					isEdittingFriend={isEdittingFriend}
 					setIsEdittingFriend={setIsEdittingFriend}
-					sessionToken={loginSessionContext.token}
+					sessionToken={loginSessionContext.csrfToken}
 				/>
 				{isUpdatingLastInteraction && (
 					<UpdateLastInteraction

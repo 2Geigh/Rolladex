@@ -5,7 +5,7 @@ import type { User } from "../types/models/User"
 export type LoginSessionData = {
 	isLoggedIn: boolean
 	user: User | undefined
-	token: string | undefined
+	csrfToken: string | undefined
 }
 
 export type LoginSessionContextType = LoginSessionData & {
@@ -82,7 +82,7 @@ export async function GetSessionAndUserData(
 			...loginSessionData,
 			user: user,
 			isLoggedIn: true,
-			token: token,
+			csrfToken: token,
 		})
 	} catch (err) {
 		throw new Error(`Invalid user data from /session/user: ${err}.}`)
