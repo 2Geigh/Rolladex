@@ -102,7 +102,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		<div id='noFriends'>
 			<span className='emoji'>🗿</span>
 			<span>No pending communications.</span>
-			<a href='/addfriend'>View all friends</a>
+			<a href='/friends'>View all friends</a>
 		</div>
 	)
 
