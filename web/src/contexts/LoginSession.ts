@@ -5,6 +5,7 @@ import type { User } from "../types/models/User"
 export type LoginSessionData = {
 	isLoggedIn: boolean
 	user: User | undefined
+	token: string | undefined
 }
 
 export type LoginSessionContextType = LoginSessionData & {
@@ -58,19 +59,31 @@ export async function GetSessionAndUserData(
 	}
 
 	try {
-		const text = await response.text()
-		// console.log("Raw response from server:", text)
-
-		const user = JSON.parse(text) as User
-
-		if (user && user.id) {
-			setLoginSessionData({
-				...loginSessionData,
-				user: user,
-				isLoggedIn: true,
-			})
-			return
+		type SessionValidationResponse = {
+			user: User
+			token: string
 		}
+
+		const sessionValidResponse =
+			(await response.json()) as SessionValidationResponse
+		const user = sessionValidResponse.user
+		const token = sessionValidResponse.token
+
+		if (!(user && user.id)) {
+			setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
+			throw new Error("No user data found")
+		}
+		if (!token) {
+			setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
+			throw new Error("No CSRF token found")
+		}
+
+		setLoginSessionData({
+			...loginSessionData,
+			user: user,
+			isLoggedIn: true,
+			token: token,
+		})
 	} catch (err) {
 		throw new Error(`Invalid user data from /session/user: ${err}.}`)
 	}

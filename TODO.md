@@ -35,7 +35,7 @@
   - [ ] Firewalls
   - [ ] VPNs
   - [ ] CSRF (cross-site request forgery)
-    - [ ] Create a database table called "CsrfTokens"
+    - [x] Create a database table called "CsrfTokens"
     - [ ] Add CSRF token generation to user session validation
       - [ ] The token should be sent in the response with the user data
     - [ ] Make very API request require validating the CSRF token according to the database

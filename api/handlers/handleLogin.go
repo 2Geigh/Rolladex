@@ -99,7 +99,7 @@ func authenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusConflict, fmt.Errorf("user doesn't exist")
 	}
 
-	hashedSaltedPassword, salt, err = getPasswordHashAndSalt(username)
+	hashedSaltedPassword, salt, err = passwordHashAndSalt(username)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("couldn't get %s's password hash or salt: %w", username, err)
 	}
@@ -113,7 +113,7 @@ func authenticateUser(username string, passwordFromClient string) (int, error) {
 	return http.StatusOK, err
 }
 
-func getPasswordHashAndSalt(username string) (string, string, error) {
+func passwordHashAndSalt(username string) (string, string, error) {
 	var (
 		passwordHash string
 		passwordSalt string

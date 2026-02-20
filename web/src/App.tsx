@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import Home from "./pages/Home/Home"
 import Logout from "./pages/Logout/Logout"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import {
 	GetSessionAndUserData,
 	LoginSessionContext,
@@ -29,6 +29,7 @@ function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
 		isLoggedIn: false,
 		user: undefined,
+		token: undefined,
 	})
 	const [isLoading, setIsLoading] = useState(true)
 	const LoginSessionContextValue = {
@@ -42,6 +43,12 @@ function App() {
 			.catch((err) => console.error(`session check failed: ${err}`))
 			.finally(() => setIsLoading(false))
 	}, []) // Runs only once on app mount
+
+	useEffect(() => {
+		if (loginSessionData.token) {
+			console.log(`token: ${loginSessionData.token}`)
+		}
+	}, [loginSessionData])
 
 	if (isLoading) {
 		return (

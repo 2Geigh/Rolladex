@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"crypto/rand"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -15,6 +17,11 @@ import (
 var (
 	LoginSessionCookieName = "myFriends_session_token"
 )
+
+type SessionValidationResponse struct {
+	User  models.User `json:"user"`
+	Token string      `json:"token"`
+}
 
 func SessionValid(w http.ResponseWriter, req *http.Request) {
 
@@ -30,21 +37,27 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		user, err := getSessionUser(user_id)
+		user, err := sessionUser(user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't find user data", http.StatusInternalServerError)
 			return
 		}
 
-		userJson, err := json.Marshal(user)
+		token := csrfToken()
+		err = storeCsrfTokenInDatabase(token, user_id)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't store CSRF token in database", http.StatusInternalServerError)
+		}
+
+		sessionData := SessionValidationResponse{User: user, Token: token}
+		sessionDataJson, err := json.Marshal(sessionData)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't marshal user data to JSON", http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(userJson)
+		_, err = w.Write(sessionDataJson)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't write user JSON data", http.StatusInternalServerError)
 			return
@@ -142,7 +155,7 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	return err
 }
 
-func getSessionUser(user_id string) (models.User, error) {
+func sessionUser(user_id string) (models.User, error) {
 	var (
 		user models.User
 
@@ -202,4 +215,41 @@ func getSessionUser(user_id string) (models.User, error) {
 
 	tx.Commit()
 	return user, err
+}
+
+func csrfToken() string {
+	token := make([]byte, 255)
+	rand.Read(token)
+	return base64.URLEncoding.EncodeToString(token)
+}
+
+func storeCsrfTokenInDatabase[U database.SqlId](token string, user_id U) error {
+
+	// Clear database of any existing tokens for this user if necessary
+	stmt, err := database.DB.Prepare(`
+		DELETE
+		FROM CsrfTokens
+		WHERE CsrfTokens.user_id = ?;
+		`)
+	if err != nil {
+		return fmt.Errorf("couldn't prepare statment: %w", err)
+	}
+	_, err = stmt.Exec(user_id)
+	if err != nil {
+		return fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	// Add new token to database
+	stmt, err = database.DB.Prepare(`
+		INSERT INTO CsrfTokens (user_id, value) VALUES (?, ?);
+		`)
+	if err != nil {
+		return fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	_, err = stmt.Exec(user_id, token)
+	if err != nil {
+		return fmt.Errorf("couldn't execute statement: %w", err)
+	}
+
+	return nil
 }

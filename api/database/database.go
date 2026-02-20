@@ -84,7 +84,6 @@ func runMigrations() error {
 		return err
 	}
 
-	// This runs all migrations in the 'migrations' directory
 	if err := goose.Up(DB, "migrations"); err != nil {
 		return fmt.Errorf("goose up failed: %w", err)
 	}
