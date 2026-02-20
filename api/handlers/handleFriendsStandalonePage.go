@@ -52,9 +52,9 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		friend, err := getFriend(friendId, user_id)
+		friend, err, statusCode := friend(friendId, user_id)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't get friend", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "couldn't get friend", statusCode)
 			return
 		}
 
@@ -84,6 +84,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't read request body", http.StatusBadRequest)
 			return
 		}
+		defer req.Body.Close()
 
 		var updateData struct {
 			ID               int    `json:"id"`
@@ -142,7 +143,7 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func getFriend(friend_id int, user_id string) (models.Friend, error) {
+func friend(friend_id int, user_id string) (models.Friend, error, int) {
 	var (
 		friend models.Friend
 
@@ -161,7 +162,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 
 	tx, err := database.DB.Begin()
 	if err != nil {
-		return friend, fmt.Errorf("couldn't begin transaction: %w", err)
+		return friend, fmt.Errorf("couldn't begin transaction: %w", err), http.StatusInternalServerError
 	}
 	defer tx.Rollback()
 
@@ -180,7 +181,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 	WHERE Friends.id = ?;
     `)
 	if err != nil {
-		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
+		return friend, fmt.Errorf("couldn't prepare statement: %w", err), http.StatusInternalServerError
 	}
 	defer stmt.Close()
 
@@ -194,8 +195,11 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		&relationshipTier,
 		&notes,
 	)
+	if err == sql.ErrNoRows {
+		return friend, fmt.Errorf("friend not found: %w", err), http.StatusNotFound
+	}
 	if err != nil {
-		return friend, fmt.Errorf("couldn't scan row: %w", err)
+		return friend, fmt.Errorf("couldn't scan row: %w", err), http.StatusInternalServerError
 	}
 
 	stmt, err = tx.Prepare(`
@@ -212,7 +216,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		LIMIT 1;
     `)
 	if err != nil {
-		return friend, fmt.Errorf("couldn't prepare statement: %w", err)
+		return friend, fmt.Errorf("couldn't prepare statement: %w", err), http.StatusInternalServerError
 	}
 	defer stmt.Close()
 
@@ -224,7 +228,7 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 		&lastInteractionName,
 	)
 	if err != nil {
-		return friend, fmt.Errorf("couldn't scan row: %w", err)
+		return friend, fmt.Errorf("couldn't scan row: %w", err), http.StatusInternalServerError
 	}
 
 	friend = models.Friend{
@@ -260,13 +264,13 @@ func getFriend(friend_id int, user_id string) (models.Friend, error) {
 
 	friend.RelationshipHealth, err = logic.GetRelationshipHealth(friend_id, user_id)
 	if err != nil {
-		return friend, fmt.Errorf("couldn't get relationship health: %w", err)
+		return friend, fmt.Errorf("couldn't get relationship health: %w", err), http.StatusInternalServerError
 	}
 
 	if err := tx.Commit(); err != nil {
-		return friend, fmt.Errorf("couldn't commit transaction: %w", err)
+		return friend, fmt.Errorf("couldn't commit transaction: %w", err), http.StatusInternalServerError
 	}
-	return friend, err
+	return friend, err, http.StatusOK
 }
 
 func updateFriend[U database.SqlId](updateData struct {

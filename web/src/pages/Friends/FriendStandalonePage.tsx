@@ -484,7 +484,7 @@ const FriendStandalonePage: React.FC = () => {
 		useState<boolean>(false)
 	const [isEdittingFriend, setIsEdittingFriend] = useState<boolean>(false)
 
-	async function getFriend(friendId: number): Promise<Friend> {
+	async function getFriend(friendId: number): Promise<Friend | undefined> {
 		const response = await fetch(
 			`${backend_base_url}/friends/${friendId}`,
 			{
@@ -494,9 +494,7 @@ const FriendStandalonePage: React.FC = () => {
 		)
 
 		if (!response.ok) {
-			throw new Error(
-				`${response.status}: couldn't get friend: ${response.body}`,
-			)
+			return undefined
 		}
 
 		const friend = (await response.json()) as Friend
@@ -506,10 +504,9 @@ const FriendStandalonePage: React.FC = () => {
 	useEffect(() => {
 		getFriend(friendId)
 			.then((fetchedFriend) => {
-				setFriend(fetchedFriend)
-			})
-			.catch((err) => {
-				throw new Error(err)
+				if (fetchedFriend) {
+					setFriend(fetchedFriend)
+				}
 			})
 			.finally(() => {
 				setIsLoading(false)

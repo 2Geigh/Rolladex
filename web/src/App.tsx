@@ -44,12 +44,6 @@ function App() {
 			.finally(() => setIsLoading(false))
 	}, []) // Runs only once on app mount
 
-	useEffect(() => {
-		if (loginSessionData.token) {
-			console.log(`token: ${loginSessionData.token}`)
-		}
-	}, [loginSessionData])
-
 	if (isLoading) {
 		return (
 			<>
