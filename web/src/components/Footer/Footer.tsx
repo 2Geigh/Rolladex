@@ -1,4 +1,4 @@
-import "./styles/Footer.scss"
+import './styles/Footer.scss'
 
 const Footer = () => {
 	const today = new Date()
@@ -13,17 +13,16 @@ const Footer = () => {
 
 	return (
 		<>
-			<nav className="footer">
-				<span className="copyrightStatement">
-					Developed with love by{" "}
+			<nav className='footer'>
+				<span className='copyrightStatement'>
 					<a
-						href="https://nicholasgarcia.com"
-						target="blank_"
-						className="logo"
+						href='https://nicholasgarcia.com'
+						target='blank_'
+						className='logo'
 					>
 						Nicholas Garcia
 					</a>
-					, {String(copyrightYears)}.
+					, <span className='year'>{String(copyrightYears)}</span>.
 				</span>
 			</nav>
 		</>

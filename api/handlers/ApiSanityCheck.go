@@ -9,7 +9,13 @@ func ApiSanityCheck(w http.ResponseWriter, req *http.Request) {
 
 	util.LogHttpRequest(req)
 
-	if req.Method == http.MethodGet {
+	switch req.Method {
+	case http.MethodOptions:
+		return
+
+	case http.MethodGet:
 		w.Write([]byte("Hello, API client!"))
+
 	}
+
 }

@@ -13,6 +13,7 @@ export type Friend = {
 	profile_image_path?: string
 	relationship_tier: number
 	relationship_health: number
+	days_since_last_interaction?: number
 	notes?: string
 	created_at?: Date
 	updated_at?: Date

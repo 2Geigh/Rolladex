@@ -1,15 +1,13 @@
-@use "../../../../static/styles/variables";
+@use '../../../../static/styles/variables';
 
 .navbar {
-	$HORIZONTAL_PADDING: min(2vw, 1.5rem);
-
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 
-	padding-left: $HORIZONTAL_PADDING;
-	padding-right: $HORIZONTAL_PADDING;
+	padding-left: variables.$SCREEN_HORIZONTAL_PADDING;
+	padding-right: variables.$SCREEN_HORIZONTAL_PADDING;
 	box-sizing: border-box;
 
 	// width: 100%;
@@ -40,7 +38,7 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		padding-right: $HORIZONTAL_PADDING;
+		padding-right: variables.$SCREEN_HORIZONTAL_PADDING;
 		box-sizing: border-box;
 
 		// background-color: red;
@@ -74,12 +72,12 @@
 
 			text-align: left;
 
-			margin-right: calc(-1 * $HORIZONTAL_PADDING);
-			margin-left: calc(1 * $HORIZONTAL_PADDING);
+			margin-right: calc(-1 * variables.$SCREEN_HORIZONTAL_PADDING);
+			margin-left: calc(1 * variables.$SCREEN_HORIZONTAL_PADDING);
 
 			padding-top: 0.5rem;
-			padding-left: calc(1 * $HORIZONTAL_PADDING);
-			padding-right: calc(1 * $HORIZONTAL_PADDING);
+			padding-left: calc(1 * variables.$SCREEN_HORIZONTAL_PADDING);
+			padding-right: calc(1 * variables.$SCREEN_HORIZONTAL_PADDING);
 			box-sizing: border-box;
 
 			border-bottom-left-radius: calc(2 * 5px);

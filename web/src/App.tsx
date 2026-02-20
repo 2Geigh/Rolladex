@@ -1,29 +1,29 @@
-import { Routes, Route } from "react-router-dom"
-import Home from "./pages/Home/Home"
-import Logout from "./pages/Logout/Logout"
-import { useState } from "react"
+import { Routes, Route } from 'react-router-dom'
+import Home from './pages/Home/Home'
+import Logout from './pages/Logout/Logout'
+import { useState } from 'react'
 import {
 	GetSessionAndUserData,
 	LoginSessionContext,
-} from "./contexts/LoginSession"
-import Login from "./pages/Login/Login"
-import SignUp from "./pages/Signup/Signup"
-import Friends from "./pages/Friends/Friends"
-import FriendStandalonePage from "./pages/Friends/FriendStandalonePage"
-import Loading from "./components/Loading/Loading"
-import ProtectedRoutes from "./components/ProtectedRoutes/ProtectedRoutes"
-import InteractionStandalonePage from "./pages/Interactions/InteractionStandalonePage"
-import Settings from "./pages/Settings/Settings"
-import type { LoginSessionData } from "./contexts/LoginSession"
-import AddFriends from "./pages/AddFriends/AddFriends"
-import Profile from "./pages/Profile/Profile"
-import { useLayoutEffect } from "react"
-import Navbar from "./components/Navbar/Navbar"
-import Footer from "./components/Footer/Footer"
-import "../static/styles/app.scss"
-import PageNotFoundWithoutHeaderAndFooter from "./components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
-import TermsOfService from "./pages/TermsOfService/TermsOfService"
-import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy"
+} from './contexts/LoginSession'
+import Login from './pages/Login/Login'
+import SignUp from './pages/Signup/Signup'
+import Friends from './pages/Friends/Friends'
+import FriendStandalonePage from './pages/Friends/FriendStandalonePage'
+import Loading from './components/Loading/Loading'
+import ProtectedRoutes from './components/ProtectedRoutes/ProtectedRoutes'
+import InteractionStandalonePage from './pages/Interactions/InteractionStandalonePage'
+import Settings from './pages/Settings/Settings'
+import type { LoginSessionData } from './contexts/LoginSession'
+import AddFriends from './pages/AddFriends/AddFriends'
+import Profile from './pages/Profile/Profile'
+import { useLayoutEffect } from 'react'
+import Navbar from './components/Navbar/Navbar'
+import Footer from './components/Footer/Footer'
+import '../static/styles/app.scss'
+import PageNotFoundWithoutHeaderAndFooter from './components/PageNotFound/PageNotFoundWithoutHeaderAndFooter'
+import TermsOfService from './pages/TermsOfService/TermsOfService'
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -62,41 +62,55 @@ function App() {
 					isLoggedIn={LoginSessionContextValue.isLoggedIn}
 					username={LoginSessionContextValue.user?.username}
 				/>
-				<div id="bodyAndFooter">
+				<div id='bodyAndFooter'>
 					<Routes>
-						<Route path="/login" element={<Login />} />
-						<Route path="/logout" element={<Logout />} />
-						<Route path="/signup" element={<SignUp />} />
+						<Route path='/login' element={<Login />} />
+						<Route path='/logout' element={<Logout />} />
+						<Route path='/signup' element={<SignUp />} />
 
 						<Route
-							path="/terms_of_service"
+							path='/terms_of_service'
 							element={<TermsOfService />}
 						/>
 
 						<Route
-							path="/privacy_policy"
+							path='/privacy_policy'
 							element={<PrivacyPolicy />}
 						/>
 
 						<Route element={<ProtectedRoutes />}>
-							<Route path="/" element={<Home />} />
-							<Route path="/home" element={<Home />} />
-							<Route path="/friends" element={<Friends />} />
 							<Route
-								path="/friends/:friendId"
+								path='/'
+								element={
+									<Home
+										loginSessionContext={loginSessionData}
+									/>
+								}
+							/>
+							<Route
+								path='/home'
+								element={
+									<Home
+										loginSessionContext={loginSessionData}
+									/>
+								}
+							/>
+							<Route path='/friends' element={<Friends />} />
+							<Route
+								path='/friends/:friendId'
 								element={<FriendStandalonePage />}
 							/>
 							<Route
-								path="/interactions/:interactionId"
+								path='/interactions/:interactionId'
 								element={<InteractionStandalonePage />}
 							/>
-							<Route path="/addfriend" element={<AddFriends />} />
-							<Route path="/profile" element={<Profile />} />
-							<Route path="/settings" element={<Settings />} />
+							<Route path='/addfriend' element={<AddFriends />} />
+							<Route path='/profile' element={<Profile />} />
+							<Route path='/settings' element={<Settings />} />
 						</Route>
 
 						<Route
-							path="*"
+							path='*'
 							element={<PageNotFoundWithoutHeaderAndFooter />}
 						></Route>
 					</Routes>

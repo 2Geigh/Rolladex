@@ -1,165 +1,108 @@
-import React, { useEffect, useState } from "react"
-import { useLoginSessionContext } from "../../contexts/LoginSession"
-import "./styles/Home.scss"
-import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
-import { backend_base_url } from "../../util/url"
-import type { JSX, SetStateAction } from "react"
-import { TimeAgo, addDays } from "../../util/dates"
+import React, { useEffect, useState } from 'react'
+import { type LoginSessionData } from '../../contexts/LoginSession'
+import './styles/Home.scss'
+import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
+import { backend_base_url } from '../../util/url'
+import type { JSX } from 'react'
+import { DaysSinceDate } from '../../util/dates'
 
-type UrgentFriendsProps = {
-	urgentFriendsByDay: Record<number, Friend[]>
-	daySelected: number
-	isLoading: boolean
-	numberOfRerenders: number
-	setNumberOfRerenders: React.Dispatch<SetStateAction<number>>
+type Notification = {
+	date: Date
+	text: string
+	friend_id: number
 }
-const UrgentFriends: React.FC<UrgentFriendsProps> = ({
-	urgentFriendsByDay,
-	daySelected,
-	isLoading,
-	numberOfRerenders,
-	setNumberOfRerenders,
-}) => {
-	let weekEmpty = true
-	for (let key in Object.values(urgentFriendsByDay)) {
-		if (urgentFriendsByDay[key].length > 0) {
-			weekEmpty = false
-			break
-		}
-	}
-	let MostUrgentFriends: JSX.Element[] = []
-	if (!weekEmpty) {
-		MostUrgentFriends = urgentFriendsByDay[daySelected].map((friend) => {
-			const today = new Date()
-			const isBirthdayToday =
-				today.getMonth() + 1 === friend.birthday_month && // Because today.getMonth() returns January as 0 🤦
-				today.getDate() === friend.birthday_day
 
-			async function ignoreFriend(
-				event: React.MouseEvent<HTMLButtonElement>,
-			) {
-				event.preventDefault()
+type HomepageContent = {
+	todaysFriends: Friend[]
+	notifications: Notification[]
+}
 
-				const response = await fetch(
-					`${backend_base_url}/friends/status`,
-					{
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({
-							friend_id: friend.id,
-							action: "ignore",
-						}),
-					},
-				)
+type UrgentFriendProps = {
+	index: number
+	friend: Friend
+}
+const UrgentFriend: React.FC<UrgentFriendProps> = ({ index, friend }) => {
+	return (
+		<div
+			className='urgent_friend'
+			id={index == 0 ? 'mostUrgent' : ''}
+			key={friend.id}
+		>
+			<a className='image_a' href={`/friends/${friend.id}`}>
+				<img
+					src={friend.profile_image_path}
+					alt={
+						GetRelationshipTierInfo(friend.relationship_tier).emoji
+					}
+				/>
+			</a>
 
-				if (!response.ok) {
-					throw new Error(`${response.statusText}: ${response.text}`)
-				}
-
-				setNumberOfRerenders(numberOfRerenders + 1)
-			}
-
-			async function completeFriend(
-				event: React.MouseEvent<HTMLButtonElement>,
-			) {
-				event.preventDefault()
-
-				const response = await fetch(
-					`${backend_base_url}/friends/status`,
-					{
-						method: "POST",
-						credentials: "include",
-						body: JSON.stringify({
-							friend_id: friend.id,
-							action: "complete",
-						}),
-					},
-				)
-
-				if (!response.ok) {
-					throw new Error(`${response.statusText}: ${response.text}`)
-				}
-
-				setNumberOfRerenders(numberOfRerenders + 1)
-			}
-
-			return (
-				<div className="urgent_friend" key={friend.id}>
-					<a href={`/friends/${friend.id}`}>
-						<img
-							src={String(friend.profile_image_path)}
-							alt={friend.name}
-						/>
+			<div className='body'>
+				<div className='top'>
+					<a className='name' href={`/friends/${friend.id}`}>
+						{friend.name}
 					</a>
-
-					<div className="body">
-						<div className="text">
-							<span className="name_and_relationship_tier">
-								<a
-									href={`/friends/${friend.id}`}
-									className="name"
-								>
-									{friend.name}
-								</a>
-								<div className="relationship_icon">
-									{
-										GetRelationshipTierInfo(
-											friend.relationship_tier,
-										).emoji
-									}
-								</div>
-							</span>
-							{isBirthdayToday ?
-								<div className="under_name birthday">
-									Today's {friend.name}'s birthday!
-									<br></br>
-									<div className="emoji">🎂 🎁 🎉</div>
-								</div>
-							:	<div className="under_name last_interaction">
-									Last interaction:{" "}
-									<span className="time_ago">
-										{friend.last_interaction ?
-											(
-												TimeAgo(
-													friend.last_interaction
-														.date,
-												) === "Just now"
-											) ?
-												<>Just now</>
-											:	<>
-													{TimeAgo(
-														friend.last_interaction
-															.date,
-													)}{" "}
-													ago
-												</>
-
-										:	<>Unknown</>}
-									</span>
-								</div>
-							}
-						</div>
-
-						<div className="buttons">
-							<button className="ignore" onClick={ignoreFriend}>
-								Ignore
-							</button>
-							<button
-								className="mark_completed"
-								onClick={completeFriend}
-							>
-								Mark completed
-							</button>
-						</div>
+					<div className='relationship_tier_emoji'>
+						{
+							GetRelationshipTierInfo(friend.relationship_tier)
+								.emoji
+						}
 					</div>
 				</div>
+				{index == 0 ?
+					<>
+						<div className='middle'>
+							Last interaction:&nbsp;
+							<span className='time_ago'>
+								{friend.days_since_last_interaction} days ago
+							</span>
+						</div>
+						<div className='bottom'>
+							<button>Update</button>
+						</div>
+					</>
+				:	<>
+						<div className='bottom'>
+							<span>
+								Last interaction:&nbsp;
+								<span className='time_ago'>
+									{friend.days_since_last_interaction} days
+									ago
+								</span>
+							</span>
+							<button>Update</button>
+						</div>
+					</>
+				}
+			</div>
+		</div>
+	)
+}
+
+type UrgentFriendsProps = {
+	date: Date
+	friends: Friend[]
+	isLoading: boolean
+}
+const UrgentFriends: React.FC<UrgentFriendsProps> = ({
+	date,
+	friends,
+	isLoading,
+}) => {
+	let MostUrgentFriends: JSX.Element[] = []
+	if (friends) {
+		MostUrgentFriends = friends.map((friend) => {
+			return (
+				<UrgentFriend index={friends.indexOf(friend)} friend={friend} />
 			)
 		})
 	}
-	let NoFriends = (
-		<div id="noFriends">
-			<span>No upcoming communications. 🗿</span>
-			<a href="/addfriend">Add a friend</a>
+
+	const NoFriends: JSX.Element = (
+		<div id='noFriends'>
+			<span className='emoji'>🗿</span>
+			<span>No pending communications.</span>
+			<a href='/addfriend'>View all friends</a>
 		</div>
 	)
 
@@ -168,139 +111,103 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	}
 
 	return (
-		<div id="urgentFriendsSection" className="homeSection">
+		<div id='urgentFriendsSection' className='homeSection'>
 			<h2>
-				{addDays(new Date(), daySelected).toLocaleDateString("en-CA", {
-					month: "long",
-					day: "numeric",
-					weekday: "long",
+				{date.toLocaleDateString('en-CA', {
+					month: 'long',
+					day: 'numeric',
+					weekday: 'long',
 				})}
 			</h2>
 
-			{weekEmpty ?
+			{MostUrgentFriends.length < 1 ?
 				NoFriends
-			:	<>
-					<div id="urgentCards">{MostUrgentFriends}</div>
-				</>
-			}
+			:	<div id='urgentCards'>{MostUrgentFriends}</div>}
+
+			{MostUrgentFriends.length > 1 && (
+				<a id='toFriends' href='/friends'>
+					View all friends
+				</a>
+			)}
 		</div>
 	)
 }
 
-type UpcomingProps = {
-	daySelected: number
-	setDaySelected: React.Dispatch<SetStateAction<number>>
-	urgentFriendsByDay: Record<number, Friend[]>
+type NotificationProps = {
+	notification: Notification
+	index: number
 }
-const Upcoming: React.FC<UpcomingProps> = ({
-	daySelected,
-	setDaySelected,
-	urgentFriendsByDay,
-}) => {
-	if (!urgentFriendsByDay) {
-		return <>Nothing...</>
+const Notification: React.FC<NotificationProps> = ({ notification, index }) => {
+	return (
+		<div className='notification' key={index}>
+			<input type='checkbox' name='dismissed' id='dismissed' />
+			<div className='body'>
+				<div className='top'>
+					<div className='date'>
+						{new Date(notification.date).toLocaleDateString(
+							'en-ca',
+							{ month: 'short', day: 'numeric' }
+						)}{' '}
+						<span className='proximity'>
+							(
+							{Math.abs(
+								DaysSinceDate(new Date(notification.date))
+							)}{' '}
+							days ahead)
+						</span>
+					</div>
+					<div className='emoji'>
+						{notification.text.toLowerCase().includes('birthday') ?
+							'🎉'
+						:	'👤'}
+					</div>
+				</div>
+				<div className='bottom'>{notification.text}</div>
+			</div>
+		</div>
+	)
+}
+
+type NotificationsProps = {
+	notifications: Notification[]
+}
+
+const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
+	let notificationElements: JSX.Element[] = []
+	if (notifications) {
+		notificationElements = notifications.map((notification, index) => {
+			return <Notification notification={notification} index={index} />
+		})
 	}
 
-	const CalendarColumns = Object.values(urgentFriendsByDay).map(
-		(friends, i) => {
-			const date = new Date()
-			date.setDate(date.getDate() + i)
-
-			let todayIsBirthday = false
-			let closestRelationshipTier = 99
-			for (const friend of friends) {
-				const today = new Date()
-				const isBirthdayToday =
-					friend.birthday_day === today.getDate() &&
-					friend.birthday_month === today.getMonth() + 1
-				if (isBirthdayToday) {
-					todayIsBirthday = true
-				}
-				if (friend.relationship_tier < closestRelationshipTier) {
-					closestRelationshipTier = friend.relationship_tier
-				}
-			}
-
-			function onClickColumn(e: React.MouseEvent<HTMLDivElement>) {
-				e.preventDefault()
-
-				const allColumns = document.getElementsByClassName("column")
-				for (const column of allColumns) {
-					column.classList.remove("selected")
-				}
-
-				const selectedColumn = e.currentTarget
-				selectedColumn.classList.add("selected")
-
-				const selectedDay = parseInt(selectedColumn.id)
-				setDaySelected(selectedDay)
-			}
-
-			const CalendarColumnImages = friends.map((friend) => (
-				<img
-					className="icon"
-					src={friend.profile_image_path}
-					alt={friend.name}
-					key={friend.id}
-				/>
-			))
-
-			return (
-				<>
-					<div
-						className={
-							i === daySelected ? "column selected" : "column"
-						}
-						id={String(i)}
-						onClickCapture={onClickColumn}
-					>
-						<div className="day_header">{date.getDate()}</div>
-						<div className="body">
-							<div className="icons">{CalendarColumnImages}</div>
-
-							<div className="emoji">
-								{friends.length < 1 ?
-									"🫥"
-								: todayIsBirthday ?
-									"🎂"
-								:	GetRelationshipTierInfo(
-										closestRelationshipTier,
-									).emoji
-								}
-							</div>
-						</div>
-					</div>
-				</>
-			)
-		},
-	)
-
 	return (
-		<div id="upcomingSection" className="homeSection">
-			<h2>Upcoming....</h2>
+		<div id='upcomingSection' className='homeSection'>
+			<h2>Upcoming&hellip;</h2>
 
-			<div id="calendar">{CalendarColumns}</div>
+			{notificationElements.length < 1 ?
+				<div id='caughtUp'>
+					<span>🥂</span>
+					All caught up!
+				</div>
+			:	<div id='notifications'>{notificationElements}</div>}
 		</div>
 	)
 }
 
-const Home: React.FC = () => {
-	const loginSessionContext = useLoginSessionContext()
+type HomeProps = {
+	loginSessionContext: LoginSessionData
+}
+const Home: React.FC<HomeProps> = ({ loginSessionContext }) => {
 	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [urgentFriendsByDay, setUrgentFriendsByDay] = useState<
-		Record<number, Friend[]>
-	>({ 0: [], 1: [], 2: [], 3: [], 4: [], 5: [] })
-	const [daySelected, setDaySelected] = useState<number>(0)
-	const [numberOfRerenders, setNumberOfRerenders] = useState<number>(0)
+	const [homepageContent, setHomepageContent] = useState<HomepageContent>({
+		todaysFriends: [],
+		notifications: [],
+	})
 
-	async function getUpcomingUrgentFriends(): Promise<
-		Record<number, Friend[]>
-	> {
-		let urgentFriendsForComingDays: Record<number, Friend[]> = {}
-
+	async function getUpcomingUrgentFriends(): Promise<HomepageContent> {
 		const response = await fetch(`${backend_base_url}/home`, {
-			method: "GET",
-			credentials: "include",
+			method: 'GET',
+			credentials: 'include',
 		})
 
 		if (!response.ok) {
@@ -308,9 +215,9 @@ const Home: React.FC = () => {
 		}
 
 		const data = await response.json()
-		urgentFriendsForComingDays = data as Record<number, Friend[]>
+		const homepage_content = data as HomepageContent
 
-		return urgentFriendsForComingDays
+		return homepage_content
 	}
 
 	useEffect(() => {
@@ -318,33 +225,27 @@ const Home: React.FC = () => {
 			.catch((err) => {
 				throw new Error(err)
 			})
-			.then((urgentFriendsForComingDays) => {
-				setUrgentFriendsByDay(urgentFriendsForComingDays)
+			.then((homepage_content) => {
+				setHomepageContent(homepage_content)
 			})
 			.finally(() => {
 				setIsLoading(false)
 			})
-	}, [numberOfRerenders])
+	}, [])
 
 	return (
-		<div id="homeContent">
+		<div id='homeContent'>
 			{loginSessionContext.user ?
 				<h1>Hello, {loginSessionContext.user?.username}.</h1>
 			:	<h1>Good afternoon.</h1>}
 
-			<div id="homeSections">
+			<div id='homeSections'>
 				<UrgentFriends
+					date={new Date()}
 					isLoading={isLoading}
-					daySelected={daySelected}
-					urgentFriendsByDay={urgentFriendsByDay}
-					numberOfRerenders={numberOfRerenders}
-					setNumberOfRerenders={setNumberOfRerenders}
+					friends={homepageContent.todaysFriends}
 				/>
-				<Upcoming
-					daySelected={daySelected}
-					setDaySelected={setDaySelected}
-					urgentFriendsByDay={urgentFriendsByDay}
-				/>
+				<Notifications notifications={homepageContent.notifications} />
 			</div>
 		</div>
 	)
