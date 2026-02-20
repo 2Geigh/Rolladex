@@ -107,9 +107,25 @@ func FriendStandalonePage(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusOK)
 
 	case http.MethodDelete:
-		_, err := validateSession(req)
+		user_id, err := validateSession(req)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			return
+		}
+
+		reqBody, err := io.ReadAll(req.Body)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't read request body", http.StatusInternalServerError)
+			return
+		}
+		csrfToken := string(reqBody)
+		isCsrfTokenValid, err := isCsrfTokenValid(csrfToken, user_id)
+		if err != nil {
+			util.ReportHttpError(err, w, "couldn't validate CSRF token", http.StatusInternalServerError)
+			return
+		}
+		if !isCsrfTokenValid {
+			util.ReportHttpError(err, w, "invalid CSRF token provided", http.StatusBadRequest)
 			return
 		}
 

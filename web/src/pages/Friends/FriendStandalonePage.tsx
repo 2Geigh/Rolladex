@@ -16,6 +16,7 @@ import {
 	TimeAgo,
 } from "../../util/dates"
 import PageNotFoundWithoutHeaderAndFooter from "../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
+import { useLoginSessionContext } from "../../contexts/LoginSession"
 
 type UpdateLastInteractionProps = {
 	friend_id: number
@@ -94,6 +95,7 @@ type FriendCardProps = {
 	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
 	isEdittingFriend: boolean
 	setIsEdittingFriend: React.Dispatch<React.SetStateAction<boolean>>
+	sessionToken: string | undefined
 }
 const FriendCard: React.FC<FriendCardProps> = ({
 	id,
@@ -108,6 +110,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	setIsUpdatingLastInteraction,
 	isEdittingFriend,
 	setIsEdittingFriend,
+	sessionToken,
 }) => {
 	const relationship = GetRelationshipTierInfo(relationship_tier)
 	const lastInteractionDate = last_interaction?.date
@@ -123,6 +126,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	async function deleteFriend() {
 		const response = await fetch(`${backend_base_url}/friends/${id}`, {
 			method: "DELETE",
+			body: sessionToken,
 			credentials: "include",
 		})
 
@@ -245,7 +249,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							profile_image_path.trim() !== ""
 						) ?
 							profile_image_path
-							: "not_found"
+						:	"not_found"
 					}
 					alt={name}
 					className="pfp"
@@ -261,7 +265,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							minLength={1}
 							maxLength={MAX_NAME_LENGTH}
 						/>
-						: <h2 className="name">{name}</h2>}
+					:	<h2 className="name">{name}</h2>}
 					<span className="relationship">
 						{isEdittingFriend ?
 							<>
@@ -304,7 +308,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 									</option>
 								</select>
 							</>
-							: <span className="relationship_tier">
+						:	<span className="relationship_tier">
 								<span className="emoji">
 									{relationship.emoji}
 								</span>
@@ -385,7 +389,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 									{DayOptions}
 								</select>
 							</>
-							: <>
+						:	<>
 								{(
 									birthday_day &&
 									birthday_day > 0 &&
@@ -402,7 +406,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 											{birthday_day}
 										</span>
 									</>
-									: "Unknown"}
+								:	"Unknown"}
 							</>
 						}
 					</span>
@@ -447,7 +451,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							Cancel
 						</button>
 					</>
-					: <button className="edit_friend" onClick={editFriend}>
+				:	<button className="edit_friend" onClick={editFriend}>
 						Edit friend
 					</button>
 				}
@@ -470,6 +474,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 }
 
 const FriendStandalonePage: React.FC = () => {
+	const loginSessionContext = useLoginSessionContext()
 	const params = useParams()
 	const friendId = Number(params.friendId)
 
@@ -539,6 +544,7 @@ const FriendStandalonePage: React.FC = () => {
 					setIsUpdatingLastInteraction={setIsUpdatingLastInteraction}
 					isEdittingFriend={isEdittingFriend}
 					setIsEdittingFriend={setIsEdittingFriend}
+					sessionToken={loginSessionContext.token}
 				/>
 				{isUpdatingLastInteraction && (
 					<UpdateLastInteraction

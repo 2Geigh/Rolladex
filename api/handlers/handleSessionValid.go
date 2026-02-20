@@ -253,3 +253,27 @@ func storeCsrfTokenInDatabase[U database.SqlId](token string, user_id U) error {
 
 	return nil
 }
+
+func isCsrfTokenValid[U database.SqlId](token string, user_id U) (bool, error) {
+	var (
+		isCsrfTokenValid      bool = false
+		tokenListedInDatabase string
+	)
+
+	stmt, err := database.DB.Prepare(`
+		SELECT value
+		FROM CsrfTokens
+		WHERE user_id = ?;
+	`)
+	if err != nil {
+		return isCsrfTokenValid, fmt.Errorf("couldn't prepare statment: %w", err)
+	}
+
+	err = stmt.QueryRow(user_id).Scan(&tokenListedInDatabase)
+	if err != nil {
+		return isCsrfTokenValid, fmt.Errorf("couldn't scan stored token to local variable: %w", err)
+	}
+
+	isCsrfTokenValid = token == tokenListedInDatabase
+	return isCsrfTokenValid, nil
+}
