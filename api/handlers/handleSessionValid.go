@@ -218,7 +218,7 @@ func sessionUser(user_id string) (models.User, error) {
 }
 
 func csrfToken() string {
-	token := make([]byte, 255)
+	token := make([]byte, 100)
 	rand.Read(token)
 	return base64.URLEncoding.EncodeToString(token)
 }

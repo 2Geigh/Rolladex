@@ -104,19 +104,7 @@ CREATE TABLE IF NOT EXISTS UserFriendUpdates (
     FOREIGN KEY (friend_id) REFERENCES Friends (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE IF NOT EXISTS CsrfTokens (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    value VARCHAR(255) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users (id) ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
 -- +goose Down
--- Dropping in reverse order to respect foreign key constraints
-DROP TABLE IF EXISTS Tokens;
-
 DROP TABLE IF EXISTS UserFriendUpdates;
 
 DROP TABLE IF EXISTS Sessions;
