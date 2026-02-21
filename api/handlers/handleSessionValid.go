@@ -284,20 +284,41 @@ func isCsrfTokenValid[U database.SqlId](token string, user_id U) (bool, error) {
 	return isCsrfTokenValid, nil
 }
 
-func clearExpiredSessions() {
+func ClearExpiredSessions() {
 	logError := func(message string, err error) {
-		log.Printf("couldn't clear expired user sessions: %s: %v", message, err)
+		log.Printf("couldn't clear expired user session(s): %s: %v", message, err)
 	}
 
-	tx, err := database.DB.Begin()
-	if err != nil {
-		logError("couldn't begin transaction", err)
-	}
-	defer tx.Rollback()
+	for {
+		time.Sleep(20 * time.Minute)
 
-	err = tx.Commit()
-	if err != nil {
-		logError("couldn't commit transaction", err)
-	}
+		tx, err := database.DB.Begin()
+		if err != nil {
+			logError("couldn't begin transaction", err)
+		}
 
+		result, err := tx.Exec(`
+			DELETE
+			FROM Sessions
+			WHERE expires_at < NOW() OR is_revoked = TRUE;
+		`)
+		if err == sql.ErrNoRows {
+			logError("no sessions found", err)
+		}
+		if err != nil {
+			logError("couldn't execute query", err)
+		}
+
+		rowsAffected, err := result.RowsAffected()
+		if err != nil {
+			logError("couldn't get number of rows affected", err)
+		}
+
+		err = tx.Commit()
+		if err != nil {
+			logError("couldn't commit transaction", err)
+			tx.Rollback()
+		}
+		log.Printf("Cleared invalid user sessions, affecting %d rows", rowsAffected)
+	}
 }

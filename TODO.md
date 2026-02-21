@@ -43,7 +43,7 @@
 
 ## API & Database
 
-- [ ] Add automatic Sessions row deletion upon session expiration
+- [x] Add automatic Sessions row deletion upon session expiration
 - [/] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
   - [x] Rate limiting/DDOS
     - [x] Add IP address-specific rate limiting to the API
