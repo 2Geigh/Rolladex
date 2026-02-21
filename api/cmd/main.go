@@ -48,6 +48,7 @@ func main() {
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
 	// System maintenance
+	go database.DbHealth()
 	go middleware.CleanupClients()
 	go handlers.ClearExpiredSessions()
 

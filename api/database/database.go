@@ -136,3 +136,13 @@ func updateSeedPasswords() error {
 
 	return nil
 }
+
+func DbHealth() {
+	for {
+		stats := DB.Stats()
+		log.Printf("[DB STATS] InUse: %d | Idle: %d | Open: %d | WaitCount: %d",
+			stats.InUse, stats.Idle, stats.OpenConnections, stats.WaitCount)
+
+		time.Sleep(5 * time.Second)
+	}
+}
