@@ -292,21 +292,14 @@ func ClearExpiredSessions() {
 	for {
 		time.Sleep(20 * time.Minute)
 
-		tx, err := database.DB.Begin()
-		if err != nil {
-			logError("couldn't begin transaction", err)
-		}
-
-		result, err := tx.Exec(`
+		result, err := database.DB.Exec(`
 			DELETE
 			FROM Sessions
 			WHERE expires_at < NOW() OR is_revoked = TRUE;
 		`)
-		if err == sql.ErrNoRows {
-			logError("no sessions found", err)
-		}
-		if err != nil {
+		if err != nil && err != sql.ErrNoRows {
 			logError("couldn't execute query", err)
+			continue
 		}
 
 		rowsAffected, err := result.RowsAffected()
@@ -314,11 +307,6 @@ func ClearExpiredSessions() {
 			logError("couldn't get number of rows affected", err)
 		}
 
-		err = tx.Commit()
-		if err != nil {
-			logError("couldn't commit transaction", err)
-			tx.Rollback()
-		}
 		log.Printf("Cleared invalid user sessions, affecting %d rows", rowsAffected)
 	}
 }
