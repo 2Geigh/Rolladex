@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"rolladex-backend/util"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
@@ -50,23 +51,19 @@ func InitializeDB() error {
 		log.Println("Warning: DB_USERNAME is empty. Connection might fail.")
 	}
 
-	// Open (or create) the SQLite database
 	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
 
-	// Check if the database is reachable
 	if err = DB.Ping(); err != nil {
 		return fmt.Errorf("failed to reach database: %w", err)
 	}
 
-	// Run Goose Migrations
 	if err := runMigrations(); err != nil {
 		return err
 	}
 
-	// Password update logic
 	if err := updateSeedPasswords(); err != nil {
 		log.Printf("Warning: Seed password update skipped or failed: %v", err)
 	}
@@ -104,12 +101,6 @@ func updateSeedPasswords() error {
 		}
 	)
 
-	tx, err := DB.Begin()
-	if err != nil {
-		return fmt.Errorf("couldn't create transaction: %w", err)
-	}
-	defer tx.Rollback()
-
 	totalRowsAffected := 0
 
 	for _, user := range users {
@@ -123,7 +114,7 @@ func updateSeedPasswords() error {
 			return fmt.Errorf("couldn't hash salted password for user %s: %w", user.username, err)
 		}
 
-		result, err := tx.Exec(`
+		result, err := DB.Exec(`
 			UPDATE Users
 			SET passwordHash = ?, passwordSalt = ?
 			WHERE username = ?`, passwordHash, passwordSalt, user.username)
@@ -136,11 +127,6 @@ func updateSeedPasswords() error {
 			return fmt.Errorf("couldn't count rows affected for user %s: %w", user.username, err)
 		}
 		totalRowsAffected += int(rowsaffected)
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return fmt.Errorf("couldn't commit transaction: %w", err)
 	}
 
 	if totalRowsAffected == 0 {
