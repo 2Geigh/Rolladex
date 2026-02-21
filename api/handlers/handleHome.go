@@ -114,6 +114,7 @@ func todaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 	if err != nil {
 		return todaysFriends, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
+	defer stmt.Close()
 
 	rows, err := stmt.Query(user_id)
 	if err != nil {
@@ -201,6 +202,7 @@ func notifications[U database.SqlId](user_id U, daysAhead int) ([]Notification, 
 	if err != nil {
 		return notifications, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
+	defer stmt.Close()
 
 	rows, err := stmt.Query(user_id, daysAhead, daysAhead)
 	if err != nil {
