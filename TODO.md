@@ -58,7 +58,7 @@
   - [ ] XSS
     - [ ] Sanitize all user inputs using github.com/microcosm-cc/bluemonday
 - [ ] Add HTTP secure transport security to VPS' Nginx
-- [ ] Add autodeletion of sessions to clear database
+- [x] Add autodeletion of sessions to clear database
 - [x] [Rename functions that start with "get"/"Get"](https://google.github.io/styleguide/go/decisions#getters)
 - [ ] Replace pfps with emoji
 - [ ] Add "time zone" column to Users table
