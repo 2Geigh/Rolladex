@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"rolladex-backend/database"
 	"rolladex-backend/models"
@@ -47,6 +48,7 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 		err = storeCsrfTokenInDatabase(token, user_id)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't store CSRF token in database", http.StatusInternalServerError)
+			return
 		}
 
 		sessionData := SessionValidationResponse{User: user, Token: token}
@@ -65,6 +67,7 @@ func SessionValid(w http.ResponseWriter, req *http.Request) {
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
 }
 
@@ -234,6 +237,7 @@ func storeCsrfTokenInDatabase[U database.SqlId](token string, user_id U) error {
 	if err != nil {
 		return fmt.Errorf("couldn't prepare statment: %w", err)
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(user_id)
 	if err != nil {
 		return fmt.Errorf("couldn't execute statement: %w", err)
@@ -246,6 +250,7 @@ func storeCsrfTokenInDatabase[U database.SqlId](token string, user_id U) error {
 	if err != nil {
 		return fmt.Errorf("couldn't prepare statement: %w", err)
 	}
+	defer stmt.Close()
 	_, err = stmt.Exec(user_id, token)
 	if err != nil {
 		return fmt.Errorf("couldn't execute statement: %w", err)
@@ -268,6 +273,7 @@ func isCsrfTokenValid[U database.SqlId](token string, user_id U) (bool, error) {
 	if err != nil {
 		return isCsrfTokenValid, fmt.Errorf("couldn't prepare statment: %w", err)
 	}
+	defer stmt.Close()
 
 	err = stmt.QueryRow(user_id).Scan(&tokenListedInDatabase)
 	if err != nil {
@@ -276,4 +282,22 @@ func isCsrfTokenValid[U database.SqlId](token string, user_id U) (bool, error) {
 
 	isCsrfTokenValid = token == tokenListedInDatabase
 	return isCsrfTokenValid, nil
+}
+
+func clearExpiredSessions() {
+	logError := func(message string, err error) {
+		log.Printf("couldn't clear expired user sessions: %s: %v", message, err)
+	}
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		logError("couldn't begin transaction", err)
+	}
+	defer tx.Rollback()
+
+	err = tx.Commit()
+	if err != nil {
+		logError("couldn't commit transaction", err)
+	}
+
 }

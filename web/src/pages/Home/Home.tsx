@@ -26,7 +26,7 @@ const UrgentFriend: React.FC<UrgentFriendProps> = ({ index, friend }) => {
 		<div
 			className='urgent_friend'
 			id={index == 0 ? 'mostUrgent' : ''}
-			key={friend.id}
+			key={`${friend.id}_${friend.name}`}
 		>
 			<a className='image_a' href={`/friends/${friend.id}`}>
 				<img
@@ -139,7 +139,7 @@ type NotificationProps = {
 }
 const Notification: React.FC<NotificationProps> = ({ notification, index }) => {
 	return (
-		<div className='notification' key={index}>
+		<div className='notification' key={`${index}_${notification.text}`}>
 			<input type='checkbox' name='dismissed' id='dismissed' />
 			<div className='body'>
 				<div className='top'>

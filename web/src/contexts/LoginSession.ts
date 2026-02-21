@@ -1,6 +1,6 @@
-import { createContext, useContext } from "react"
-import { backend_base_url } from "../util/url"
-import type { User } from "../types/models/User"
+import { createContext, useContext } from 'react'
+import { backend_base_url } from '../util/url'
+import type { User } from '../types/models/User'
 
 export type LoginSessionData = {
 	isLoggedIn: boolean
@@ -20,14 +20,14 @@ export function useLoginSessionContext() {
 	const loginSessionContext = useContext(LoginSessionContext)
 
 	if (loginSessionContext === undefined) {
-		throw new Error("useLoginSessionContext must be used within provider")
+		throw new Error('useLoginSessionContext must be used within provider')
 	}
 	return loginSessionContext
 }
 
 export async function GetSessionAndUserData(
 	loginSessionData: LoginSessionData,
-	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>,
+	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>
 ): Promise<void> {
 	/*
 		Returns true if session is valid according
@@ -38,8 +38,8 @@ export async function GetSessionAndUserData(
 	const permittedMessage_serverside = `Login session validated on the server.`
 
 	const response = await fetch(`${backend_base_url}/session/valid`, {
-		method: "GET",
-		credentials: "include", // sends cookies
+		method: 'GET',
+		credentials: 'include', // sends cookies
 	})
 
 	if (response.status === 401) {
@@ -71,11 +71,11 @@ export async function GetSessionAndUserData(
 
 		if (!(user && user.id)) {
 			setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
-			throw new Error("No user data found")
+			throw new Error('No user data found')
 		}
 		if (!token) {
 			setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
-			throw new Error("No CSRF token found")
+			throw new Error('No CSRF token found')
 		}
 
 		setLoginSessionData({
@@ -86,43 +86,5 @@ export async function GetSessionAndUserData(
 		})
 	} catch (err) {
 		throw new Error(`Invalid user data from /session/user: ${err}.}`)
-	}
-}
-
-export async function GetSessionData(
-	loginSessionData: LoginSessionData,
-	setLoginSessionData: React.Dispatch<React.SetStateAction<LoginSessionData>>,
-): Promise<void> {
-	/*
-		Returns true if session is valid according
-		to the server, false otherwise.
-	*/
-
-	const redirectMessage_serverside = `Session could not be validated on the server`
-	const permittedMessage_serverside = `Login session validated on the server.`
-
-	const response = await fetch(`${backend_base_url}/session/valid`, {
-		method: "GET",
-		credentials: "include", // sends cookies
-	})
-
-	if (response.status === 401) {
-		console.log(redirectMessage_serverside)
-		setLoginSessionData({ ...loginSessionData, isLoggedIn: false })
-		return
-	}
-	if (!response.ok) {
-		setLoginSessionData({
-			...loginSessionData,
-			isLoggedIn: false,
-		})
-		throw new Error(`${redirectMessage_serverside}: ${response.statusText}`)
-	} else {
-		console.log(permittedMessage_serverside)
-		setLoginSessionData({
-			...loginSessionData,
-			isLoggedIn: true,
-		})
-		return
 	}
 }

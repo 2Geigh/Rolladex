@@ -51,6 +51,7 @@ function App() {
 					username={loginSessionData.user?.username}
 				/>
 				<Loading />
+				<Footer />
 			</>
 		)
 	}
