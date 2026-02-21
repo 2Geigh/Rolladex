@@ -120,6 +120,7 @@ func todaysFriends[U database.SqlId](user_id U) ([]models.Friend, error) {
 	if err != nil {
 		return todaysFriends, fmt.Errorf("couldn't query statement: %w", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var (
@@ -208,6 +209,7 @@ func notifications[U database.SqlId](user_id U, daysAhead int) ([]Notification, 
 	if err != nil {
 		return notifications, fmt.Errorf("couldn't query statement: %w", err)
 	}
+	defer rows.Close()
 
 	for rows.Next() {
 		var (

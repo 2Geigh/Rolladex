@@ -288,14 +288,15 @@ func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, erro
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Query(user_id, user_id)
+	rows, err := stmt.Query(user_id, user_id)
 	if err == sql.ErrNoRows {
 		return friends, nil
 	} else if err != nil {
 		return friends, fmt.Errorf("couldn't execute statement: %w", err)
 	}
+	defer rows.Close()
 
-	for result.Next() {
+	for rows.Next() {
 		var (
 			friend           models.Friend
 			last_interaction models.Interaction
@@ -314,7 +315,7 @@ func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, erro
 			err error
 		)
 
-		err = result.Scan(
+		err = rows.Scan(
 			&friend_id,
 			&pfp_path,
 			&friend_name,
