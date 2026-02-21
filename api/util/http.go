@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, errorCode int) {
@@ -13,7 +14,7 @@ func ReportHttpError(err error, w http.ResponseWriter, errorMessage string, erro
 }
 
 func LogHttpRequest(req *http.Request) {
-	log.Printf("%v %v\n", req.Method, req.RequestURI)
+	log.Printf("%s %v %v\n", req.RemoteAddr[0:strings.Index(req.RemoteAddr, ":")], req.Method, req.RequestURI)
 }
 
 func SetCrossOriginResourceSharing(w http.ResponseWriter, req *http.Request) {

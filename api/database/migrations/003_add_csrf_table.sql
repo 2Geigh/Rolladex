@@ -1,5 +1,5 @@
 -- +goose up
-CREATE TABLE CsrfTokens (
+CREATE TABLE IF NOT EXISTS CsrfTokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     value VARCHAR(255) NOT NULL,
