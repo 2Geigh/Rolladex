@@ -93,7 +93,11 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	if (friends) {
 		MostUrgentFriends = friends.map((friend) => {
 			return (
-				<UrgentFriend index={friends.indexOf(friend)} friend={friend} />
+				<UrgentFriend
+					key={friend.id}
+					index={friends.indexOf(friend)}
+					friend={friend}
+				/>
 			)
 		})
 	}
@@ -135,11 +139,10 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 
 type NotificationProps = {
 	notification: Notification
-	index: number
 }
-const Notification: React.FC<NotificationProps> = ({ notification, index }) => {
+const Notification: React.FC<NotificationProps> = ({ notification }) => {
 	return (
-		<div className='notification' key={`${index}_${notification.text}`}>
+		<div className='notification'>
 			<input type='checkbox' name='dismissed' id='dismissed' />
 			<div className='body'>
 				<div className='top'>
@@ -175,8 +178,13 @@ type NotificationsProps = {
 const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 	let notificationElements: JSX.Element[] = []
 	if (notifications) {
-		notificationElements = notifications.map((notification, index) => {
-			return <Notification notification={notification} index={index} />
+		notificationElements = notifications.map((notification) => {
+			return (
+				<Notification
+					key={`${notification.date}_${notification.friend_id}`}
+					notification={notification}
+				/>
+			)
 		})
 	}
 
