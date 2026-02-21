@@ -36,17 +36,6 @@ type AddFriendFormData struct {
 	BirthdayDay            int       `json:"birthday_day"`
 }
 
-var (
-	maxNumberOfUrgentFriends   = 5
-	columnNamesToSortFriendsBy = ColumnNamesToSortFriendsBy{
-		"name",
-		"last_interaction_date",
-		"last_meetup_date",
-		"birthday",
-		"relationship_tier",
-	}
-)
-
 func Friends(w http.ResponseWriter, req *http.Request) {
 
 	util.SetCrossOriginResourceSharing(w, req)
@@ -82,7 +71,6 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
 		_, err = w.Write(userJson)
 		if err != nil {
 			util.ReportHttpError(err, w, "couldn't write friends JSON data", http.StatusInternalServerError)
@@ -260,50 +248,45 @@ func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, erro
 	}
 
 	sqlQuery = fmt.Sprintf(`
-							WITH LatestInteractions AS (
-														SELECT 
-															Interactions.id AS interaction_id,
-															Interactions.name AS interaction_name,
-															Interactions.date AS interaction_date,
-															Interactions.location AS interaction_location,
-															Interactions.interaction_type AS interaction_type,
-															InteractionsAttendees.friend_id AS friend_id,
-															ROW_NUMBER() OVER (PARTITION BY InteractionsAttendees.friend_id ORDER BY Interactions.date DESC) AS rn
-														FROM
-															Interactions
-														LEFT JOIN InteractionsAttendees ON Interactions.id = InteractionsAttendees.interaction_id
-														WHERE
-															Interactions.user_id = ?
-							)
+		WITH LatestInteractions AS (
+			SELECT 
+				Interactions.id AS interaction_id,
+				Interactions.name AS interaction_name,
+				Interactions.date AS interaction_date,
+				Interactions.location AS interaction_location,
+				Interactions.interaction_type AS interaction_type,
+				InteractionsAttendees.friend_id AS friend_id,
+				ROW_NUMBER() OVER (PARTITION BY InteractionsAttendees.friend_id ORDER BY Interactions.date DESC) AS rn
+			FROM
+				Interactions
+				LEFT JOIN InteractionsAttendees ON Interactions.id = InteractionsAttendees.interaction_id
+			WHERE
+				Interactions.user_id = ?
+		)
 
-							SELECT
-								Friends.id AS friend_id,
-								Images.filepath AS pfp_path,
-								Friends.name AS name,
-								Relationships.relationship_tier AS relationship_tier,
-								Friends.birthday_month AS birthday_month,
-								Friends.birthday_day AS birthday_day,
-								Friends.created_at AS friend_created_at,
-								LatestInteractions.interaction_date as last_interaction_date,
-								LatestInteractions.interaction_name,
-								LatestInteractions.interaction_id
-							FROM Friends
-							LEFT JOIN Images ON Friends.profile_image_id = Images.id
-							LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
-							LEFT JOIN LatestInteractions ON LatestInteractions.friend_id = Friends.id AND LatestInteractions.rn = 1
-							WHERE Relationships.user_id = ?
-							%s;`, OrderBy)
+		SELECT
+			Friends.id AS friend_id,
+			Images.filepath AS pfp_path,
+			Friends.name AS name,
+			Relationships.relationship_tier AS relationship_tier,
+			Friends.birthday_month AS birthday_month,
+			Friends.birthday_day AS birthday_day,
+			Friends.created_at AS friend_created_at,
+			LatestInteractions.interaction_date as last_interaction_date,
+			LatestInteractions.interaction_name,
+			LatestInteractions.interaction_id
+		FROM Friends
+		LEFT JOIN Images ON Friends.profile_image_id = Images.id
+		LEFT JOIN Relationships ON Relationships.friend_id = Friends.id
+		LEFT JOIN LatestInteractions ON LatestInteractions.friend_id = Friends.id AND LatestInteractions.rn = 1
+		WHERE Relationships.user_id = ?
+		%s;`, OrderBy)
 
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return friends, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-
-	stmt, err := tx.Prepare(sqlQuery)
+	stmt, err := database.DB.Prepare(sqlQuery)
 	if err != nil {
 		return friends, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
+	defer stmt.Close()
 
 	result, err := stmt.Query(user_id, user_id)
 	if err == sql.ErrNoRows {
@@ -374,7 +357,6 @@ func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, erro
 		if interaction_id.Valid {
 			last_interaction.ID = uint(interaction_id.Int64)
 		}
-
 		friend.LastInteraction = last_interaction
 
 		friends = append(friends, friend)
@@ -385,118 +367,5 @@ func friendsSortedByColumn(user_id string, sortBy string) ([]models.Friend, erro
 		slices.Reverse(friends)
 	}
 
-	tx.Commit()
 	return friends, err
-}
-
-func friends(user_id string) ([]models.Friend, error) {
-	var friends []models.Friend
-
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return friends, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-
-	stmt, err := tx.Prepare(`
-	SELECT
-		f.id AS friend_id,
-		f.name,
-		f.birthday_month,
-		f.birthday_day,
-		i.filepath AS profile_image_path,
-		r.relationship_tier,
-		-- Last interaction (any type)
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-		) AS last_interaction_date,
-		-- Last meetup date (specifically type = 'meetup')
-		(
-			SELECT inter.date
-			FROM Interactions inter
-			JOIN InteractionsAttendees ia ON ia.interaction_id = inter.id
-			WHERE inter.user_id = r.user_id AND ia.friend_id = f.id
-				AND inter.interaction_type = 'meetup'
-		) AS last_meetup_date
-	FROM Relationships r
-	JOIN Friends f ON f.id = r.friend_id
-	LEFT JOIN Images i ON i.id = f.profile_image_id
-	WHERE r.user_id = ?
-    `)
-	if err != nil {
-		return friends, fmt.Errorf("couldn't prepare statement: %w", err)
-	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query(user_id)
-	if err != nil {
-		return friends, fmt.Errorf("couldn't execute query: %w", err)
-	}
-	defer rows.Close()
-
-	for rows.Next() {
-		var (
-			friend_id        int
-			name             string
-			birthdayMonth    sql.NullInt64
-			birthdayDay      sql.NullInt64
-			profileImagePath sql.NullString
-			relationshipTier sql.NullInt64
-			lastInteraction  sql.NullTime
-			lastMeetup       sql.NullTime
-		)
-
-		err = rows.Scan(
-			&friend_id,
-			&name,
-			&birthdayMonth,
-			&birthdayDay,
-			&profileImagePath,
-			&relationshipTier,
-			&lastInteraction,
-			&lastMeetup,
-		)
-		if err != nil {
-			return friends, fmt.Errorf("couldn't scan row: %w", err)
-		}
-
-		friend := models.Friend{
-			ID:   uint(friend_id),
-			Name: name,
-		}
-
-		if birthdayMonth.Valid {
-			friend.BirthdayMonth = int(birthdayMonth.Int64)
-		}
-		if birthdayDay.Valid {
-			friend.BirthdayDay = int(birthdayDay.Int64)
-		}
-		if profileImagePath.Valid {
-			friend.ProfileImagePath = profileImagePath.String
-		}
-		if relationshipTier.Valid {
-			friend.RelationshipTier = uint(relationshipTier.Int64)
-		}
-		if lastInteraction.Valid {
-			friend.LastInteraction.Date = lastInteraction.Time
-		}
-		if lastMeetup.Valid {
-			friend.LastMeetup.Date = lastMeetup.Time
-		}
-
-		friends = append(friends, friend)
-	}
-
-	if err = rows.Err(); err != nil {
-		return friends, fmt.Errorf("rows error: %w", err)
-	}
-
-	if err := tx.Commit(); err != nil {
-		return friends, fmt.Errorf("couldn't commit transaction: %w", err)
-	}
-
-	return friends, nil
 }

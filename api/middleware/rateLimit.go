@@ -25,7 +25,7 @@ var (
 func client(ip string) *Client {
 	var (
 		rateLimit  rate.Limit = 10
-		burstLimit int        = 5
+		burstLimit int        = 10
 	)
 
 	mu.Lock()
@@ -60,7 +60,7 @@ func RateLimit(next http.Handler) http.Handler {
 			mu.Unlock()
 
 			// Return without logging to suppress terminal noise
-			w.WriteHeader(http.StatusForbidden)
+			w.WriteHeader(http.StatusTooManyRequests)
 
 			return
 		}
