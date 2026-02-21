@@ -105,12 +105,11 @@ func validateSession(req *http.Request) (string, error) {
 		return user_id, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
 	}
 
-	return user_id, err
+	return user_id, nil
 }
 
 func validateSessionCookie(loginCookie *http.Cookie) error {
 	var (
-		err     error
 		session models.Session
 	)
 
@@ -124,12 +123,7 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	// }
 
 	// Check if cookie is in database
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-	stmt, err := tx.Prepare(`
+	stmt, err := database.DB.Prepare(`
 		SELECT expires_at, is_revoked
 		FROM Sessions
 		WHERE session_token = ?`)
@@ -138,13 +132,10 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	}
 	defer stmt.Close()
 	err = stmt.QueryRow(loginCookie.Value).Scan(&session.Expires_at, &session.Is_revoked)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			// No session found
-			return fmt.Errorf("no session found: %w", err)
-		} else {
-			return fmt.Errorf("failed to execute query: %w", err)
-		}
+	if err == sql.ErrNoRows {
+		return fmt.Errorf("no session found: %w", err)
+	} else if err != nil {
+		return fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	if session.Expires_at.Before(time.Now()) {
@@ -155,7 +146,7 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 		return fmt.Errorf("login session revoked")
 	}
 
-	return err
+	return nil
 }
 
 func sessionUser(user_id string) (models.User, error) {
@@ -178,12 +169,7 @@ func sessionUser(user_id string) (models.User, error) {
 	}
 	user.ID = uint(user_id_int)
 
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return user, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-	stmt, err := tx.Prepare(`
+	stmt, err := database.DB.Prepare(`
 		SELECT username, email, profile_image_id, birthday_month, birthday_day, created_at
 		FROM Users
 		WHERE id = ?;`,
@@ -192,6 +178,7 @@ func sessionUser(user_id string) (models.User, error) {
 		return user, fmt.Errorf("couldn't prepare statement: %w", err)
 	}
 	defer stmt.Close()
+
 	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday_month, &birthday_day, &created_at)
 	if err != nil {
 		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
@@ -216,7 +203,6 @@ func sessionUser(user_id string) (models.User, error) {
 		user.CreatedAt = created_at.Time
 	}
 
-	tx.Commit()
 	return user, err
 }
 
