@@ -60,6 +60,9 @@ func InitializeDB() error {
 		return fmt.Errorf("failed to reach database: %w", err)
 	}
 
+	DB.SetMaxIdleConns(0) // no idle connections are retained
+	DB.SetMaxOpenConns(0) // unlimited
+
 	if err := runMigrations(); err != nil {
 		return err
 	}
