@@ -181,13 +181,12 @@ func createSession(username string) (string, error) {
 		now       = time.Now().UTC()
 		expiresAt = now.Add(24 * time.Hour).Format(util.DatetimeFormat)
 	)
-	result, err := stmt.Exec(user_id, token, expiresAt, isRevoked)
+	_, err = stmt.Exec(user_id, token, expiresAt, isRevoked)
 	if err != nil {
 		return token, fmt.Errorf("could not create session: %w", err)
 	}
-	rowsAffected, _ := result.RowsAffected()
 	stmt.Close()
 
-	log.Printf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected)
+	log.Printf("\033[3m%s\033[0m logged in", username)
 	return token, err
 }
