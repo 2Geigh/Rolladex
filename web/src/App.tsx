@@ -21,9 +21,9 @@ import { useLayoutEffect } from 'react'
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import '../static/styles/app.scss'
-import PageNotFoundWithoutHeaderAndFooter from './components/PageNotFound/PageNotFoundWithoutHeaderAndFooter'
 import TermsOfService from './pages/TermsOfService/TermsOfService'
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy'
+import HttpErrorWithoutHeaderAndFooter from './components/Error/ErrorWithoutHeaderAndFooter'
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -31,15 +31,20 @@ function App() {
 		user: undefined,
 		csrfToken: undefined,
 	})
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const LoginSessionContextValue = {
 		...loginSessionData,
 		updateSession: setLoginSessionData,
 	}
 
 	useLayoutEffect(() => {
+		let err: unknown
 		GetSessionAndUserData(loginSessionData, setLoginSessionData)
-			.catch((err) => console.error(`session check failed: ${err}`))
+			.catch((err) => {
+				if (err instanceof Error) {
+					console.error(`session check failed: ${err}`)
+				}
+			})
 			.finally(() => setIsLoading(false))
 	}, []) // Runs only once on app mount
 
@@ -112,7 +117,12 @@ function App() {
 
 						<Route
 							path='*'
-							element={<PageNotFoundWithoutHeaderAndFooter />}
+							element={
+								<HttpErrorWithoutHeaderAndFooter
+									errorCode={404}
+									errorMessage='Page not found'
+								/>
+							}
 						></Route>
 					</Routes>
 					<Footer />

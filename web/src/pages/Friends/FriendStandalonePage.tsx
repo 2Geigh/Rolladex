@@ -1,22 +1,22 @@
-import { useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from 'react-router-dom'
 import {
 	GetRelationshipTierInfo,
 	MAX_NAME_LENGTH,
 	type Friend,
-} from "../../types/models/Friend"
-import React, { useEffect, useState } from "react"
-import { backend_base_url } from "../../util/url"
-import Loading from "../../components/Loading/Loading"
-import "./styles/FriendStandalonePage.scss"
-import type { Interaction } from "../../types/models/Interaction"
+} from '../../types/models/Friend'
+import React, { useEffect, useState } from 'react'
+import { backend_base_url } from '../../util/url'
+import Loading from '../../components/Loading/Loading'
+import './styles/FriendStandalonePage.scss'
+import type { Interaction } from '../../types/models/Interaction'
 import {
 	GetMaxDaysInMonth,
 	GetZodiac,
 	MonthNumberToString,
 	TimeAgo,
-} from "../../util/dates"
-import PageNotFoundWithoutHeaderAndFooter from "../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
-import { useLoginSessionContext } from "../../contexts/LoginSession"
+} from '../../util/dates'
+import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter'
+import { useLoginSessionContext } from '../../contexts/LoginSession'
 
 type UpdateLastInteractionProps = {
 	friend_id: number
@@ -32,20 +32,20 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 		e.preventDefault()
 
 		const input = document.getElementById(
-			"newLastInteractionDate",
+			'newLastInteractionDate'
 		) as HTMLInputElement
 		const new_last_interaction_date = new Date(input.value).toISOString()
 
 		const response = await fetch(
 			`${backend_base_url}/friends/interactions`,
 			{
-				method: "PUT",
-				credentials: "include",
+				method: 'PUT',
+				credentials: 'include',
 				body: JSON.stringify({
 					friend_id: friend_id,
 					new_last_interaction_date: new_last_interaction_date,
 				}),
-			},
+			}
 		)
 		if (!response.ok) {
 			throw new Error(`${response.statusText}: ${response.text}`)
@@ -55,28 +55,28 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 	}
 
 	return (
-		<div id="updateLastInteraction">
+		<div id='updateLastInteraction'>
 			<form onSubmit={onSubmit}>
 				<div
-					className="cancel"
+					className='cancel'
 					onClick={() => {
 						setIsUpdatingLastInteraction(false)
 					}}
 				>
 					×
 				</div>
-				<label htmlFor="newLastInteractionDate">
+				<label htmlFor='newLastInteractionDate'>
 					When'd you last interact with {friend_name}?
 				</label>
 				<input
 					required
-					id="newLastInteractionDate"
-					name="new_last_interaction_date"
-					max={new Date().toISOString().split("T")[0]}
-					type="date"
-					defaultValue={new Date().toISOString().split("T")[0]}
+					id='newLastInteractionDate'
+					name='new_last_interaction_date'
+					max={new Date().toISOString().split('T')[0]}
+					type='date'
+					defaultValue={new Date().toISOString().split('T')[0]}
 				/>
-				<input className="submit" type="submit" value="Update" />
+				<input className='submit' type='submit' value='Update' />
 			</form>
 		</div>
 	)
@@ -116,18 +116,18 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	const lastInteractionDate = last_interaction?.date
 
 	const [draftBirthdayMonth, setDraftBirthdayMonth] = useState<null | string>(
-		String(birthday_month),
+		String(birthday_month)
 	)
-	const [notesState, setNotesState] = useState<string>("")
+	const [notesState, setNotesState] = useState<string>('')
 	const [isMounted, setIsMounted] = useState<boolean>(false)
 
 	const navigate = useNavigate()
 
 	async function deleteFriend() {
 		const response = await fetch(`${backend_base_url}/friends/${id}`, {
-			method: "DELETE",
+			method: 'DELETE',
 			body: sessionToken,
-			credentials: "include",
+			credentials: 'include',
 		})
 
 		if (!response.ok) {
@@ -143,20 +143,20 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 	async function finishEdittingFriend() {
 		const nameInput = document.getElementById(
-			"nameInput",
+			'nameInput'
 		)! as HTMLInputElement
 		const RelationshipSelect = document.getElementById(
-			"relationshipSelect",
+			'relationshipSelect'
 		) as HTMLSelectElement
 		const birthdayMonthSelect = document.getElementById(
-			"birthdayMonthSelect",
+			'birthdayMonthSelect'
 		) as HTMLSelectElement
 		const birthdayDaySelect = document.getElementById(
-			"birthdayDaySelect",
+			'birthdayDaySelect'
 		) as HTMLSelectElement
 
 		if (nameInput.value.length < 1) {
-			alert("Name required")
+			alert('Name required')
 			return
 		}
 
@@ -169,8 +169,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		}
 
 		const response = await fetch(`${backend_base_url}/friends/${id}`, {
-			method: "PUT",
-			credentials: "include",
+			method: 'PUT',
+			credentials: 'include',
 			body: JSON.stringify(reqBody),
 		})
 
@@ -190,8 +190,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		const red = Math.round(((100 - percentage) * 255) / 100)
 		const green = Math.round((percentage * 255) / 100)
 
-		const redHex = red.toString(16).padStart(2, "0")
-		const greenHex = green.toString(16).padStart(2, "0")
+		const redHex = red.toString(16).padStart(2, '0')
+		const greenHex = green.toString(16).padStart(2, '0')
 
 		return `#${redHex}${greenHex}00`
 	}
@@ -206,8 +206,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 
 	async function updateNotes(noteString: string) {
 		const response = await fetch(`${backend_base_url}/friends/notes`, {
-			method: "PUT",
-			credentials: "include",
+			method: 'PUT',
+			credentials: 'include',
 			body: JSON.stringify({
 				id: id,
 				notes: noteString,
@@ -217,7 +217,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 		if (!response.ok) {
 			throw new Error(`${response.statusText}: ${response.text}`)
 		} else {
-			console.log("Notes updated")
+			console.log('Notes updated')
 		}
 	}
 
@@ -240,91 +240,91 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	}, [notesState])
 
 	return (
-		<div id="friendCard">
-			<div className="nameAndPhoto">
+		<div id='friendCard'>
+			<div className='nameAndPhoto'>
 				<img
 					src={
 						(
 							profile_image_path !== undefined &&
-							profile_image_path.trim() !== ""
+							profile_image_path.trim() !== ''
 						) ?
 							profile_image_path
-						:	"not_found"
+						:	'not_found'
 					}
 					alt={name}
-					className="pfp"
+					className='pfp'
 				/>
 
-				<div id="nameAndRelationship">
+				<div id='nameAndRelationship'>
 					{isEdittingFriend ?
 						<input
-							id="nameInput"
-							className="name"
-							type="text"
+							id='nameInput'
+							className='name'
+							type='text'
 							defaultValue={name}
 							minLength={1}
 							maxLength={MAX_NAME_LENGTH}
 						/>
-					:	<h2 className="name">{name}</h2>}
-					<span className="relationship">
+					:	<h2 className='name'>{name}</h2>}
+					<span className='relationship'>
 						{isEdittingFriend ?
 							<>
 								<select
-									id="relationshipSelect"
-									className="relationship_tier"
+									id='relationshipSelect'
+									className='relationship_tier'
 									defaultValue={relationship_tier}
 								>
 									<option value={1}>
-										<span className="relationship_name">
+										<span className='relationship_name'>
 											{GetRelationshipTierInfo(1).name}
-										</span>{" "}
-										<span className="emoji">
+										</span>{' '}
+										<span className='emoji'>
 											{GetRelationshipTierInfo(1).emoji}
 										</span>
 									</option>
 									<option value={2}>
-										<span className="relationship_name">
+										<span className='relationship_name'>
 											{GetRelationshipTierInfo(2).name}
-										</span>{" "}
-										<span className="emoji">
+										</span>{' '}
+										<span className='emoji'>
 											{GetRelationshipTierInfo(2).emoji}
 										</span>
 									</option>
 									<option value={3}>
-										<span className="relationship_name">
+										<span className='relationship_name'>
 											{GetRelationshipTierInfo(3).name}
-										</span>{" "}
-										<span className="emoji">
+										</span>{' '}
+										<span className='emoji'>
 											{GetRelationshipTierInfo(3).emoji}
 										</span>
 									</option>
 									<option value={4}>
-										<span className="relationship_name">
+										<span className='relationship_name'>
 											{GetRelationshipTierInfo(4).name}
-										</span>{" "}
-										<span className="emoji">
+										</span>{' '}
+										<span className='emoji'>
 											{GetRelationshipTierInfo(4).emoji}
 										</span>
 									</option>
 								</select>
 							</>
-						:	<span className="relationship_tier">
-								<span className="emoji">
+						:	<span className='relationship_tier'>
+								<span className='emoji'>
 									{relationship.emoji}
 								</span>
-								<span className="relationship_name">
+								<span className='relationship_name'>
 									{relationship.name}
 								</span>
 							</span>
 						}
-						<span className="relationship_health">
-							Relationship status:{" "}
+						<span className='relationship_health'>
+							Relationship status:{' '}
 							<span
-								id="healthValue"
-								className="health"
+								id='healthValue'
+								className='health'
 								style={{
 									color: percentageToHexColor(
-										relationship_health_percentage,
+										relationship_health_percentage
 									),
 								}}
 							>
@@ -335,55 +335,55 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				</div>
 			</div>
 
-			<div className="card_content">
+			<div className='card_content'>
 				<div
-					className="friend_card_content_section"
-					id="lastInteraction"
+					className='friend_card_content_section'
+					id='lastInteraction'
 				>
 					<h3>Last interaction</h3>
-					<span className="time_ago">
+					<span className='time_ago'>
 						{TimeAgo(lastInteractionDate)} ago
 					</span>
 					<button
 						onClick={() => {
 							setIsUpdatingLastInteraction(true)
 						}}
-						className="update"
+						className='update'
 					>
 						Update
 					</button>
 				</div>
 
-				<div className="friend_card_content_section" id="birthday">
+				<div className='friend_card_content_section' id='birthday'>
 					<h3>Birthday</h3>
-					<span className="birthday_date">
+					<span className='birthday_date'>
 						{isEdittingFriend ?
 							<>
 								<select
-									className="month"
-									id="birthdayMonthSelect"
+									className='month'
+									id='birthdayMonthSelect'
 									defaultValue={birthday_month}
 									onChange={(e) =>
 										setDraftBirthdayMonth(e.target.value)
 									}
 								>
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
+									<option value='01'>January</option>
+									<option value='02'>February</option>
+									<option value='03'>March</option>
+									<option value='04'>April</option>
+									<option value='05'>May</option>
+									<option value='06'>June</option>
+									<option value='07'>July</option>
+									<option value='08'>August</option>
+									<option value='09'>September</option>
+									<option value='10'>October</option>
+									<option value='11'>November</option>
+									<option value='12'>December</option>
 								</select>
 
 								<select
-									className="day"
-									id="birthdayDaySelect"
+									className='day'
+									id='birthdayDaySelect'
 									defaultValue={birthday_day}
 								>
 									{DayOptions}
@@ -397,33 +397,33 @@ const FriendCard: React.FC<FriendCardProps> = ({
 									birthday_month > 0
 								) ?
 									<>
-										<span className="month">
+										<span className='month'>
 											{MonthNumberToString(
-												birthday_month,
+												birthday_month
 											)}
 										</span>
-										<span className="day">
+										<span className='day'>
 											{birthday_day}
 										</span>
 									</>
-								:	"Unknown"}
+								:	'Unknown'}
 							</>
 						}
 					</span>
-					<span className="emoji" title={zodiac.zodiacName}>
+					<span className='emoji' title={zodiac.zodiacName}>
 						{zodiac.zodiacEmoji}
 					</span>
 				</div>
 
-				<div className="friend_card_content_section" id="notesSection">
+				<div className='friend_card_content_section' id='notesSection'>
 					<h3>Notes</h3>
 					<textarea
-						name="notes"
-						id="notes"
+						name='notes'
+						id='notes'
 						maxLength={999}
 						onChange={() => {
 							const notesTextArea = document.getElementById(
-								"notes",
+								'notes'
 							)! as HTMLTextAreaElement
 							setNotesState(notesTextArea.value)
 						}}
@@ -432,18 +432,18 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				</div>
 			</div>
 
-			<div className="buttons">
+			<div className='buttons'>
 				{isEdittingFriend ?
 					<>
 						<button
-							id="saveButton"
-							className="edit_friend"
+							id='saveButton'
+							className='edit_friend'
 							onClick={finishEdittingFriend}
 						>
 							Save
 						</button>
 						<button
-							className="edit_friend"
+							className='edit_friend'
 							onClick={() => {
 								setIsEdittingFriend(false)
 							}}
@@ -451,19 +451,19 @@ const FriendCard: React.FC<FriendCardProps> = ({
 							Cancel
 						</button>
 					</>
-				:	<button className="edit_friend" onClick={editFriend}>
+				:	<button className='edit_friend' onClick={editFriend}>
 						Edit friend
 					</button>
 				}
 
 				<button
-					id="deleteFriend"
+					id='deleteFriend'
 					onClick={() => {
 						deleteFriend()
 							.catch((err) => {
 								throw new Error(err)
 							})
-							.finally(() => navigate("/friends"))
+							.finally(() => navigate('/friends'))
 					}}
 				>
 					Delete friend
@@ -488,9 +488,9 @@ const FriendStandalonePage: React.FC = () => {
 		const response = await fetch(
 			`${backend_base_url}/friends/${friendId}`,
 			{
-				method: "GET",
-				credentials: "include",
-			},
+				method: 'GET',
+				credentials: 'include',
+			}
 		)
 
 		if (!response.ok) {
@@ -520,14 +520,17 @@ const FriendStandalonePage: React.FC = () => {
 	if (!friend) {
 		return (
 			<>
-				<PageNotFoundWithoutHeaderAndFooter />
+				<PageNotFoundWithoutHeaderAndFooter
+					errorCode={404}
+					errorMessage='Friend not found'
+				/>
 			</>
 		)
 	}
 
 	return (
 		<>
-			<div id="friendStandalonePageContent">
+			<div id='friendStandalonePageContent'>
 				<FriendCard
 					id={friend.id}
 					name={friend.name}

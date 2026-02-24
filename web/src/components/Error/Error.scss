@@ -1,6 +1,6 @@
-@use "../../../static/styles/variables";
+@use '../../../static/styles/variables';
 
-#NotFoundContent {
+#ErrorContent {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -17,9 +17,9 @@
 		flex-direction: column;
 		justify-content: center;
 
-		#error-code {
+		#errorCode {
 			font-size: 3em;
-			font-family: "Comic Sans MS", cursive, sans-serif;
+			font-family: 'Comic Sans MS', cursive, sans-serif;
 
 			// background-color: ;
 		}
@@ -31,7 +31,7 @@
 		}
 	}
 
-	#go-home {
+	#goHome {
 		margin-top: 2em;
 
 		padding: 1em 3.5em 1em 3.5em;
@@ -42,10 +42,10 @@
 		border-radius: 0.75em;
 		text-decoration: none;
 	}
-	#go-home:hover {
+	#goHome:hover {
 		background-color: variables.$YELLOW_DARK;
 	}
-	#go-home:active {
+	#goHome:active {
 		box-shadow: 0px 0px 10px 0px variables.$VIOLET_DARK inset;
 	}
 }

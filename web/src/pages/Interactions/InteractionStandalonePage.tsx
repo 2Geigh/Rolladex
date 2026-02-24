@@ -4,7 +4,7 @@ import React, { useEffect, useState, type SetStateAction } from 'react'
 import { backend_base_url } from '../../util/url'
 import Loading from '../../components/Loading/Loading'
 import type { Interaction } from '../../types/models/Interaction'
-import PageNotFoundWithoutHeaderAndFooter from '../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter'
+import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter'
 import './styles/InteractionStandalonePage.scss'
 import { TimeAgo } from '../../util/dates'
 import { Link } from 'react-router-dom'
@@ -181,7 +181,10 @@ const InteractionStandalonePage: React.FC = () => {
 	if (!interaction) {
 		return (
 			<>
-				<PageNotFoundWithoutHeaderAndFooter />
+				<PageNotFoundWithoutHeaderAndFooter
+					errorCode={404}
+					errorMessage='Interaction not found'
+				/>
 			</>
 		)
 	}
