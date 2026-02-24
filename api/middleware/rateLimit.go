@@ -93,5 +93,6 @@ func CleanupClients() {
 				delete(clients, ip)
 			}
 		}
+		mu.Unlock()
 	}
 }
