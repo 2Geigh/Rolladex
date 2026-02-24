@@ -38,7 +38,6 @@ function App() {
 	}
 
 	useLayoutEffect(() => {
-		let err: unknown
 		GetSessionAndUserData(loginSessionData, setLoginSessionData)
 			.catch((err) => {
 				if (err instanceof Error) {
