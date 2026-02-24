@@ -33,6 +33,7 @@ func client(ip string) *Client {
 
 	client, clientExists := clients[ip]
 	if clientExists {
+		client.lastSeen = time.Now()
 		return client
 	}
 
