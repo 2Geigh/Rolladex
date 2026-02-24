@@ -2,6 +2,7 @@ import { useState, type FormEvent } from "react"
 import { Navigate } from "react-router-dom"
 import "./Signup.scss"
 import { backend_base_url } from "../../util/url"
+import { Link } from 'react-router-dom'
 
 export type SignupData = {
 	username: string
@@ -97,6 +98,8 @@ const SignUp = () => {
 
 				<span id="toLogin">
 					Already have an account? <a href="/login">Login now!</a>
+				<span id='toLogin'>
+					Already have an account? <Link to='/login'>Login now!</Link>
 				</span>
 			</div>
 		</>

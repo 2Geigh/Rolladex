@@ -1,7 +1,8 @@
-import type React from "react"
-import "./styles/Navbar.scss"
-import "../../../static/images/Hamburger_icon.svg"
-import { useEffect } from "react"
+import type React from 'react'
+import './styles/Navbar.scss'
+import '../../../static/images/Hamburger_icon.svg'
+import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 
 type NavbarProps = {
 	isLoggedIn: boolean
@@ -12,57 +13,61 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 	function toggleMobileNavVisibiity(event: React.MouseEvent<HTMLDivElement>) {
 		event.preventDefault()
 
-		const mobileNav = document.getElementById("mobileNav")!
-		const toggleIcon = document.getElementById("hamburgerIcon")!
+		const mobileNav = document.getElementById('mobileNav')!
+		const toggleIcon = document.getElementById('hamburgerIcon')!
 
-		if (mobileNav.style.display === "none") {
-			mobileNav.style.display = ""
-			toggleIcon.innerText = "🗙"
+		if (mobileNav.style.display === 'none') {
+			mobileNav.style.display = ''
+			toggleIcon.innerText = '🗙'
 		} else {
-			mobileNav.style.display = "none"
-			toggleIcon.innerText = "☰"
+			mobileNav.style.display = 'none'
+			toggleIcon.innerText = '☰'
 		}
 	}
 
 	useEffect(() => {
-		const mobileNav = document.getElementById("mobileNav")
+		const mobileNav = document.getElementById('mobileNav')
 
 		if (mobileNav) {
-			mobileNav.style.display = "none"
+			mobileNav.style.display = 'none'
 		}
 	}, [])
 
 	return (
-				<nav className="navbar">
-					<a href="/home" className="logo">
-						Rolladex
-					</a>
-				
-				{isLoggedIn ?
-					<>
-						<div id="burgerAndMobileNav">
-							<div
-								id="hamburgerIcon"
-								onClick={toggleMobileNavVisibiity}
-							>
-								☰
-							</div>
-							<nav id="mobileNav">
-								<a href="/home">Home</a>
-								<a href="/friends?sortby=default&page=1&perpage=default">
-									Network
-								</a>
-								<a href="/logout">Logout</a>
-							</nav>
+		<nav className='navbar'>
+			<Link to={'/home'} className='logo'>
+				Rolladex
+			</Link>
+
+			{isLoggedIn ?
+				<>
+					<div id='burgerAndMobileNav'>
+						<div
+							id='hamburgerIcon'
+							onClick={toggleMobileNavVisibiity}
+						>
+							☰
 						</div>
-						<nav id="desktopNav">
-							<a href="/friends?sortby=default&page=1&perpage=default">
-								Network
-							</a>
-							<a href="/logout">Logout</a>
+						<nav id='mobileNav'>
+							<Link to={'home'}>Home</Link>
+
+							<Link to={'/logout'}>Logout</Link>
 						</nav>
-					</>
+					</div>
+					<nav id='desktopNav'>
+						<Link
+							to={
+								'/friends?sortby=default&page=1&perpage=default'
+							}
+						>
+							Network
+						</Link>
+						<Link to={'/logout'}>Logout</Link>
+					</nav>
+				</>
 			:	<></>}
-			</nav>)}
+		</nav>
+	)
+}
 
 export default Navbar

@@ -1,7 +1,8 @@
-import Navbar from "../Navbar/Navbar"
-import Footer from "../Footer/Footer"
-import { useLoginSessionContext } from "../../contexts/LoginSession"
-import "./PageNotFound.scss"
+import Navbar from '../Navbar/Navbar'
+import Footer from '../Footer/Footer'
+import { Link } from 'react-router-dom'
+import { useLoginSessionContext } from '../../contexts/LoginSession'
+import './PageNotFound.scss'
 
 const PageNotFoundWithHeaderAndFooter = () => {
 	const loginSessionData = useLoginSessionContext()
@@ -21,18 +22,18 @@ const PageNotFoundWithHeaderAndFooter = () => {
 const PageNotFoundWithoutHeaderAndFooter: React.FC = () => {
 	return (
 		<>
-			<div id="NotFoundContent">
-				<div className="top">
-					<h2 id="error-code">404</h2>
+			<div id='NotFoundContent'>
+				<div className='top'>
+					<h2 id='error-code'>404</h2>
 					<img
-						alt="₍˄·͈༝·͈˄₍˄·͈༝·͈˄( ͒ ु•·̫• ू ͒)˄·͈༝·͈˄₎˄·͈༝·͈˄₎"
-						id="cuteness"
-						draggable="false"
+						alt='₍˄·͈༝·͈˄₍˄·͈༝·͈˄( ͒ ु•·̫• ू ͒)˄·͈༝·͈˄₎˄·͈༝·͈˄₎'
+						id='cuteness'
+						draggable='false'
 					/>
 				</div>
-				<a href="/home" id="go-home">
+				<Link to={'/home'} id='go-home'>
 					Go home
-				</a>
+				</Link>
 			</div>
 		</>
 	)

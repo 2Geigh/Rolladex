@@ -13,6 +13,7 @@ import {
 	MonthNumberToString,
 	clientTimeZoneOffset,
 } from '../../util/dates'
+import { Link } from 'react-router-dom'
 import type { JSX } from 'react'
 import type { SetURLSearchParams } from 'react-router-dom'
 
@@ -346,7 +347,7 @@ const Friends: React.FC = () => {
 		return (
 			<tr key={friend.id}>
 				<td className='name'>
-					<a href={`/friends/${friend_id}`}>{name}</a>
+					<Link to={`/friends/${friend_id}`}>{name}</Link>
 				</td>
 				<td className='relationship'>
 					<div className='cell_content'>
@@ -358,9 +359,9 @@ const Friends: React.FC = () => {
 				</td>
 
 				<td className='last_interaction'>
-					<a href={`/interactions/${last_interaction_id}`}>
+					<Link to={`/interactions/${last_interaction_id}`}>
 						{formatted_interaction_column_text}
-					</a>
+					</Link>
 				</td>
 				<td className='birthday'>
 					<div className='birthday_content'>
@@ -446,9 +447,9 @@ const Friends: React.FC = () => {
 					<h2>Your network</h2>
 
 					<div className='subheader'>
-						<a id='addFriend' href='/addfriend'>
+						<Link id='addFriend' to='/addfriend'>
 							Add person
-						</a>
+						</Link>
 
 						{FriendListItems && FriendListItems?.length > 0 && (
 							<SortBy

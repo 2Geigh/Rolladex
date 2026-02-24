@@ -5,6 +5,7 @@ import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
 import { backend_base_url } from '../../util/url'
 import type { JSX } from 'react'
 import { DaysSinceDate } from '../../util/dates'
+import { Link } from 'react-router-dom'
 
 type Notification = {
 	date: Date
@@ -28,20 +29,20 @@ const UrgentFriend: React.FC<UrgentFriendProps> = ({ index, friend }) => {
 			id={index == 0 ? 'mostUrgent' : ''}
 			key={`${friend.id}_${friend.name}`}
 		>
-			<a className='image_a' href={`/friends/${friend.id}`}>
+			<Link className='image_a' to={`/friends/${friend.id}`}>
 				<img
 					src={friend.profile_image_path}
 					alt={
 						GetRelationshipTierInfo(friend.relationship_tier).emoji
 					}
 				/>
-			</a>
+			</Link>
 
 			<div className='body'>
 				<div className='top'>
-					<a className='name' href={`/friends/${friend.id}`}>
+					<Link className='name' to={`/friends/${friend.id}`}>
 						{friend.name}
-					</a>
+					</Link>
 					<div className='relationship_tier_emoji'>
 						{
 							GetRelationshipTierInfo(friend.relationship_tier)
@@ -106,7 +107,7 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 		<div id='noFriends'>
 			<span className='emoji'>🗿</span>
 			<span>No pending communications.</span>
-			<a href='/friends'>View all friends</a>
+			<Link to='/friends'>View all friends</Link>
 		</div>
 	)
 
@@ -129,9 +130,9 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 			:	<div id='urgentCards'>{MostUrgentFriends}</div>}
 
 			{MostUrgentFriends.length > 1 && (
-				<a id='toFriends' href='/friends'>
+				<Link id='toFriends' to='/friends'>
 					View all friends
-				</a>
+				</Link>
 			)}
 		</div>
 	)

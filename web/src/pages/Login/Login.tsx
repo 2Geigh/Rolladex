@@ -1,13 +1,14 @@
-import "./Login.scss"
-import { Navigate } from "react-router-dom"
-import type { FormEvent } from "react"
-import { useLayoutEffect, useState } from "react"
+import './Login.scss'
+import { Navigate } from 'react-router-dom'
+import type { FormEvent } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import {
 	GetSessionAndUserData,
 	useLoginSessionContext,
-} from "../../contexts/LoginSession"
-import Loading from "../../components/Loading/Loading"
-import { backend_base_url } from "../../util/url"
+} from '../../contexts/LoginSession'
+import Loading from '../../components/Loading/Loading'
+import { backend_base_url } from '../../util/url'
+import { Link } from 'react-router-dom'
 
 type loginData = {
 	username: string
@@ -28,7 +29,7 @@ const Login: React.FC = () => {
 	}
 
 	if (loginSessionContext.isLoggedIn) {
-		return <Navigate to="/home" />
+		return <Navigate to='/home' />
 	}
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -43,23 +44,23 @@ const Login: React.FC = () => {
 		}
 
 		const response = await fetch(`${backend_base_url}/login`, {
-			method: "POST",
+			method: 'POST',
 			headers: {
-				"Content-Type": "application/json",
+				'Content-Type': 'application/json',
 			},
-			credentials: "include", // sends cookies
+			credentials: 'include', // sends cookies
 			body: JSON.stringify(loginData),
 		})
 
 		if (response.ok) {
-			console.log("Credentials validated by server")
+			console.log('Credentials validated by server')
 			loginSessionContext.updateSession({
 				...loginSessionContext,
 				isLoggedIn: true,
 			})
 			await GetSessionAndUserData(
 				loginSessionContext,
-				loginSessionContext.updateSession,
+				loginSessionContext.updateSession
 			)
 		} else {
 			const errorText = await response.text()
@@ -69,33 +70,25 @@ const Login: React.FC = () => {
 
 	return (
 		<>
-			<div id="loginContainer">
-					<form id="loginForm" onSubmit={handleSubmit}>
-						<label htmlFor="username">
-							Username{" "}
-							<input required name="username" type="text"></input>
-						</label>
+			<div id='loginContainer'>
+				<form id='loginForm' onSubmit={handleSubmit}>
+					<label htmlFor='username'>
+						Username{' '}
+						<input required name='username' type='text'></input>
+					</label>
 
-						<label htmlFor="password">
-							Password{" "}
-							<input
-								required
-								name="password"
-								type="password"
-							></input>
-						</label>
+					<label htmlFor='password'>
+						Password{' '}
+						<input required name='password' type='password'></input>
+					</label>
 
-						<input
-							id="loginButton"
-							type="submit"
-							value="Login"
-						></input>
-					</form>
+					<input id='loginButton' type='submit' value='Login'></input>
+				</form>
 
-					<span id="toSignup">
-						Don't have an account?{" "}
-						<a href="/signup">Register now!</a>
-					</span>
+				<span id='toSignup'>
+					Don't have an account?{' '}
+					<Link to='/signup'>Register now!</Link>
+				</span>
 			</div>
 		</>
 	)

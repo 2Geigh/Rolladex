@@ -1,12 +1,13 @@
-import { useParams } from "react-router-dom"
-import { GetRelationshipTierInfo, type Friend } from "../../types/models/Friend"
-import React, { useEffect, useState, type SetStateAction } from "react"
-import { backend_base_url } from "../../util/url"
-import Loading from "../../components/Loading/Loading"
-import type { Interaction } from "../../types/models/Interaction"
-import PageNotFoundWithoutHeaderAndFooter from "../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter"
-import "./styles/InteractionStandalonePage.scss"
-import { TimeAgo } from "../../util/dates"
+import { useParams } from 'react-router-dom'
+import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
+import React, { useEffect, useState, type SetStateAction } from 'react'
+import { backend_base_url } from '../../util/url'
+import Loading from '../../components/Loading/Loading'
+import type { Interaction } from '../../types/models/Interaction'
+import PageNotFoundWithoutHeaderAndFooter from '../../components/PageNotFound/PageNotFoundWithoutHeaderAndFooter'
+import './styles/InteractionStandalonePage.scss'
+import { TimeAgo } from '../../util/dates'
+import { Link } from 'react-router-dom'
 
 type FriendCardProps = {
 	id: number
@@ -86,46 +87,46 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 
 	const AttendeeList = attendees.map((attendee) => (
 		<>
-			<span className="attendee" key={attendee.name}>
-				<div className="emoji">
+			<span className='attendee' key={attendee.name}>
+				<div className='emoji'>
 					{GetRelationshipTierInfo(attendee.relationship_tier).emoji}
 				</div>
-				<a href={`/friends/${attendee.id}`} className="name">
+				<Link to={`/friends/${attendee.id}`} className='name'>
 					{attendee.name}
-				</a>
+				</Link>
 			</span>
 		</>
 	))
 
 	return (
-		<div id="interactionCard" key={id}>
-			<div className="name_and_subtitle">
-				<div className="name">
-					<h1>{name ? name : "Unnamed Interaction"}</h1>
-					<span className="time_ago">
+		<div id='interactionCard' key={id}>
+			<div className='name_and_subtitle'>
+				<div className='name'>
+					<h1>{name ? name : 'Unnamed Interaction'}</h1>
+					<span className='time_ago'>
 						(
-						{TimeAgo(date) === "Just now" ?
-							"Just now"
-							: `${TimeAgo(date)} ago`}
+						{TimeAgo(date) === 'Just now' ?
+							'Just now'
+						:	`${TimeAgo(date)} ago`}
 						)
 					</span>
 				</div>
-				<div className="date">
-					<span className="emoji">📅</span>Wednesday, Septembruary 19,
+				<div className='date'>
+					<span className='emoji'>📅</span>Wednesday, Septembruary 19,
 					2025
 				</div>
-				<div className="location">
-					<span className="emoji">📍</span>
-					{location ? location : "Unspecified"}
+				<div className='location'>
+					<span className='emoji'>📍</span>
+					{location ? location : 'Unspecified'}
 				</div>
 			</div>
-			<div className="attendees">
+			<div className='attendees'>
 				<h2>Attendees</h2>
-				<div className="attendee_list">{AttendeeList}</div>
+				<div className='attendee_list'>{AttendeeList}</div>
 			</div>
-			<div className="buttons">
-				<button className="edit">Edit</button>
-				<button className="delete">Delete</button>
+			<div className='buttons'>
+				<button className='edit'>Edit</button>
+				<button className='delete'>Delete</button>
 			</div>
 		</div>
 	)
@@ -144,14 +145,14 @@ const InteractionStandalonePage: React.FC = () => {
 		const response = await fetch(
 			`${backend_base_url}/interactions/${interactionId}`,
 			{
-				method: "GET",
-				credentials: "include",
-			},
+				method: 'GET',
+				credentials: 'include',
+			}
 		)
 
 		if (!response.ok) {
 			throw new Error(
-				`${response.status}: couldn't get friend: ${response.body}`,
+				`${response.status}: couldn't get friend: ${response.body}`
 			)
 		}
 
@@ -187,7 +188,7 @@ const InteractionStandalonePage: React.FC = () => {
 
 	return (
 		<>
-			<div id="interactionStandalonePageContent">
+			<div id='interactionStandalonePageContent'>
 				<InteractionCard
 					id={interaction.id}
 					date={interaction.date}
