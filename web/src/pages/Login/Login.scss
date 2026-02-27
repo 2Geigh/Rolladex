@@ -1,4 +1,4 @@
-@use "../../../static/styles/variables";
+@use '../../../static/styles/variables';
 
 #loginContainer {
 	display: flex;
@@ -11,17 +11,15 @@
 
 	background-color: variables.$VIOLET_BACKGROUND;
 
-
 	#loginForm {
 		display: flex;
 		justify-content: space-evenly;
 		align-items: center;
 		flex-direction: column;
 
-		padding: min(5vw,2em);
+		padding: min(5vw, 2em);
 		padding-bottom: 1em;
 		box-sizing: border-box;
-
 
 		$shadow_color: rgba(0, 0, 0, 0.283);
 		// box-shadow: 1px 1px 20px 1px $shadow_color;
@@ -62,7 +60,7 @@
 			border-radius: 3em;
 
 			font-size: 95%;
-			
+
 			color: white;
 			background-color: variables.$VIOLET;
 		}

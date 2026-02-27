@@ -1,37 +1,37 @@
-import type React from 'react'
-import './styles/Navbar.scss'
-import '../../../static/images/Hamburger_icon.svg'
-import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
+import type React from 'react';
+import './styles/Navbar.scss';
+import '../../../static/images/Hamburger_icon.svg';
+import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 type NavbarProps = {
-	isLoggedIn: boolean
-	username: string | undefined
-}
+	isLoggedIn: boolean;
+	username: string | undefined;
+};
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 	function toggleMobileNavVisibiity(event: React.MouseEvent<HTMLDivElement>) {
-		event.preventDefault()
+		event.preventDefault();
 
-		const mobileNav = document.getElementById('mobileNav')!
-		const toggleIcon = document.getElementById('hamburgerIcon')!
+		const mobileNav = document.getElementById('mobileNav')!;
+		const toggleIcon = document.getElementById('hamburgerIcon')!;
 
 		if (mobileNav.style.display === 'none') {
-			mobileNav.style.display = ''
-			toggleIcon.innerText = '🗙'
+			mobileNav.style.display = '';
+			toggleIcon.innerText = '🗙';
 		} else {
-			mobileNav.style.display = 'none'
-			toggleIcon.innerText = '☰'
+			mobileNav.style.display = 'none';
+			toggleIcon.innerText = '☰';
 		}
 	}
 
 	useEffect(() => {
-		const mobileNav = document.getElementById('mobileNav')
+		const mobileNav = document.getElementById('mobileNav');
 
 		if (mobileNav) {
-			mobileNav.style.display = 'none'
+			mobileNav.style.display = 'none';
 		}
-	}, [])
+	}, []);
 
 	return (
 		<nav className='navbar'>
@@ -67,7 +67,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 				</>
 			:	<></>}
 		</nav>
-	)
-}
+	);
+};
 
-export default Navbar
+export default Navbar;

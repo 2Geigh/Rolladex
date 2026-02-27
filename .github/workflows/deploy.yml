@@ -21,55 +21,55 @@ jobs:
                   timeout: 120s
                   command_timeout: 30m
                   script: |
-                        # Exit on any error
-                        set -e
-            
-                        PROJECT_DIR="$HOME/Rolladex"
-                        REPO_URL="https://github.com/${{ github.repository }}.git"
-            
-                        # 1. Ensure the directory exists
-                        mkdir -p $PROJECT_DIR
-                        cd $PROJECT_DIR
-            
-                        # 2. Handle Git Logic properly
-                        if [ ! -d ".git" ]; then
-                          echo "First time setup: Initializing repository..."
-                          git init
-                          git remote add origin $REPO_URL
-                          git fetch origin main
-                          # This pulls the code without deleting your manual .env
-                          git reset --hard origin/main 
-                        else
-                          echo "Updating repository..."
-                          git fetch origin main
-                          git reset --hard origin/main
-                        fi
-            
-                        # 3. Dependency & Environment Check
-                        if [ ! -f ".env" ]; then
-                          echo "CRITICAL ERROR: .env file missing in $PROJECT_DIR"
-                          echo "Please SSH into the VPS and run: nano $PROJECT_DIR/.env"
-                          exit 1
-                        fi
-            
-                        # 4. Build and Deploy
-                        FILES="-f docker-compose.yml -f docker-compose.prod.yml"
-                        
-                        echo "Starting Docker containers with Production Config..."
-                        
-                        # Explicitly force-remove the specific UI container if it's being stubborn
-                        docker rm -f rolladex-ui || true 
-                        
-                        # Standard Compose deployment
-                        if command -v docker-compose > /dev/null 2>&1; then
-                            DOCKER_CMD="docker-compose"
-                        else
-                            DOCKER_CMD="docker compose"
-                        fi
-                        
-                        $DOCKER_CMD $FILES down --remove-orphans
-                        $DOCKER_CMD $FILES up --build -d
-            
-                        # 5. Post-deployment cleanup
-                        docker image prune -f
-                        echo "Deployment successful! Site should be live at your VPS IP."
+                      # Exit on any error
+                      set -e
+
+                      PROJECT_DIR="$HOME/Rolladex"
+                      REPO_URL="https://github.com/${{ github.repository }}.git"
+
+                      # 1. Ensure the directory exists
+                      mkdir -p $PROJECT_DIR
+                      cd $PROJECT_DIR
+
+                      # 2. Handle Git Logic properly
+                      if [ ! -d ".git" ]; then
+                        echo "First time setup: Initializing repository..."
+                        git init
+                        git remote add origin $REPO_URL
+                        git fetch origin main
+                        # This pulls the code without deleting your manual .env
+                        git reset --hard origin/main 
+                      else
+                        echo "Updating repository..."
+                        git fetch origin main
+                        git reset --hard origin/main
+                      fi
+
+                      # 3. Dependency & Environment Check
+                      if [ ! -f ".env" ]; then
+                        echo "CRITICAL ERROR: .env file missing in $PROJECT_DIR"
+                        echo "Please SSH into the VPS and run: nano $PROJECT_DIR/.env"
+                        exit 1
+                      fi
+
+                      # 4. Build and Deploy
+                      FILES="-f docker-compose.yml -f docker-compose.prod.yml"
+
+                      echo "Starting Docker containers with Production Config..."
+
+                      # Explicitly force-remove the specific UI container if it's being stubborn
+                      docker rm -f rolladex-ui || true 
+
+                      # Standard Compose deployment
+                      if command -v docker-compose > /dev/null 2>&1; then
+                          DOCKER_CMD="docker-compose"
+                      else
+                          DOCKER_CMD="docker compose"
+                      fi
+
+                      $DOCKER_CMD $FILES down --remove-orphans
+                      $DOCKER_CMD $FILES up --build -d
+
+                      # 5. Post-deployment cleanup
+                      docker image prune -f
+                      echo "Deployment successful! Site should be live at your VPS IP."

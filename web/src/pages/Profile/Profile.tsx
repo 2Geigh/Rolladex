@@ -1,15 +1,15 @@
-import { useLoginSessionContext } from "../../contexts/LoginSession"
+import { useLoginSessionContext } from '../../contexts/LoginSession';
 
 const Profile: React.FC = () => {
-	const loginSessionContext = useLoginSessionContext()
+	const loginSessionContext = useLoginSessionContext();
 
 	return (
 		<>
-			<div className="content">
+			<div className='content'>
 				Hello, {loginSessionContext.user?.username}
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default Profile
+export default Profile;

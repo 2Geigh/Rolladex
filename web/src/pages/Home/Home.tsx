@@ -1,27 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import { type LoginSessionData } from '../../contexts/LoginSession'
-import './styles/Home.scss'
-import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
-import { backend_base_url } from '../../util/url'
-import type { JSX } from 'react'
-import { DaysSinceDate } from '../../util/dates'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { type LoginSessionData } from '../../contexts/LoginSession';
+import './styles/Home.scss';
+import {
+	GetRelationshipTierInfo,
+	type Friend,
+} from '../../types/models/Friend';
+import { backend_base_url } from '../../util/url';
+import type { JSX } from 'react';
+import { DaysSinceDate } from '../../util/dates';
+import { Link } from 'react-router-dom';
 
 type Notification = {
-	date: Date
-	text: string
-	friend_id: number
-}
+	date: Date;
+	text: string;
+	friend_id: number;
+};
 
 type HomepageContent = {
-	todaysFriends: Friend[]
-	notifications: Notification[]
-}
+	todaysFriends: Friend[];
+	notifications: Notification[];
+};
 
 type UrgentFriendProps = {
-	index: number
-	friend: Friend
-}
+	index: number;
+	friend: Friend;
+};
 const UrgentFriend: React.FC<UrgentFriendProps> = ({ index, friend }) => {
 	return (
 		<div
@@ -77,20 +80,20 @@ const UrgentFriend: React.FC<UrgentFriendProps> = ({ index, friend }) => {
 				}
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 type UrgentFriendsProps = {
-	date: Date
-	friends: Friend[]
-	isLoading: boolean
-}
+	date: Date;
+	friends: Friend[];
+	isLoading: boolean;
+};
 const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 	date,
 	friends,
 	isLoading,
 }) => {
-	let MostUrgentFriends: JSX.Element[] = []
+	let MostUrgentFriends: JSX.Element[] = [];
 	if (friends) {
 		MostUrgentFriends = friends.map((friend) => {
 			return (
@@ -99,8 +102,8 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 					index={friends.indexOf(friend)}
 					friend={friend}
 				/>
-			)
-		})
+			);
+		});
 	}
 
 	const NoFriends: JSX.Element = (
@@ -109,10 +112,10 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 			<span>No pending communications.</span>
 			<Link to='/friends'>View all friends</Link>
 		</div>
-	)
+	);
 
 	if (isLoading) {
-		return <>Loading...</>
+		return <>Loading...</>;
 	}
 
 	return (
@@ -135,12 +138,12 @@ const UrgentFriends: React.FC<UrgentFriendsProps> = ({
 				</Link>
 			)}
 		</div>
-	)
-}
+	);
+};
 
 type NotificationProps = {
-	notification: Notification
-}
+	notification: Notification;
+};
 const Notification: React.FC<NotificationProps> = ({ notification }) => {
 	return (
 		<div className='notification'>
@@ -169,15 +172,15 @@ const Notification: React.FC<NotificationProps> = ({ notification }) => {
 				<div className='bottom'>{notification.text}</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 type NotificationsProps = {
-	notifications: Notification[]
-}
+	notifications: Notification[];
+};
 
 const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
-	let notificationElements: JSX.Element[] = []
+	let notificationElements: JSX.Element[] = [];
 	if (notifications) {
 		notificationElements = notifications.map((notification) => {
 			return (
@@ -185,8 +188,8 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 					key={`${notification.date}_${notification.friend_id}`}
 					notification={notification}
 				/>
-			)
-		})
+			);
+		});
 	}
 
 	return (
@@ -200,47 +203,47 @@ const Notifications: React.FC<NotificationsProps> = ({ notifications }) => {
 				</div>
 			:	<div id='notifications'>{notificationElements}</div>}
 		</div>
-	)
-}
+	);
+};
 
 type HomeProps = {
-	loginSessionContext: LoginSessionData
-}
+	loginSessionContext: LoginSessionData;
+};
 const Home: React.FC<HomeProps> = ({ loginSessionContext }) => {
-	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [homepageContent, setHomepageContent] = useState<HomepageContent>({
 		todaysFriends: [],
 		notifications: [],
-	})
+	});
 
 	async function getUpcomingUrgentFriends(): Promise<HomepageContent> {
 		const response = await fetch(`${backend_base_url}/home`, {
 			method: 'GET',
 			credentials: 'include',
-		})
+		});
 
 		if (!response.ok) {
-			throw new Error(`${response.statusText}: ${response.text}`)
+			throw new Error(`${response.statusText}: ${response.text}`);
 		}
 
-		const data = await response.json()
-		const homepage_content = data as HomepageContent
+		const data = await response.json();
+		const homepage_content = data as HomepageContent;
 
-		return homepage_content
+		return homepage_content;
 	}
 
 	useEffect(() => {
 		getUpcomingUrgentFriends()
 			.catch((err) => {
-				throw new Error(err)
+				throw new Error(err);
 			})
 			.then((homepage_content) => {
-				setHomepageContent(homepage_content)
+				setHomepageContent(homepage_content);
 			})
 			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [])
+				setIsLoading(false);
+			});
+	}, []);
 
 	return (
 		<div id='homeContent'>
@@ -257,7 +260,7 @@ const Home: React.FC<HomeProps> = ({ loginSessionContext }) => {
 				<Notifications notifications={homepageContent.notifications} />
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default Home
+export default Home;

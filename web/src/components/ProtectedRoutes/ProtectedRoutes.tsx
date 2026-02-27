@@ -1,24 +1,24 @@
-import { useLoginSessionContext } from "../../contexts/LoginSession"
-import { Navigate, Outlet } from "react-router-dom"
-import Loading from "../Loading/Loading"
+import { useLoginSessionContext } from '../../contexts/LoginSession';
+import { Navigate, Outlet } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 const ProtectedRoutes: React.FC = () => {
-	const loginSessionContext = useLoginSessionContext()
+	const loginSessionContext = useLoginSessionContext();
 
 	if (loginSessionContext.isLoggedIn === undefined) {
 		// accounts for the initial <App/> load
-		return <Loading />
+		return <Loading />;
 	}
 
 	if (!loginSessionContext.isLoggedIn) {
-		return <Navigate to="/login" />
+		return <Navigate to='/login' />;
 	}
 
 	return (
 		<>
 			<Outlet />
 		</>
-	)
-}
+	);
+};
 
-export default ProtectedRoutes
+export default ProtectedRoutes;

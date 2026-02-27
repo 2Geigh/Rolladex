@@ -1,20 +1,20 @@
-import Navbar from '../Navbar/Navbar'
-import Footer from '../Footer/Footer'
-import { Link } from 'react-router-dom'
-import { useLoginSessionContext } from '../../contexts/LoginSession'
-import './Error.scss'
-import type { FC } from 'react'
+import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
+import { Link } from 'react-router-dom';
+import { useLoginSessionContext } from '../../contexts/LoginSession';
+import './Error.scss';
+import type { FC } from 'react';
 
 type HttpErrorProps = {
-	errorCode: number
-	errorMessage: string
-}
+	errorCode: number;
+	errorMessage: string;
+};
 
 const HttpErrorWithHeaderAndFooter: FC<HttpErrorProps> = ({
 	errorCode,
 	errorMessage,
 }) => {
-	const loginSessionData = useLoginSessionContext()
+	const loginSessionData = useLoginSessionContext();
 
 	return (
 		<>
@@ -28,8 +28,8 @@ const HttpErrorWithHeaderAndFooter: FC<HttpErrorProps> = ({
 			/>
 			<Footer />
 		</>
-	)
-}
+	);
+};
 
 const HttpErrorWithoutHeaderAndFooter: FC<HttpErrorProps> = ({
 	errorCode,
@@ -52,8 +52,8 @@ const HttpErrorWithoutHeaderAndFooter: FC<HttpErrorProps> = ({
 				</Link>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default HttpErrorWithoutHeaderAndFooter
-export { HttpErrorWithHeaderAndFooter }
+export default HttpErrorWithoutHeaderAndFooter;
+export { HttpErrorWithHeaderAndFooter };

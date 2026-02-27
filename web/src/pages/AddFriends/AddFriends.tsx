@@ -1,33 +1,33 @@
-import React, { useState } from 'react'
-import { MAX_NAME_LENGTH } from '../../types/models/Friend'
-import './styles/AddFriends.scss'
-import { backend_base_url } from '../../util/url'
-import { useNavigate } from 'react-router-dom'
-import OptionalSection from './components/OptionalSection'
-import LastInteractionInputs from './components/LastInteractionInputs'
-import RelationshipSection from './components/RelationshipSection'
+import React, { useState } from 'react';
+import { MAX_NAME_LENGTH } from '../../types/models/Friend';
+import './styles/AddFriends.scss';
+import { backend_base_url } from '../../util/url';
+import { useNavigate } from 'react-router-dom';
+import OptionalSection from './components/OptionalSection';
+import LastInteractionInputs from './components/LastInteractionInputs';
+import RelationshipSection from './components/RelationshipSection';
 
 type RequiredFormData = {
-	name: string | undefined
-	last_interaction_date: string | null | undefined
-	relationship_tier_code: number | null | undefined
-}
+	name: string | undefined;
+	last_interaction_date: string | null | undefined;
+	relationship_tier_code: number | null | undefined;
+};
 
 type OptionalFormData = {
-	birthday_month: number | undefined
-	birthday_day: number | undefined
-}
+	birthday_month: number | undefined;
+	birthday_day: number | undefined;
+};
 
-export type FormData = RequiredFormData & OptionalFormData
+export type FormData = RequiredFormData & OptionalFormData;
 
 export type AddFriendsInputState = {
-	knowsApproximateLastInteraction: boolean | undefined
-	knowsAbsoluteLastInteraction: boolean | undefined
-	hasInputtedLastInteractionDate: boolean
-	hasInputtedRelationshipTier: boolean
-	currentlySelectedRelationshipTier: number | undefined
-	lastHoveredRelationshipTier: number | undefined
-}
+	knowsApproximateLastInteraction: boolean | undefined;
+	knowsAbsoluteLastInteraction: boolean | undefined;
+	hasInputtedLastInteractionDate: boolean;
+	hasInputtedRelationshipTier: boolean;
+	currentlySelectedRelationshipTier: number | undefined;
+	lastHoveredRelationshipTier: number | undefined;
+};
 
 const AddFriends: React.FC = () => {
 	const [formData, setFormData] = useState<FormData>({
@@ -36,7 +36,7 @@ const AddFriends: React.FC = () => {
 		relationship_tier_code: undefined,
 		birthday_month: undefined,
 		birthday_day: undefined,
-	})
+	});
 
 	const [input, setInput] = useState<AddFriendsInputState>({
 		knowsApproximateLastInteraction: undefined,
@@ -45,22 +45,22 @@ const AddFriends: React.FC = () => {
 		hasInputtedRelationshipTier: false,
 		currentlySelectedRelationshipTier: undefined,
 		lastHoveredRelationshipTier: undefined,
-	})
+	});
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
+		e.preventDefault();
 
 		if (!formData.name) {
-			alert('Please fill out the name field')
-			return
+			alert('Please fill out the name field');
+			return;
 		} else if (!formData.last_interaction_date) {
-			alert('Please properly fill out the last interaction date')
-			return
+			alert('Please properly fill out the last interaction date');
+			return;
 		} else if (!formData.relationship_tier_code) {
-			alert('Please specify the relationship type')
-			return
+			alert('Please specify the relationship type');
+			return;
 		}
 
 		try {
@@ -68,15 +68,15 @@ const AddFriends: React.FC = () => {
 				method: 'POST',
 				credentials: 'include',
 				body: JSON.stringify(formData),
-			})
+			});
 
 			if (response.ok) {
-				navigate('/friends')
+				navigate('/friends');
 			} else {
-				alert(`Error: ${response.text}`)
+				alert(`Error: ${response.text}`);
 			}
 		} catch (err) {
-			throw new Error(String(err))
+			throw new Error(String(err));
 		}
 	}
 
@@ -94,12 +94,12 @@ const AddFriends: React.FC = () => {
 							maxLength={MAX_NAME_LENGTH}
 							tabIndex={0}
 							onChange={(e) => {
-								const inputtedText = e.target.value
+								const inputtedText = e.target.value;
 
 								setFormData({
 									...formData,
 									name: inputtedText,
-								})
+								});
 							}}
 						/>
 					</div>
@@ -147,7 +147,7 @@ const AddFriends: React.FC = () => {
 				</form>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default AddFriends
+export default AddFriends;

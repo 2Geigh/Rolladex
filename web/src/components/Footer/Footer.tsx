@@ -1,14 +1,14 @@
-import './styles/Footer.scss'
+import './styles/Footer.scss';
 
 const Footer = () => {
-	const today = new Date()
-	const thisYear = today.getFullYear()
+	const today = new Date();
+	const thisYear = today.getFullYear();
 
-	let copyrightYears
+	let copyrightYears;
 	if (thisYear <= 2025) {
-		copyrightYears = `2025`
+		copyrightYears = `2025`;
 	} else {
-		copyrightYears = `2025-${thisYear}`
+		copyrightYears = `2025-${thisYear}`;
 	}
 
 	return (
@@ -26,7 +26,7 @@ const Footer = () => {
 				</span>
 			</nav>
 		</>
-	)
-}
+	);
+};
 
-export default Footer
+export default Footer;

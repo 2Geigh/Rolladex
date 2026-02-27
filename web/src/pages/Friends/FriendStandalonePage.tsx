@@ -1,40 +1,40 @@
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom';
 import {
 	GetRelationshipTierInfo,
 	MAX_NAME_LENGTH,
 	type Friend,
-} from '../../types/models/Friend'
-import React, { useEffect, useState } from 'react'
-import { backend_base_url } from '../../util/url'
-import Loading from '../../components/Loading/Loading'
-import './styles/FriendStandalonePage.scss'
-import type { Interaction } from '../../types/models/Interaction'
+} from '../../types/models/Friend';
+import React, { useEffect, useState } from 'react';
+import { backend_base_url } from '../../util/url';
+import Loading from '../../components/Loading/Loading';
+import './styles/FriendStandalonePage.scss';
+import type { Interaction } from '../../types/models/Interaction';
 import {
 	GetMaxDaysInMonth,
 	GetZodiac,
 	MonthNumberToString,
 	TimeAgo,
-} from '../../util/dates'
-import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter'
-import { useLoginSessionContext } from '../../contexts/LoginSession'
+} from '../../util/dates';
+import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter';
+import { useLoginSessionContext } from '../../contexts/LoginSession';
 
 type UpdateLastInteractionProps = {
-	friend_id: number
-	friend_name: string
-	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
-}
+	friend_id: number;
+	friend_name: string;
+	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>;
+};
 const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 	friend_id,
 	friend_name,
 	setIsUpdatingLastInteraction,
 }) => {
 	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault()
+		e.preventDefault();
 
 		const input = document.getElementById(
 			'newLastInteractionDate'
-		) as HTMLInputElement
-		const new_last_interaction_date = new Date(input.value).toISOString()
+		) as HTMLInputElement;
+		const new_last_interaction_date = new Date(input.value).toISOString();
 
 		const response = await fetch(
 			`${backend_base_url}/friends/interactions`,
@@ -46,12 +46,12 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 					new_last_interaction_date: new_last_interaction_date,
 				}),
 			}
-		)
+		);
 		if (!response.ok) {
-			throw new Error(`${response.statusText}: ${response.text}`)
+			throw new Error(`${response.statusText}: ${response.text}`);
 		}
 
-		setIsUpdatingLastInteraction(false)
+		setIsUpdatingLastInteraction(false);
 	}
 
 	return (
@@ -60,7 +60,7 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 				<div
 					className='cancel'
 					onClick={() => {
-						setIsUpdatingLastInteraction(false)
+						setIsUpdatingLastInteraction(false);
 					}}
 				>
 					×
@@ -79,24 +79,24 @@ const UpdateLastInteraction: React.FC<UpdateLastInteractionProps> = ({
 				<input className='submit' type='submit' value='Update' />
 			</form>
 		</div>
-	)
-}
+	);
+};
 
 type FriendCardProps = {
-	id: number
-	name: string
-	profile_image_path: string | undefined
-	relationship_tier: number
-	relationship_health: number
-	last_interaction: Interaction | undefined
-	birthday_month: number | undefined
-	birthday_day: number | undefined
-	notes: string | undefined
-	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>
-	isEdittingFriend: boolean
-	setIsEdittingFriend: React.Dispatch<React.SetStateAction<boolean>>
-	sessionToken: string | undefined
-}
+	id: number;
+	name: string;
+	profile_image_path: string | undefined;
+	relationship_tier: number;
+	relationship_health: number;
+	last_interaction: Interaction | undefined;
+	birthday_month: number | undefined;
+	birthday_day: number | undefined;
+	notes: string | undefined;
+	setIsUpdatingLastInteraction: React.Dispatch<React.SetStateAction<boolean>>;
+	isEdittingFriend: boolean;
+	setIsEdittingFriend: React.Dispatch<React.SetStateAction<boolean>>;
+	sessionToken: string | undefined;
+};
 const FriendCard: React.FC<FriendCardProps> = ({
 	id,
 	name,
@@ -112,52 +112,52 @@ const FriendCard: React.FC<FriendCardProps> = ({
 	setIsEdittingFriend,
 	sessionToken,
 }) => {
-	const relationship = GetRelationshipTierInfo(relationship_tier)
-	const lastInteractionDate = last_interaction?.date
+	const relationship = GetRelationshipTierInfo(relationship_tier);
+	const lastInteractionDate = last_interaction?.date;
 
 	const [draftBirthdayMonth, setDraftBirthdayMonth] = useState<null | string>(
 		String(birthday_month)
-	)
-	const [notesState, setNotesState] = useState<string>('')
-	const [isMounted, setIsMounted] = useState<boolean>(false)
+	);
+	const [notesState, setNotesState] = useState<string>('');
+	const [isMounted, setIsMounted] = useState<boolean>(false);
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
 	async function deleteFriend() {
 		const response = await fetch(`${backend_base_url}/friends/${id}`, {
 			method: 'DELETE',
 			body: sessionToken,
 			credentials: 'include',
-		})
+		});
 
 		if (!response.ok) {
-			throw new Error(`${response.status}: ${response.statusText}`)
+			throw new Error(`${response.status}: ${response.statusText}`);
 		}
 
-		return
+		return;
 	}
 
 	function editFriend() {
-		setIsEdittingFriend(true)
+		setIsEdittingFriend(true);
 	}
 
 	async function finishEdittingFriend() {
 		const nameInput = document.getElementById(
 			'nameInput'
-		)! as HTMLInputElement
+		)! as HTMLInputElement;
 		const RelationshipSelect = document.getElementById(
 			'relationshipSelect'
-		) as HTMLSelectElement
+		) as HTMLSelectElement;
 		const birthdayMonthSelect = document.getElementById(
 			'birthdayMonthSelect'
-		) as HTMLSelectElement
+		) as HTMLSelectElement;
 		const birthdayDaySelect = document.getElementById(
 			'birthdayDaySelect'
-		) as HTMLSelectElement
+		) as HTMLSelectElement;
 
 		if (nameInput.value.length < 1) {
-			alert('Name required')
-			return
+			alert('Name required');
+			return;
 		}
 
 		const reqBody = {
@@ -166,43 +166,45 @@ const FriendCard: React.FC<FriendCardProps> = ({
 			relationship_tier: parseInt(RelationshipSelect.value),
 			birthday_month: parseInt(birthdayMonthSelect.value),
 			birthday_day: parseInt(birthdayDaySelect.value),
-		}
+		};
 
 		const response = await fetch(`${backend_base_url}/friends/${id}`, {
 			method: 'PUT',
 			credentials: 'include',
 			body: JSON.stringify(reqBody),
-		})
+		});
 
 		if (!response.ok) {
-			throw new Error(`${response.statusText}: ${response.text}`)
+			throw new Error(`${response.statusText}: ${response.text}`);
 		}
 
-		setIsEdittingFriend(false)
+		setIsEdittingFriend(false);
 	}
 
-	const zodiac = GetZodiac(birthday_month, birthday_day)
+	const zodiac = GetZodiac(birthday_month, birthday_day);
 
 	function percentageToHexColor(percentage: number): string {
-		percentage = Math.min(100, percentage)
-		percentage = Math.max(0, percentage)
+		percentage = Math.min(100, percentage);
+		percentage = Math.max(0, percentage);
 
-		const red = Math.round(((100 - percentage) * 255) / 100)
-		const green = Math.round((percentage * 255) / 100)
+		const red = Math.round(((100 - percentage) * 255) / 100);
+		const green = Math.round((percentage * 255) / 100);
 
-		const redHex = red.toString(16).padStart(2, '0')
-		const greenHex = green.toString(16).padStart(2, '0')
+		const redHex = red.toString(16).padStart(2, '0');
+		const greenHex = green.toString(16).padStart(2, '0');
 
-		return `#${redHex}${greenHex}00`
+		return `#${redHex}${greenHex}00`;
 	}
 
-	const relationship_health_percentage = Math.round(relationship_health * 100)
+	const relationship_health_percentage = Math.round(
+		relationship_health * 100
+	);
 
-	const maxDays = GetMaxDaysInMonth(draftBirthdayMonth)
+	const maxDays = GetMaxDaysInMonth(draftBirthdayMonth);
 
 	const DayOptions = Array.from(Array(maxDays).keys()).map((i: number) => {
-		return <option value={i + 1}>{i + 1}</option>
-	})
+		return <option value={i + 1}>{i + 1}</option>;
+	});
 
 	async function updateNotes(noteString: string) {
 		const response = await fetch(`${backend_base_url}/friends/notes`, {
@@ -212,32 +214,32 @@ const FriendCard: React.FC<FriendCardProps> = ({
 				id: id,
 				notes: noteString,
 			}),
-		})
+		});
 
 		if (!response.ok) {
-			throw new Error(`${response.statusText}: ${response.text}`)
+			throw new Error(`${response.statusText}: ${response.text}`);
 		} else {
-			console.log('Notes updated')
+			console.log('Notes updated');
 		}
 	}
 
 	useEffect(() => {
 		if (!isMounted) {
-			setIsMounted(true)
+			setIsMounted(true);
 		} else {
-			const runTimes = 1
-			let count = 0
+			const runTimes = 1;
+			let count = 0;
 			const interval = setInterval(() => {
-				updateNotes(notesState)
+				updateNotes(notesState);
 
-				count += 1
+				count += 1;
 				if (count >= runTimes) {
-					clearInterval(interval)
+					clearInterval(interval);
 				}
-			}, 250)
-			return () => clearInterval(interval)
+			}, 250);
+			return () => clearInterval(interval);
 		}
-	}, [notesState])
+	}, [notesState]);
 
 	return (
 		<div id='friendCard'>
@@ -346,7 +348,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					</span>
 					<button
 						onClick={() => {
-							setIsUpdatingLastInteraction(true)
+							setIsUpdatingLastInteraction(true);
 						}}
 						className='update'
 					>
@@ -424,8 +426,8 @@ const FriendCard: React.FC<FriendCardProps> = ({
 						onChange={() => {
 							const notesTextArea = document.getElementById(
 								'notes'
-							)! as HTMLTextAreaElement
-							setNotesState(notesTextArea.value)
+							)! as HTMLTextAreaElement;
+							setNotesState(notesTextArea.value);
 						}}
 						defaultValue={notes}
 					></textarea>
@@ -445,7 +447,7 @@ const FriendCard: React.FC<FriendCardProps> = ({
 						<button
 							className='edit_friend'
 							onClick={() => {
-								setIsEdittingFriend(false)
+								setIsEdittingFriend(false);
 							}}
 						>
 							Cancel
@@ -461,28 +463,28 @@ const FriendCard: React.FC<FriendCardProps> = ({
 					onClick={() => {
 						deleteFriend()
 							.catch((err) => {
-								throw new Error(err)
+								throw new Error(err);
 							})
-							.finally(() => navigate('/friends'))
+							.finally(() => navigate('/friends'));
 					}}
 				>
 					Delete friend
 				</button>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 const FriendStandalonePage: React.FC = () => {
-	const loginSessionContext = useLoginSessionContext()
-	const params = useParams()
-	const friendId = Number(params.friendId)
+	const loginSessionContext = useLoginSessionContext();
+	const params = useParams();
+	const friendId = Number(params.friendId);
 
-	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [friend, setFriend] = useState<Friend | null>(null)
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [friend, setFriend] = useState<Friend | null>(null);
 	const [isUpdatingLastInteraction, setIsUpdatingLastInteraction] =
-		useState<boolean>(false)
-	const [isEdittingFriend, setIsEdittingFriend] = useState<boolean>(false)
+		useState<boolean>(false);
+	const [isEdittingFriend, setIsEdittingFriend] = useState<boolean>(false);
 
 	async function getFriend(friendId: number): Promise<Friend | undefined> {
 		const response = await fetch(
@@ -491,30 +493,30 @@ const FriendStandalonePage: React.FC = () => {
 				method: 'GET',
 				credentials: 'include',
 			}
-		)
+		);
 
 		if (!response.ok) {
-			return undefined
+			return undefined;
 		}
 
-		const friend = (await response.json()) as Friend
-		return friend
+		const friend = (await response.json()) as Friend;
+		return friend;
 	}
 
 	useEffect(() => {
 		getFriend(friendId)
 			.then((fetchedFriend) => {
 				if (fetchedFriend) {
-					setFriend(fetchedFriend)
+					setFriend(fetchedFriend);
 				}
 			})
 			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [isUpdatingLastInteraction, isEdittingFriend, friendId])
+				setIsLoading(false);
+			});
+	}, [isUpdatingLastInteraction, isEdittingFriend, friendId]);
 
 	if (isLoading) {
-		return <Loading />
+		return <Loading />;
 	}
 
 	if (!friend) {
@@ -525,7 +527,7 @@ const FriendStandalonePage: React.FC = () => {
 					errorMessage='Friend not found'
 				/>
 			</>
-		)
+		);
 	}
 
 	return (
@@ -557,7 +559,7 @@ const FriendStandalonePage: React.FC = () => {
 				)}
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default FriendStandalonePage
+export default FriendStandalonePage;

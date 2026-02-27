@@ -1,13 +1,13 @@
-import type React from 'react'
-import type { AddFriendsInputState, FormData } from '../AddFriends'
+import type React from 'react';
+import type { AddFriendsInputState, FormData } from '../AddFriends';
 
 type LastInteractionInputsProps = {
-	formData: FormData
-	setFormData: React.Dispatch<React.SetStateAction<FormData>>
-	friendName: string
-	input: AddFriendsInputState
-	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
-}
+	formData: FormData;
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+	friendName: string;
+	input: AddFriendsInputState;
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>;
+};
 
 const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 	formData,
@@ -21,33 +21,33 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			...input,
 			knowsAbsoluteLastInteraction: true,
 			knowsApproximateLastInteraction: false,
-		})
+		});
 
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			'time_unit_multiple'
-		) as HTMLInputElement
-		inputtedTimeAgoMultipleElement.value = ''
+		) as HTMLInputElement;
+		inputtedTimeAgoMultipleElement.value = '';
 
 		const inputtedTimeAgoUnitElement = document.getElementById(
 			'time_unit'
-		) as HTMLSelectElement
-		inputtedTimeAgoUnitElement.value = ''
+		) as HTMLSelectElement;
+		inputtedTimeAgoUnitElement.value = '';
 
 		if (
 			e.target.value.trim() !== '' ||
 			e.target.value !== null ||
 			e.target.value !== undefined
 		) {
-			const date = new Date(e.target.value).toISOString()
+			const date = new Date(e.target.value).toISOString();
 
-			setInput({ ...input, hasInputtedLastInteractionDate: true })
+			setInput({ ...input, hasInputtedLastInteractionDate: true });
 			setFormData({
 				...formData,
 				last_interaction_date: date,
-			})
+			});
 		} else {
-			setInput({ ...input, hasInputtedLastInteractionDate: false })
-			setFormData({ ...formData, last_interaction_date: null })
+			setInput({ ...input, hasInputtedLastInteractionDate: false });
+			setFormData({ ...formData, last_interaction_date: null });
 		}
 	}
 
@@ -56,69 +56,69 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 			...input,
 			knowsAbsoluteLastInteraction: false,
 			knowsApproximateLastInteraction: true,
-		})
+		});
 
 		const inputtedTimeAgoMultipleElement = document.getElementById(
 			'time_unit_multiple'
-		) as HTMLInputElement
+		) as HTMLInputElement;
 
 		const inputtedTimeAgoUnitElement = document.getElementById(
 			'time_unit'
-		) as HTMLSelectElement
+		) as HTMLSelectElement;
 
 		const inputtedAbsoluteLastInteractionDate = document.getElementById(
 			'last_interaction_date_absolute'
-		) as HTMLInputElement
+		) as HTMLInputElement;
 
 		function calculatePastDate(n: number, unit: string): string {
-			const localDate = new Date()
+			const localDate = new Date();
 
 			switch (unit.toLowerCase()) {
 				case 'years':
 				case 'year':
-					localDate.setFullYear(localDate.getFullYear() - n)
-					break
+					localDate.setFullYear(localDate.getFullYear() - n);
+					break;
 				case 'months':
 				case 'month':
-					localDate.setMonth(localDate.getMonth() - n)
-					break
+					localDate.setMonth(localDate.getMonth() - n);
+					break;
 				case 'weeks':
 				case 'week':
-					localDate.setDate(localDate.getDate() - n * 7)
-					break
+					localDate.setDate(localDate.getDate() - n * 7);
+					break;
 				case 'days':
 				case 'day':
-					localDate.setDate(localDate.getDate() - n)
-					break
+					localDate.setDate(localDate.getDate() - n);
+					break;
 				case 'hours':
 				case 'hour':
-					localDate.setHours(localDate.getHours() - n)
-					break
+					localDate.setHours(localDate.getHours() - n);
+					break;
 				default:
 					throw new Error(
 						'Invalid unit of time. Use "years", "months", "weeks", "days", or "hours".'
-					)
+					);
 			}
 
-			return localDate.toISOString()
+			return localDate.toISOString();
 		}
 
 		if (
 			inputtedTimeAgoMultipleElement.value.trim() !== '' &&
 			inputtedTimeAgoUnitElement.value.trim() !== ''
 		) {
-			inputtedAbsoluteLastInteractionDate.value = ''
-			setInput({ ...input, hasInputtedLastInteractionDate: true })
+			inputtedAbsoluteLastInteractionDate.value = '';
+			setInput({ ...input, hasInputtedLastInteractionDate: true });
 
-			const timeUnit = inputtedTimeAgoUnitElement.value.trim()
+			const timeUnit = inputtedTimeAgoUnitElement.value.trim();
 			const numberOf = parseInt(
 				inputtedTimeAgoMultipleElement.value.trim()
-			)
-			const pastDate = calculatePastDate(numberOf, timeUnit)
-			setFormData({ ...formData, last_interaction_date: pastDate })
+			);
+			const pastDate = calculatePastDate(numberOf, timeUnit);
+			setFormData({ ...formData, last_interaction_date: pastDate });
 		} else {
-			setInput({ ...input, hasInputtedLastInteractionDate: false })
-			setFormData({ ...formData, last_interaction_date: null })
+			setInput({ ...input, hasInputtedLastInteractionDate: false });
+			setFormData({ ...formData, last_interaction_date: null });
 		}
 	}
 
@@ -186,7 +186,7 @@ const LastInteractionInputs: React.FC<LastInteractionInputsProps> = ({
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default LastInteractionInputs
+export default LastInteractionInputs;

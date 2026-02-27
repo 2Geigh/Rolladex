@@ -1,27 +1,27 @@
-import { useState, type FormEvent } from 'react'
-import { Navigate } from 'react-router-dom'
-import './Signup.scss'
-import { backend_base_url } from '../../util/url'
-import { Link } from 'react-router-dom'
+import { useState, type FormEvent } from 'react';
+import { Navigate } from 'react-router-dom';
+import './Signup.scss';
+import { backend_base_url } from '../../util/url';
+import { Link } from 'react-router-dom';
 
 export type SignupData = {
-	username: string
-	password: string
-}
+	username: string;
+	password: string;
+};
 
 const SignUp = () => {
-	const [hasSignedUp, setHasSignedUp] = useState(false)
+	const [hasSignedUp, setHasSignedUp] = useState(false);
 
 	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-		event.preventDefault()
+		event.preventDefault();
 
-		const formData = new FormData(event.currentTarget as HTMLFormElement)
-		const data = Object.fromEntries(formData.entries())
+		const formData = new FormData(event.currentTarget as HTMLFormElement);
+		const data = Object.fromEntries(formData.entries());
 
 		const signupData: SignupData = {
 			username: String(data.username),
 			password: String(data.password),
-		}
+		};
 
 		const response = await fetch(`${backend_base_url}/signup`, {
 			method: 'POST',
@@ -29,19 +29,19 @@ const SignUp = () => {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify(signupData),
-		})
+		});
 
 		if (response.ok) {
-			alert(`Registered ${signupData.username} as a user`)
-			setHasSignedUp(true)
+			alert(`Registered ${signupData.username} as a user`);
+			setHasSignedUp(true);
 		} else {
-			const errorText = await response.text()
-			alert(errorText)
+			const errorText = await response.text();
+			alert(errorText);
 		}
 	}
 
 	if (hasSignedUp) {
-		return <Navigate to='/login' />
+		return <Navigate to='/login' />;
 	}
 
 	return (
@@ -101,7 +101,7 @@ const SignUp = () => {
 				</span>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default SignUp
+export default SignUp;

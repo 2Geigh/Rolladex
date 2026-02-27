@@ -1,24 +1,27 @@
-import { useParams } from 'react-router-dom'
-import { GetRelationshipTierInfo, type Friend } from '../../types/models/Friend'
-import React, { useEffect, useState, type SetStateAction } from 'react'
-import { backend_base_url } from '../../util/url'
-import Loading from '../../components/Loading/Loading'
-import type { Interaction } from '../../types/models/Interaction'
-import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter'
-import './styles/InteractionStandalonePage.scss'
-import { TimeAgo } from '../../util/dates'
-import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom';
+import {
+	GetRelationshipTierInfo,
+	type Friend,
+} from '../../types/models/Friend';
+import React, { useEffect, useState, type SetStateAction } from 'react';
+import { backend_base_url } from '../../util/url';
+import Loading from '../../components/Loading/Loading';
+import type { Interaction } from '../../types/models/Interaction';
+import PageNotFoundWithoutHeaderAndFooter from '../../components/Error/ErrorWithoutHeaderAndFooter';
+import './styles/InteractionStandalonePage.scss';
+import { TimeAgo } from '../../util/dates';
+import { Link } from 'react-router-dom';
 
 type FriendCardProps = {
-	id: number
-	date: Date
-	attendees: Array<Friend>
-	interaction_type: string | undefined
-	name: string | undefined
-	location: string | undefined
-	isEdittingInteraction: boolean
-	setIsEdittingInteraction: React.Dispatch<SetStateAction<boolean>>
-}
+	id: number;
+	date: Date;
+	attendees: Array<Friend>;
+	interaction_type: string | undefined;
+	name: string | undefined;
+	location: string | undefined;
+	isEdittingInteraction: boolean;
+	setIsEdittingInteraction: React.Dispatch<SetStateAction<boolean>>;
+};
 const InteractionCard: React.FC<FriendCardProps> = ({
 	id,
 	date,
@@ -96,7 +99,7 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 				</Link>
 			</span>
 		</>
-	))
+	));
 
 	return (
 		<div id='interactionCard' key={id}>
@@ -129,17 +132,17 @@ const InteractionCard: React.FC<FriendCardProps> = ({
 				<button className='delete'>Delete</button>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
 const InteractionStandalonePage: React.FC = () => {
-	const params = useParams()
-	const interactionId = Number(params.interactionId)
+	const params = useParams();
+	const interactionId = Number(params.interactionId);
 
-	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [interaction, setInteraction] = useState<Interaction | null>(null)
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [interaction, setInteraction] = useState<Interaction | null>(null);
 	const [isEdittingInteraction, setIsEdittingInteraction] =
-		useState<boolean>(false)
+		useState<boolean>(false);
 
 	async function getInteraction(interactionId: number): Promise<Interaction> {
 		const response = await fetch(
@@ -148,34 +151,34 @@ const InteractionStandalonePage: React.FC = () => {
 				method: 'GET',
 				credentials: 'include',
 			}
-		)
+		);
 
 		if (!response.ok) {
 			throw new Error(
 				`${response.status}: couldn't get friend: ${response.body}`
-			)
+			);
 		}
 
-		const interaction = (await response.json()) as Interaction
-		return interaction
+		const interaction = (await response.json()) as Interaction;
+		return interaction;
 	}
 
 	useEffect(() => {
 		getInteraction(interactionId)
 			.then((fetchedInteraction) => {
-				console.log(fetchedInteraction)
-				setInteraction(fetchedInteraction)
+				console.log(fetchedInteraction);
+				setInteraction(fetchedInteraction);
 			})
 			.catch((err) => {
-				throw new Error(err)
+				throw new Error(err);
 			})
 			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [isEdittingInteraction, setIsEdittingInteraction, interactionId])
+				setIsLoading(false);
+			});
+	}, [isEdittingInteraction, setIsEdittingInteraction, interactionId]);
 
 	if (isLoading) {
-		return <Loading />
+		return <Loading />;
 	}
 
 	if (!interaction) {
@@ -186,7 +189,7 @@ const InteractionStandalonePage: React.FC = () => {
 					errorMessage='Interaction not found'
 				/>
 			</>
-		)
+		);
 	}
 
 	return (
@@ -204,7 +207,7 @@ const InteractionStandalonePage: React.FC = () => {
 				/>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default InteractionStandalonePage
+export default InteractionStandalonePage;

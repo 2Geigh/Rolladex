@@ -1,47 +1,47 @@
-import './Login.scss'
-import { Navigate } from 'react-router-dom'
-import type { FormEvent } from 'react'
-import { useLayoutEffect, useState } from 'react'
+import './Login.scss';
+import { Navigate } from 'react-router-dom';
+import type { FormEvent } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import {
 	GetSessionAndUserData,
 	useLoginSessionContext,
-} from '../../contexts/LoginSession'
-import Loading from '../../components/Loading/Loading'
-import { backend_base_url } from '../../util/url'
-import { Link } from 'react-router-dom'
+} from '../../contexts/LoginSession';
+import Loading from '../../components/Loading/Loading';
+import { backend_base_url } from '../../util/url';
+import { Link } from 'react-router-dom';
 
 type loginData = {
-	username: string
-	password: string
-}
+	username: string;
+	password: string;
+};
 
 const Login: React.FC = () => {
-	const loginSessionContext = useLoginSessionContext()
-	const [isLoading, setIsLoading] = useState(true)
+	const loginSessionContext = useLoginSessionContext();
+	const [isLoading, setIsLoading] = useState(true);
 
 	// Auth guard
 	useLayoutEffect(() => {
-		setIsLoading(false)
-	}, [])
+		setIsLoading(false);
+	}, []);
 
 	if (isLoading) {
-		return <Loading />
+		return <Loading />;
 	}
 
 	if (loginSessionContext.isLoggedIn) {
-		return <Navigate to='/home' />
+		return <Navigate to='/home' />;
 	}
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-		event.preventDefault()
+		event.preventDefault();
 
-		const formData = new FormData(event.currentTarget as HTMLFormElement)
-		const data = Object.fromEntries(formData.entries())
+		const formData = new FormData(event.currentTarget as HTMLFormElement);
+		const data = Object.fromEntries(formData.entries());
 
 		const loginData: loginData = {
 			username: String(data.username),
 			password: String(data.password),
-		}
+		};
 
 		const response = await fetch(`${backend_base_url}/login`, {
 			method: 'POST',
@@ -50,23 +50,23 @@ const Login: React.FC = () => {
 			},
 			credentials: 'include', // sends cookies
 			body: JSON.stringify(loginData),
-		})
+		});
 
 		if (response.ok) {
-			console.log('Credentials validated by server')
+			console.log('Credentials validated by server');
 			loginSessionContext.updateSession({
 				...loginSessionContext,
 				isLoggedIn: true,
-			})
+			});
 			await GetSessionAndUserData(
 				loginSessionContext,
 				loginSessionContext.updateSession
-			)
+			);
 		} else {
-			const errorText = await response.text()
-			alert(errorText)
+			const errorText = await response.text();
+			alert(errorText);
 		}
-	}
+	};
 
 	return (
 		<>
@@ -91,7 +91,7 @@ const Login: React.FC = () => {
 				</span>
 			</div>
 		</>
-	)
-}
+	);
+};
 
-export default Login
+export default Login;

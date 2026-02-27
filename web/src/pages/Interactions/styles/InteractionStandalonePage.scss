@@ -1,5 +1,5 @@
-@use "../../../../static/styles/variables";
-@use "sass:math";
+@use '../../../../static/styles/variables';
+@use 'sass:math';
 
 #interactionStandalonePageContent {
 	display: flex;
@@ -12,7 +12,7 @@
 	box-sizing: border-box;
 
 	width: 100%;
-	min-height: calc(100vh - 2*variables.$NAVBAR_HEIGHT);
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
 
 	background-color: variables.$VIOLET_BACKGROUND;
 

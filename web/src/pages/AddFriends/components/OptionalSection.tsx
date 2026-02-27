@@ -1,22 +1,22 @@
-import { useState } from 'react'
-import { GetMaxDaysInMonth, GetZodiac } from '../../../util/dates'
-import { type FormData } from '../AddFriends'
+import { useState } from 'react';
+import { GetMaxDaysInMonth, GetZodiac } from '../../../util/dates';
+import { type FormData } from '../AddFriends';
 
 type OptionalSectionProps = {
-	formData: FormData
-	setFormData: React.Dispatch<React.SetStateAction<FormData>>
-	friendName: string
-}
+	formData: FormData;
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+	friendName: string;
+};
 
 const OptionalSection: React.FC<OptionalSectionProps> = ({
 	formData,
 	setFormData,
 	friendName,
 }) => {
-	const [month, setMonth] = useState<string | null>(null)
-	const [day, setDay] = useState<string | null>(null)
+	const [month, setMonth] = useState<string | null>(null);
+	const [day, setDay] = useState<string | null>(null);
 
-	const maxDays = GetMaxDaysInMonth(month)
+	const maxDays = GetMaxDaysInMonth(month);
 
 	return (
 		<div id='optional'>
@@ -30,13 +30,13 @@ const OptionalSection: React.FC<OptionalSectionProps> = ({
 						name='birthday_month'
 						id='birthdayMonth'
 						onChange={(e) => {
-							setMonth(e.target.value)
+							setMonth(e.target.value);
 
 							if (e.target.value.trim() !== '') {
 								setFormData({
 									...formData,
 									birthday_month: parseInt(e.target.value),
-								})
+								});
 							}
 						}}
 						defaultValue={'00'}
@@ -61,13 +61,13 @@ const OptionalSection: React.FC<OptionalSectionProps> = ({
 						name='birthday_day'
 						id='birthdayDay'
 						onChange={(e) => {
-							setDay(e.target.value)
+							setDay(e.target.value);
 
 							if (e.target.value.trim() !== '') {
 								setFormData({
 									...formData,
 									birthday_day: parseInt(e.target.value),
-								})
+								});
 							}
 						}}
 					>
@@ -92,7 +92,7 @@ const OptionalSection: React.FC<OptionalSectionProps> = ({
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default OptionalSection
+export default OptionalSection;

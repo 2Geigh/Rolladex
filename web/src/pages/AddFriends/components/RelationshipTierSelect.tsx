@@ -1,13 +1,13 @@
-import type { AddFriendsInputState, FormData } from '../AddFriends'
-import { DefaultRelationshipTiers } from '../../../types/models/Friend'
-import type React from 'react'
+import type { AddFriendsInputState, FormData } from '../AddFriends';
+import { DefaultRelationshipTiers } from '../../../types/models/Friend';
+import type React from 'react';
 
 type RelationshipTierSelectOptionsProps = {
-	formData: FormData
-	setFormData: React.Dispatch<React.SetStateAction<FormData>>
-	input: AddFriendsInputState
-	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
-}
+	formData: FormData;
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+	input: AddFriendsInputState;
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>;
+};
 
 const RelationshipTierSelectOptions = ({
 	formData,
@@ -17,11 +17,11 @@ const RelationshipTierSelectOptions = ({
 }: RelationshipTierSelectOptionsProps) => {
 	const options = Object.values(DefaultRelationshipTiers).map(
 		(relationship_tier) => {
-			const name = 'relationship_tier'
-			const inputValue = relationship_tier.code
-			const inputId = relationship_tier.name.replace(/\s+/g, '')
-			const labelFor = inputId
-			const labelInnerHtml = `${relationship_tier.emoji} ${relationship_tier.name}`
+			const name = 'relationship_tier';
+			const inputValue = relationship_tier.code;
+			const inputId = relationship_tier.name.replace(/\s+/g, '');
+			const labelFor = inputId;
+			const labelInnerHtml = `${relationship_tier.emoji} ${relationship_tier.name}`;
 
 			return (
 				<div key={inputValue} className='relationshipLabelAndRadio'>
@@ -36,11 +36,11 @@ const RelationshipTierSelectOptions = ({
 								setInput({
 									...input,
 									hasInputtedRelationshipTier: true,
-								})
+								});
 								setFormData({
 									...formData,
 									relationship_tier_code: null,
-								})
+								});
 							}
 
 							if (relationship_tier.code !== undefined) {
@@ -48,17 +48,17 @@ const RelationshipTierSelectOptions = ({
 									...input,
 									currentlySelectedRelationshipTier:
 										relationship_tier.code,
-								})
+								});
 								setFormData({
 									...formData,
 									relationship_tier_code:
 										relationship_tier.code,
-								})
+								});
 							} else {
 								setFormData({
 									...formData,
 									relationship_tier_code: null,
-								})
+								});
 							}
 						}}
 					/>
@@ -71,14 +71,14 @@ const RelationshipTierSelectOptions = ({
 								...input,
 								lastHoveredRelationshipTier:
 									relationship_tier.code,
-							})
+							});
 						}}
 						onClick={() => {
 							setInput({
 								...input,
 								lastHoveredRelationshipTier:
 									relationship_tier.code,
-							})
+							});
 						}}
 						onKeyDown={(e) =>
 							e.key === 'Enter' ?
@@ -103,11 +103,11 @@ const RelationshipTierSelectOptions = ({
 						{labelInnerHtml}
 					</label>
 				</div>
-			)
+			);
 		}
-	)
+	);
 
-	return <div className='options'>{options}</div>
-}
+	return <div className='options'>{options}</div>;
+};
 
-export default RelationshipTierSelectOptions
+export default RelationshipTierSelectOptions;

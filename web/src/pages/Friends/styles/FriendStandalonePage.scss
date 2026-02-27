@@ -1,5 +1,5 @@
-@use "../../../../static/styles/variables";
-@use "sass:math";
+@use '../../../../static/styles/variables';
+@use 'sass:math';
 
 $shadow_color: rgba(0, 0, 0, 0.159);
 $FRIEND_CARD_BORDER_RADIUS: 0rem;
@@ -87,8 +87,7 @@ $FRIEND_CARD_BUTTON_BORDER_RADIUS: 0.75rem;
 
 				font-size: 2rem;
 				font-weight: 100;
-				font-family:
-					cursive;
+				font-family: cursive;
 				text-align: center;
 
 				color: gray;

@@ -1,15 +1,15 @@
-import type { AddFriendsInputState, FormData } from '../AddFriends'
-import React, { useState } from 'react'
-import RelationshipTierDescription from './RelationshipTierDescription'
-import RelationshipTierSelectOptions from './RelationshipTierSelect'
+import type { AddFriendsInputState, FormData } from '../AddFriends';
+import React, { useState } from 'react';
+import RelationshipTierDescription from './RelationshipTierDescription';
+import RelationshipTierSelectOptions from './RelationshipTierSelect';
 
 type RelationshipSectionProps = {
-	formData: FormData
-	setFormData: React.Dispatch<React.SetStateAction<FormData>>
-	friendName: string
-	input: AddFriendsInputState
-	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>
-}
+	formData: FormData;
+	setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+	friendName: string;
+	input: AddFriendsInputState;
+	setInput: React.Dispatch<React.SetStateAction<AddFriendsInputState>>;
+};
 
 const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 	formData,
@@ -18,7 +18,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 	input,
 	setInput,
 }) => {
-	const [wantsToKnowWhy, setWantsToKnowWhy] = useState<boolean>(false)
+	const [wantsToKnowWhy, setWantsToKnowWhy] = useState<boolean>(false);
 
 	return (
 		<div className='section' id='relationshipTier'>
@@ -29,7 +29,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						...input,
 						lastHoveredRelationshipTier:
 							input.currentlySelectedRelationshipTier,
-					})
+					});
 				}}
 			>
 				<label className='selectionPrompt'>
@@ -39,7 +39,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 						className='why'
 						tabIndex={0}
 						onClick={() => {
-							setWantsToKnowWhy(!wantsToKnowWhy)
+							setWantsToKnowWhy(!wantsToKnowWhy);
 						}}
 						onKeyDown={(e) =>
 							e.key === 'Enter' ?
@@ -66,7 +66,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 							className='close'
 							tabIndex={0}
 							onClick={() => {
-								setWantsToKnowWhy(!wantsToKnowWhy)
+								setWantsToKnowWhy(!wantsToKnowWhy);
 							}}
 							onKeyDown={(e) =>
 								e.key === 'Enter' ?
@@ -93,7 +93,7 @@ const RelationshipSection: React.FC<RelationshipSectionProps> = ({
 				</div>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default RelationshipSection
+export default RelationshipSection;

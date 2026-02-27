@@ -1,49 +1,49 @@
-import { useSearchParams } from 'react-router-dom'
-import React, { useLayoutEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom';
+import React, { useLayoutEffect, useState } from 'react';
 import {
 	type Friend,
 	GetRelationshipTierInfo,
 	MAX_NUMBER_OF_FRIENDS,
 	type RelationshipTier,
-} from '../../types/models/Friend'
-import { backend_base_url } from '../../util/url'
-import './styles/Friends.scss'
+} from '../../types/models/Friend';
+import { backend_base_url } from '../../util/url';
+import './styles/Friends.scss';
 import {
 	GetZodiac,
 	MonthNumberToString,
 	clientTimeZoneOffset,
-} from '../../util/dates'
-import { Link } from 'react-router-dom'
-import type { JSX } from 'react'
-import type { SetURLSearchParams } from 'react-router-dom'
+} from '../../util/dates';
+import { Link } from 'react-router-dom';
+import type { JSX } from 'react';
+import type { SetURLSearchParams } from 'react-router-dom';
 
 type SortByProps = {
-	validSortParams: string[]
-	validSortParamLabels: Record<string, string>
-	searchParams: URLSearchParams
-	setSearchParams: SetURLSearchParams
-}
+	validSortParams: string[];
+	validSortParamLabels: Record<string, string>;
+	searchParams: URLSearchParams;
+	setSearchParams: SetURLSearchParams;
+};
 const SortBy: React.FC<SortByProps> = ({
 	validSortParams,
 	validSortParamLabels,
 	searchParams,
 	setSearchParams,
 }) => {
-	const selected = searchParams.get('sortby')!
+	const selected = searchParams.get('sortby')!;
 
 	function onSortChange(event: React.ChangeEvent<HTMLSelectElement>) {
-		const { value } = event.target
+		const { value } = event.target;
 
-		searchParams.set('sortby', value)
-		searchParams.set('page', '1')
-		setSearchParams(searchParams)
+		searchParams.set('sortby', value);
+		searchParams.set('page', '1');
+		setSearchParams(searchParams);
 	}
 
 	const Options = validSortParams.map((sortby) => (
 		<option value={sortby} key={sortby}>
 			{validSortParamLabels[String(sortby)]}
 		</option>
-	))
+	));
 
 	return (
 		<div className='sortBy'>
@@ -59,42 +59,42 @@ const SortBy: React.FC<SortByProps> = ({
 				Sort by:
 			</label>
 		</div>
-	)
-}
+	);
+};
 
 type SetFriendsPerPageProps = {
-	searchParams: URLSearchParams
-	setSearchParams: SetURLSearchParams
-}
+	searchParams: URLSearchParams;
+	setSearchParams: SetURLSearchParams;
+};
 const SetFriendsPerPage: React.FC<SetFriendsPerPageProps> = ({
 	searchParams,
 	setSearchParams,
 }) => {
-	const [isReadyToSubmit, setIsReadyToSubmit] = useState<boolean>(false)
+	const [isReadyToSubmit, setIsReadyToSubmit] = useState<boolean>(false);
 
 	function setNewPerPage() {
 		const value = (
 			document.getElementById('setFriendsPerPage')! as HTMLInputElement
-		).value
+		).value;
 
-		searchParams.set('perpage', value)
+		searchParams.set('perpage', value);
 		// searchParams.set("page", "1")
-		setSearchParams(searchParams)
+		setSearchParams(searchParams);
 	}
 
 	function onPerPageChange(event: React.ChangeEvent<HTMLInputElement>) {
-		const value = event.target.value
+		const value = event.target.value;
 
 		const isValueValid =
 			value &&
 			!(value.trim() === '') &&
 			!isNaN(parseInt(value)) &&
-			parseInt(value) > 0
+			parseInt(value) > 0;
 
 		if (isValueValid) {
-			setIsReadyToSubmit(true)
+			setIsReadyToSubmit(true);
 		} else {
-			setIsReadyToSubmit(false)
+			setIsReadyToSubmit(false);
 		}
 	}
 
@@ -118,14 +118,14 @@ const SetFriendsPerPage: React.FC<SetFriendsPerPageProps> = ({
 				/>
 			:	<></>}
 		</div>
-	)
-}
+	);
+};
 
 type getFriendsProps = {
-	sortBy: string
-}
+	sortBy: string;
+};
 async function getFriends({ sortBy }: getFriendsProps): Promise<Array<Friend>> {
-	let friends: Array<Friend> = []
+	let friends: Array<Friend> = [];
 
 	try {
 		const response = await fetch(
@@ -134,69 +134,69 @@ async function getFriends({ sortBy }: getFriendsProps): Promise<Array<Friend>> {
 				method: 'GET',
 				credentials: 'include',
 			}
-		)
+		);
 
 		if (!response.ok) {
-			throw new Error(`${response.status}: ${await response.text()}`)
+			throw new Error(`${response.status}: ${await response.text()}`);
 		}
 
-		const data = await response.json()
-		friends = data as Array<Friend>
+		const data = await response.json();
+		friends = data as Array<Friend>;
 	} catch (err) {
-		throw new Error(String(err))
+		throw new Error(String(err));
 	}
 
-	return friends
+	return friends;
 }
 
 type PageNavProps = {
-	numberOfPages: number
-	searchParams: URLSearchParams
-	setSearchParams: SetURLSearchParams
-}
+	numberOfPages: number;
+	searchParams: URLSearchParams;
+	setSearchParams: SetURLSearchParams;
+};
 const PageNav: React.FC<PageNavProps> = ({
 	numberOfPages,
 	searchParams,
 	setSearchParams,
 }) => {
-	const pageNumber = parseInt(searchParams.get('page')!)
+	const pageNumber = parseInt(searchParams.get('page')!);
 
-	const pageNumbers: Array<number> = []
+	const pageNumbers: Array<number> = [];
 	for (let i = 1; i <= numberOfPages; i++) {
-		pageNumbers.push(i)
+		pageNumbers.push(i);
 	}
 	const PageSelectOptions = pageNumbers.map((pageNum) => (
 		<option value={pageNum} key={pageNum}>
 			{pageNum}
 		</option>
-	))
+	));
 
 	function onSelectPageNumber(e: React.ChangeEvent<HTMLSelectElement>) {
-		const selectValue = e.target.value
-		const pageNum = parseInt(selectValue, 10)
+		const selectValue = e.target.value;
+		const pageNum = parseInt(selectValue, 10);
 
 		if (isNaN(pageNum) || pageNum < 1) {
-			searchParams.set('page', '1')
-			setSearchParams(searchParams)
+			searchParams.set('page', '1');
+			setSearchParams(searchParams);
 		} else {
-			searchParams.set('page', String(pageNum))
-			setSearchParams(searchParams)
+			searchParams.set('page', String(pageNum));
+			setSearchParams(searchParams);
 		}
 	}
 
 	function goToNextPage() {
 		if (pageNumber < numberOfPages) {
-			const pageNum = parseInt(searchParams.get('page')!)
-			searchParams.set('page', String(pageNum + 1))
-			setSearchParams(searchParams)
+			const pageNum = parseInt(searchParams.get('page')!);
+			searchParams.set('page', String(pageNum + 1));
+			setSearchParams(searchParams);
 		}
 	}
 
 	function goToPreviousPage() {
 		if (pageNumber > 1) {
-			const pageNum = parseInt(searchParams.get('page')!)
-			searchParams.set('page', String(pageNum - 1))
-			setSearchParams(searchParams)
+			const pageNum = parseInt(searchParams.get('page')!);
+			searchParams.set('page', String(pageNum - 1));
+			setSearchParams(searchParams);
 		}
 	}
 
@@ -221,12 +221,12 @@ const PageNav: React.FC<PageNavProps> = ({
 				</div>
 			:	<div className='blocked' id='right'></div>}
 		</div>
-	)
-}
+	);
+};
 
 type TableProps = {
-	FriendListItems: JSX.Element[]
-}
+	FriendListItems: JSX.Element[];
+};
 const Table: React.FC<TableProps> = ({ FriendListItems }) => {
 	return (
 		<table
@@ -254,12 +254,12 @@ const Table: React.FC<TableProps> = ({ FriendListItems }) => {
 				}
 			</tbody>
 		</table>
-	)
-}
+	);
+};
 
 const Friends: React.FC = () => {
-	const [friends, setFriends] = useState<Array<Friend>>([])
-	const [isLoading, setIsLoading] = useState(true)
+	const [friends, setFriends] = useState<Array<Friend>>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const validSortParams = [
 		'name',
@@ -267,71 +267,73 @@ const Friends: React.FC = () => {
 		'relationship_tier',
 		'birthday',
 		'created_at',
-	]
+	];
 	const validSortParamLabels = {
 		name: 'Name',
 		last_interaction_date: 'Last interaction',
 		relationship_tier: 'Relationship',
 		birthday: 'Birthday',
 		created_at: 'Date added',
-	}
+	};
 	const [searchParams, setSearchParams] = useSearchParams({
 		sortby: 'name',
 		page: '1',
 		perpage: '25',
-	})
+	});
 
-	const [numberOfPages, setNumberOfPages] = useState<number>(1)
+	const [numberOfPages, setNumberOfPages] = useState<number>(1);
 
 	const index_start =
 		parseInt(searchParams.get('perpage')!) *
-		(parseInt(searchParams.get('page')!) - 1)
-	const index_end = index_start + parseInt(searchParams.get('perpage')!)
+		(parseInt(searchParams.get('page')!) - 1);
+	const index_end = index_start + parseInt(searchParams.get('perpage')!);
 	const friendsForTheCurrentPage: Friend[] =
-		friends !== null ? friends.slice(index_start, index_end) : []
+		friends !== null ? friends.slice(index_start, index_end) : [];
 	const FriendListItems = friendsForTheCurrentPage?.map((friend) => {
-		const name = friend.name
-		const friend_id = friend.id
-		const last_interaction_id = friend.last_interaction?.id
+		const name = friend.name;
+		const friend_id = friend.id;
+		const last_interaction_id = friend.last_interaction?.id;
 
-		let formatted_interaction_column_text: string = ''
+		let formatted_interaction_column_text: string = '';
 		if (friend.last_interaction?.date) {
-			const last_interaction_date = new Date(friend.last_interaction.date)
+			const last_interaction_date = new Date(
+				friend.last_interaction.date
+			);
 			last_interaction_date.setMinutes(
 				last_interaction_date.getMinutes() - clientTimeZoneOffset
-			)
+			);
 			formatted_interaction_column_text =
 				last_interaction_date.toLocaleString('en-US', {
 					year: 'numeric',
 					month: 'short',
 					day: '2-digit',
 					weekday: 'long',
-				})
+				});
 
 			if (friend.last_interaction.name) {
-				formatted_interaction_column_text = `${friend.last_interaction.name} (${formatted_interaction_column_text})`
+				formatted_interaction_column_text = `${friend.last_interaction.name} (${formatted_interaction_column_text})`;
 			}
 		}
 
 		let birthday: { month: number | null; day: number | null } = {
 			month: null,
 			day: null,
-		}
+		};
 		if (friend.birthday_day) {
-			birthday = { ...birthday, day: friend.birthday_day }
+			birthday = { ...birthday, day: friend.birthday_day };
 		}
 		if (friend.birthday_month) {
-			birthday = { ...birthday, month: friend.birthday_month }
+			birthday = { ...birthday, month: friend.birthday_month };
 		}
 
-		let formatted_created_at: string = ''
+		let formatted_created_at: string = '';
 		if (friend.created_at) {
-			const created_at = new Date(friend.created_at)
+			const created_at = new Date(friend.created_at);
 			formatted_created_at = created_at.toLocaleDateString('en-US', {
 				year: 'numeric',
 				month: 'short',
 				day: '2-digit',
-			})
+			});
 		}
 
 		let relationshipTier: RelationshipTier = {
@@ -340,9 +342,11 @@ const Friends: React.FC = () => {
 			emoji: '👤',
 			description: 'Undefined',
 			max: MAX_NUMBER_OF_FRIENDS,
-		}
+		};
 		if (friend.relationship_tier)
-			relationshipTier = GetRelationshipTierInfo(friend.relationship_tier)
+			relationshipTier = GetRelationshipTierInfo(
+				friend.relationship_tier
+			);
 
 		return (
 			<tr key={friend.id}>
@@ -385,53 +389,53 @@ const Friends: React.FC = () => {
 				</td>
 				<td className='created_at'>{formatted_created_at}</td>
 			</tr>
-		)
-	})
+		);
+	});
 
 	useLayoutEffect(() => {
-		const sortBy = searchParams.get('sortby')!
+		const sortBy = searchParams.get('sortby')!;
 		getFriends({ sortBy })
 			.then((friendArray) => {
-				setFriends(friendArray)
+				setFriends(friendArray);
 
 				const numberOfFriends =
-					friendArray !== null ? friendArray.length : 0
+					friendArray !== null ? friendArray.length : 0;
 				const totalPageNum = Math.ceil(
 					numberOfFriends / parseInt(searchParams.get('perpage')!)
-				)
-				setNumberOfPages(totalPageNum)
+				);
+				setNumberOfPages(totalPageNum);
 
 				if (
 					isNaN(parseInt(searchParams.get('page')!)) ||
 					parseInt(searchParams.get('page')!) < 1 ||
 					parseInt(searchParams.get('page')!) > totalPageNum
 				) {
-					searchParams.set('page', '1')
-					setSearchParams(searchParams)
+					searchParams.set('page', '1');
+					setSearchParams(searchParams);
 				}
 			})
 			.then(() => {
-				const sortBy = searchParams.get('sortby')
+				const sortBy = searchParams.get('sortby');
 				if (!sortBy || !validSortParams.includes(sortBy)) {
-					searchParams.set('sortby', 'name')
-					setSearchParams(searchParams)
+					searchParams.set('sortby', 'name');
+					setSearchParams(searchParams);
 				}
 
-				const perPage = searchParams.get('perpage')
+				const perPage = searchParams.get('perpage');
 				if (
 					!perPage ||
 					perPage === 'default' ||
 					isNaN(parseInt(perPage)) ||
 					parseInt(perPage) < 1
 				) {
-					searchParams.set('perpage', '15')
-					setSearchParams(searchParams)
+					searchParams.set('perpage', '15');
+					setSearchParams(searchParams);
 				}
 			})
 			.finally(() => {
-				setIsLoading(false)
-			})
-	}, [searchParams])
+				setIsLoading(false);
+			});
+	}, [searchParams]);
 
 	return (
 		<div
@@ -492,7 +496,7 @@ const Friends: React.FC = () => {
 				/>
 			:	<></>}
 		</div>
-	)
-}
+	);
+};
 
-export default Friends
+export default Friends;
