@@ -6,3 +6,4 @@ api/bin/main.out
 *.css
 *.map
 .env
+.vscode/settings.json
