@@ -1,5 +1,5 @@
 # Base stage
-FROM golang:latest AS base
+FROM golang:alpine AS base
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
