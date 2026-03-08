@@ -1,5 +1,5 @@
 # Base stage
-FROM node:latest AS base
+FROM node:slim AS base
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
