@@ -22,7 +22,7 @@ const Landing = () => {
 							id='github'
 						>
 							<img
-								src='../../../public/images/GItHub-silhouette.png'
+								src='public/images/GitHub-silhouette.png'
 								alt='GitHub'
 							/>
 							Github
