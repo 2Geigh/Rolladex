@@ -3,7 +3,7 @@
 ## Meta (design, ideas, etc.)
 
 - [ ] Add passwordless sign-in requirement to VPS
-- [ ] Update README.md to revise the dev and deployment environment instantiation to just `docker-compose` and list Docker engine as a dependency for the project
+- [x] Update README.md to revise the dev and deployment environment instantiation to just `docker-compose` and list Docker engine as a dependency for the project
 - [x] Redesign the homepage to make it less confusing for the end user
 - [ ] Redesign friend standalone page to make it less confusing for the end user
 - [ ] Read [this documentation](https://react.dev/reference/rules) and apply each of the following principles across the client-side codebases:
@@ -22,7 +22,6 @@
 
 ## Web Client
 
-- [ ] Remove container for deployed frontend; switch to just serving static files from a folder
 - [x] Fix 405 error on deployment
 - [x] Fix proportions of login and signup page forms to better fit mobile screen sizes
 - [ ] Add login/signup with OAuth
