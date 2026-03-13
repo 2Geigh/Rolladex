@@ -1,0 +1,260 @@
+@use '../../../static/styles/variables';
+
+#landingContainer {
+	display: flex;
+	flex-direction: column;
+
+	min-height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
+	width: 100%;
+
+	font-family: sans-serif;
+
+	background-color: variables.$VIOLET_BACKGROUND;
+}
+
+.hero {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	height: calc(100vh - 2 * variables.$NAVBAR_HEIGHT);
+	width: 100%;
+
+	background-color: variables.$VIOLET;
+	background: linear-gradient(
+		0deg,
+		variables.$VIOLET 0%,
+		variables.$VIOLET 100%
+	);
+
+	.hero-content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		width: calc(100% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
+
+		h1 {
+			font-size: 3rem;
+			margin-bottom: 1.25rem;
+		}
+
+		p {
+			width: calc(100% - 2 * variables.$SCREEN_HORIZONTAL_PADDING);
+			max-width: 40rem;
+
+			margin-bottom: 1.25rem;
+
+			font-size: 1.25rem;
+			font-weight: lighter;
+			line-height: 2rem;
+		}
+
+		text-align: center;
+		color: white;
+		// background-color: violet;
+
+		.cta-buttons {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			flex-wrap: wrap;
+
+			.cta-button {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-evenly;
+				align-items: center;
+
+				margin: 0.5rem;
+
+				padding: 1rem 2rem;
+
+				border: none;
+				border-radius: 4px;
+
+				cursor: pointer;
+
+				font-size: 1.1rem;
+				font-weight: normal;
+				text-decoration: none;
+
+				background-color: variables.$YELLOW;
+				color: black;
+
+				img {
+					width: 1.5em;
+					height: 1.5em;
+					aspect-ratio: 1 / 1;
+
+					margin-bottom: 0.2em;
+					margin-right: 0.75em;
+
+					// background-color: red;
+					filter: invert(100%);
+				}
+			}
+
+			#github {
+				color: white;
+				background-color: rgb(32, 32, 32);
+
+				&:hover {
+					background-color: rgb(14, 14, 14);
+				}
+			}
+
+			#toApp {
+				color: black;
+				background-color: variables.$YELLOW;
+
+				&:hover {
+					background-color: variables.$YELLOW_DARK;
+				}
+			}
+		}
+	}
+}
+
+.features {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: 2rem;
+	padding: 4rem variables.$SCREEN_HORIZONTAL_PADDING;
+	background-color: variables.$VIOLET_BACKGROUND;
+
+	.feature-card {
+		background-color: white;
+		padding: 2rem;
+		// Non-clickable element: no rounded corners
+		border-radius: 0;
+		border-bottom: 4px solid variables.$VIOLET;
+
+		h3 {
+			color: variables.$VIOLET;
+			margin-top: 0;
+		}
+
+		p {
+			color: variables.$FOOTER_DARK_GRAY;
+			margin-bottom: 0;
+		}
+	}
+}
+
+#devProgress {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: stretch;
+
+	width: 100%;
+
+	background-color: white;
+
+	div {
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: center;
+
+		min-width: 200px;
+		width: 100%;
+		max-width: 25em;
+
+		padding: 1rem;
+		box-sizing: border-box;
+
+		margin: 0.5rem;
+
+		color: white;
+		background-color: rgb(29, 29, 29);
+
+		h3 {
+			margin-bottom: 0.5rem;
+
+			font-size: 1.25em;
+			font-weight: normal;
+		}
+
+		ul {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: stretch;
+			width: 100%;
+
+			list-style-type: none;
+
+			// background-color: red;
+
+			li {
+				display: flex;
+				flex-direction: row;
+				justify-content: flex-start;
+				align-items: center;
+
+				margin-bottom: 0.5em;
+
+				padding: 0.25em;
+
+				background-color: rgb(70, 70, 70);
+
+				&:hover {
+					background-color: rgb(40, 40, 40);
+				}
+
+				.checkbox {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+
+					width: 1.5em;
+					height: 1.5em;
+
+					margin-right: 0.5em;
+
+					user-select: none;
+
+					// background-color: blue;
+				}
+
+				.feature {
+					display: inline;
+
+					width: 100%;
+				}
+			}
+		}
+
+		.tbd {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			width: 100%;
+			height: 100%;
+
+			box-sizing: border-box;
+			margin: 0;
+
+			align-self: stretch;
+
+			color: gray;
+			// background-color: red;
+		}
+	}
+}
+
+.landing-footer {
+	margin-top: auto;
+	background-color: variables.$FOOTER_DARK_GRAY;
+	color: variables.$LIGHT_GRAY;
+	padding: 2rem variables.$SCREEN_HORIZONTAL_PADDING;
+	text-align: center;
+	// Non-clickable element: no rounded corners
+	border-radius: 0;
+}

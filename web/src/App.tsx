@@ -24,6 +24,7 @@ import '../static/styles/app.scss';
 import TermsOfService from './pages/TermsOfService/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import HttpErrorWithoutHeaderAndFooter from './components/Error/ErrorWithoutHeaderAndFooter';
+import Landing from './pages/Landing/Landing';
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
@@ -69,6 +70,8 @@ function App() {
 				/>
 				<div id='bodyAndFooter'>
 					<Routes>
+						<Route path='/' element={<Landing />} />
+
 						<Route path='/login' element={<Login />} />
 						<Route path='/logout' element={<Logout />} />
 						<Route path='/signup' element={<SignUp />} />
@@ -84,14 +87,6 @@ function App() {
 						/>
 
 						<Route element={<ProtectedRoutes />}>
-							<Route
-								path='/'
-								element={
-									<Home
-										loginSessionContext={loginSessionData}
-									/>
-								}
-							/>
 							<Route
 								path='/home'
 								element={

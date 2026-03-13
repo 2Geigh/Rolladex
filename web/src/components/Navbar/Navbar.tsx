@@ -1,7 +1,7 @@
 import type React from 'react';
 import './styles/Navbar.scss';
 import '../../../static/images/Hamburger_icon.svg';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 
 type NavbarProps = {
@@ -33,11 +33,29 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 		}
 	}, []);
 
+	const location = useLocation();
+
 	return (
 		<nav className='navbar'>
-			<Link to={'/home'} className='logo'>
+			<Link
+				to={
+					(
+						location.pathname === '/login' ||
+						location.pathname === '/'
+					) ?
+						'/'
+					:	'/home'
+				}
+				className='logo'
+			>
 				Rolladex
 			</Link>
+
+			{location.pathname === '/' && (
+				<Link id='openRolladex' to={`/login`}>
+					Open Rolladex
+				</Link>
+			)}
 
 			{isLoggedIn ?
 				<>
