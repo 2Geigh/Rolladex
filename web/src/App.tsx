@@ -20,7 +20,7 @@ import Profile from './pages/Profile/Profile';
 import { useLayoutEffect } from 'react';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
-import '../static/styles/app.scss';
+import '../public/styles/app.scss';
 import TermsOfService from './pages/TermsOfService/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import HttpErrorWithoutHeaderAndFooter from './components/Error/ErrorWithoutHeaderAndFooter';
