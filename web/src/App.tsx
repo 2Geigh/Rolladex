@@ -24,6 +24,7 @@ import '../static/styles/app.scss';
 import TermsOfService from './pages/TermsOfService/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import HttpErrorWithoutHeaderAndFooter from './components/Error/ErrorWithoutHeaderAndFooter';
+import Landing from './pages/Landing/Landing';
 
 function App() {
 	const [loginSessionData, setLoginSessionData] = useState<LoginSessionData>({
