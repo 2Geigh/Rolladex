@@ -21,10 +21,10 @@ const Landing = () => {
 							className='cta-button'
 							id='github'
 						>
-							<img
+							{/* <img
 								src='public/images/GitHub-silhouette.png'
 								alt='GitHub'
-							/>
+							/> */}
 							Github
 						</Link>
 					</div>
