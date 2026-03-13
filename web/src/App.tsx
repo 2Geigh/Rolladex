@@ -69,6 +69,8 @@ function App() {
 				/>
 				<div id='bodyAndFooter'>
 					<Routes>
+						<Route path='/' element={<Landing />} />
+
 						<Route path='/login' element={<Login />} />
 						<Route path='/logout' element={<Logout />} />
 						<Route path='/signup' element={<SignUp />} />
@@ -84,14 +86,6 @@ function App() {
 						/>
 
 						<Route element={<ProtectedRoutes />}>
-							<Route
-								path='/'
-								element={
-									<Home
-										loginSessionContext={loginSessionData}
-									/>
-								}
-							/>
 							<Route
 								path='/home'
 								element={

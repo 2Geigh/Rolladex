@@ -29,6 +29,22 @@
 		text-decoration: none;
 	}
 
+	#openRolladex {
+		padding: calc(1rem / 3) 1rem;
+
+		border-radius: 0.5rem;
+
+		font-weight: normal;
+		text-decoration: none;
+
+		color: black;
+		background-color: white;
+
+		&:hover {
+			background-color: rgb(232, 232, 232);
+		}
+	}
+
 	#burgerAndMobileNav {
 		display: flex;
 		flex-direction: column;
@@ -58,10 +74,9 @@
 
 			color: white;
 			// background-color: orange;
-		}
-
-		#hamburgerIcon:hover {
-			cursor: pointer;
+			&:hover {
+				cursor: pointer;
+			}
 		}
 
 		#mobileNav {
@@ -98,15 +113,15 @@
 
 				color: white;
 				// background-color: pink;
-			}
 
-			a:hover {
-				background-color: black;
-			}
+				&:hover {
+					background-color: black;
+				}
 
-			a:active {
-				background-color: white;
-				color: black;
+				&:active {
+					background-color: white;
+					color: black;
+				}
 			}
 		}
 	}
