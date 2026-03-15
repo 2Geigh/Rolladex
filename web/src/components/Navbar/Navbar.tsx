@@ -18,7 +18,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 
 		if (mobileNav.style.display === 'none') {
 			mobileNav.style.display = '';
-			toggleIcon.innerText = '🗙';
+			toggleIcon.innerText = '×';
 		} else {
 			mobileNav.style.display = 'none';
 			toggleIcon.innerText = '☰';
