@@ -51,13 +51,11 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 				Rolladex
 			</Link>
 
-			{location.pathname === '/' && (
+			{location.pathname === '/' ?
 				<Link id='openRolladex' to={`/login`}>
 					Open Rolladex
 				</Link>
-			)}
-
-			{isLoggedIn ?
+			: isLoggedIn ?
 				<>
 					<div id='burgerAndMobileNav'>
 						<div
