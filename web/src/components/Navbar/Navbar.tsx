@@ -66,7 +66,13 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
 						</div>
 						<nav id='mobileNav'>
 							<Link to={'home'}>Home</Link>
-
+							<Link
+								to={
+									'/friends?sortby=default&page=1&perpage=default'
+								}
+							>
+								Network
+							</Link>
 							<Link to={'/logout'}>Logout</Link>
 						</nav>
 					</div>
