@@ -14,7 +14,7 @@ const Landing = () => {
 					</p>
 					<div className='cta-buttons'>
 						<Link to='/login' className='cta-button' id='toApp'>
-							Open App
+							Open Rolladex
 						</Link>
 						<Link
 							to={`https://github.com/2geigh/rolladex`}
