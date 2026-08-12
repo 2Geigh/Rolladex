@@ -2,8 +2,6 @@ package models
 
 import (
 	"time"
-
-	_ "modernc.org/sqlite"
 )
 
 type NotificationPreference struct {
