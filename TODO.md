@@ -4,40 +4,7 @@
 
 - [ ] Redesign the homepage to functionally resemble a rolodex (It should be like a contact list with a notification hub at the top)
 
-## Web Client
+## Web app
 
-- [ ] Remove container for deployed frontend; switch to just serving static files from a folder
-- [x] Fix 405 error on deployment
-- [x] Fix proportions of login and signup page forms to better fit mobile screen sizes
-- [ ] Create email server for Rolladex.ca on VPS
-- [ ] Replace personal email in TOS with [frontdesk@rolladex.ca](mailto:frontdesk@rolladex.ca)
-- [ ] Add email field to signup (and thus usernames can no longer contain `@`) with email-sending to "finish setting up" an account
-- [ ] Add "Forgot my password" functionality
-- [ ] Add login/signup with OAuth
-- [x] Write a TOS for the signup
-- [x] Make the TOS button a target="\_blank" anchor or a popup
-
-## Mobile Client
-
-- [ ] Create React Native project in its own directory in this repository
-- [ ] Create login/signup screen and a temporary home screen to show that you've successfully logged in/out
-
-## API & Database
-
-- [ ] Add automatic Sessions row deletion upon session expiration
-- [ ] Migrate MariaDB to Postgresql
-- [/] Watch [this video](https://youtu.be/FsB_nRGdeLs?si=49Gu9p7P4JaNyGwI) and adress each of the following security domains:
-  - [ ] Rate limiting/DDOS
-    - [ ] Add user-specific rate limiting to the API
-    - [ ] Add IP address-specific rate limiting to the API
-    - [ ] Add IP address-specific rate limiting to VPS' NGINX
-  - [ ] CORS
-    - [ ] Specify specific CORS headers for each handler instead of using a single global one
-  - [x] SQL/NoSQL injection
-    - [x] Prepare all SQL statements that rely on user inputs in some way
-  - [ ] Firewalls
-  - [ ] VPNs
-  - [ ] CSRF (cross-site request forgery)
-    - [ ] Add CSRF tokens to every session created
-  - [ ] XSS
-    - [ ] Sanitize all user inputs using github.com/microcosm-cc/bluemonday
+- [ ] Add Templ to Golang backend
+- [ ] Create the / splashpage, /signup, /login, and route-protected /home pages in Golang 
