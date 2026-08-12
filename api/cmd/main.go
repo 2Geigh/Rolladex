@@ -10,11 +10,15 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var (
-	port = 3001
-)
-
 func main() {
+	const (
+		listening_port int = 3001
+	)
+
+	var (
+		address string = fmt.Sprintf("0.0.0.0:%d", listening_port)
+	)
+
 	godotenv.Load()
 
 	// Meta
@@ -41,10 +45,13 @@ func main() {
 	// Database
 	err := database.InitializeDB()
 	if err != nil {
-		log.Fatal(fmt.Errorf("couldn't initialize database: %w", err))
+		log.Fatalf("couldn't initialize database: %v", err)
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
 	// Server
-	log.Printf("Listening on http://0.0.0.0:%d\n", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", port), nil))
+	log.Printf("Listening on %s\n", address)
+	err = http.ListenAndServe(address, nil)
+	if err != nil {
+		log.Fatalf("failed to start server on port %d", listening_port)
+	}
 }
