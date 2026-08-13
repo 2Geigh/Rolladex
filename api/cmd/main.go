@@ -45,11 +45,11 @@ func main() {
 	// Database
 	err := database.InitializeDB()
 	if err != nil {
-		log.Fatalf("couldn't initialize database: %v", err)
+		log.Fatalf("couldn't initialize database connection: %v", err)
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
 	// Server
-	log.Printf("Listening on %s\n", address)
+	log.Printf("Listening on %s (check the Docker Compose config what host machine port that maps to!)\n", address)
 	err = http.ListenAndServe(address, nil)
 	if err != nil {
 		log.Fatalf("failed to start server on port %d", listening_port)

@@ -7,6 +7,7 @@ services:
         environment:
             PGUSER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
         volumes:
             - db-data:/var/lib/rolladex
         healthcheck:
@@ -21,21 +22,18 @@ services:
     #     image: postgres:18.4-alpine
     #     container_name: rolladex-db-backup
 
-    # api:
-    #     build:
-    #         context: ./api
-    #         target: base
-    #     container_name: rolladex-api
-    #     depends_on:
-    #         db:
-    #             condition: service_healthy
-    #     env_file:
-    #         - .env
-    #     ports:
-    #         - "3002:3001"
-    #     environment:
-    #         - DB_HOST=${DB_HOST}
-    #         - DB_PORT=${DB_PORT}
+    api:
+        build:
+            context: ./api
+            target: dist
+        container_name: rolladex-api
+        depends_on:
+            db:
+                condition: service_healthy
+        env_file:
+            - .env
+        ports:
+            - "3002:3001"
 
 volumes:
     db-data:

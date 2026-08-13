@@ -8,9 +8,8 @@ import (
 	"os"
 	"rolladex-backend/util"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"github.com/pressly/goose/v3"
+	_ "github.com/lib/pq"
 )
 
 type SqlId interface {
@@ -20,8 +19,6 @@ type SqlId interface {
 var (
 	DB *sql.DB = nil
 
-	// DSN format for MariaDB/MySQL
-
 	// Use go:embed to bundle migrations into the binary
 	// This assumes your migrations are in a folder named 'migrations'
 	//go:embed migrations/*.sql
@@ -29,7 +26,7 @@ var (
 )
 
 func InitializeDB() error {
-	log.Println("Connecting to MariaDB...")
+	log.Println("Connecting to Postgresql...")
 	var err error
 
 	// Optional, in the event that the environment variables
@@ -43,7 +40,7 @@ func InitializeDB() error {
 		dbPort   string = os.Getenv("DB_PORT")
 		dbName   string = os.Getenv("DB_NAME")
 
-		dsn string = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", username, password, dbHost, dbPort, dbName)
+		dsn string = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", username, password, dbHost, dbPort, dbName)
 	)
 
 	if username == "" {
@@ -51,46 +48,48 @@ func InitializeDB() error {
 	}
 
 	// Open (or create) the SQLite database
-	DB, err = sql.Open("mysql", dsn)
+	DB, err = sql.Open("postgres", dsn)
 	if err != nil {
 		return fmt.Errorf("failed to open database: %w", err)
 	}
 
 	// Check if the database is reachable
-	if err = DB.Ping(); err != nil {
+	err = DB.Ping()
+	if err != nil {
 		return fmt.Errorf("failed to reach database: %w", err)
 	}
+	log.Println("Database connection successful.")
 
-	// Run Goose Migrations
-	if err := runMigrations(); err != nil {
-		return err
-	}
+	// // Run Goose Migrations
+	// if err := runMigrations(); err != nil {
+	// 	return fmt.Errorf("run migrations failed: %w", err)
+	// }
+	// log.Println("Database migration successful.")
 
-	// Password update logic
-	if err := updateSeedPasswords(); err != nil {
-		log.Printf("Warning: Seed password update skipped or failed: %v", err)
-	}
-
-	log.Println("Database initialized and migrated.")
-	return nil
-}
-
-func runMigrations() error {
-	log.Println("Running migrations...")
-
-	goose.SetBaseFS(embedMigrations)
-
-	if err := goose.SetDialect("mysql"); err != nil {
-		return err
-	}
-
-	// This runs all migrations in the 'migrations' directory
-	if err := goose.Up(DB, "migrations"); err != nil {
-		return fmt.Errorf("goose up failed: %w", err)
-	}
+	// // Password update logic for the seed template/testing users
+	// if err := updateSeedPasswords(); err != nil {
+	// 	log.Printf("Warning: Seed password update skipped or failed: %v", err)
+	// }
 
 	return nil
 }
+
+// func runMigrations() error {
+// 	log.Println("Running migrations...")
+
+// 	goose.SetBaseFS(embedMigrations)
+
+// 	if err := goose.SetDialect("mysql"); err != nil {
+// 		return fmt.Errorf("goose set SQL dialect failed: %w", err)
+// 	}
+
+// 	// This runs all migrations in the 'migrations' directory
+// 	if err := goose.Up(DB, "migrations"); err != nil {
+// 		return fmt.Errorf("goose up failed: %w", err)
+// 	}
+
+// 	return nil
+// }
 
 func updateSeedPasswords() error {
 	var (

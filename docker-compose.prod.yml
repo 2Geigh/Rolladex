@@ -7,14 +7,5 @@ services:
             target: dist
         restart: always
 
-    frontend:
-        build:
-            target: dist
-        restart: always
-        volumes:
-            - ./web/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-        ports:
-            - "8080:80"
-
 volumes:
     db_data:
