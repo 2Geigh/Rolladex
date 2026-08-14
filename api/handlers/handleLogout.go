@@ -87,6 +87,6 @@ func deleteSession(sessionToken string) error {
 		return fmt.Errorf("commit tx: %w", err)
 	}
 
-	log.Println(fmt.Sprintf("\033[3m%s\033[3m logged out, affecting %d row(s)", username, rowsAffected))
+	log.Printf("\033[3m%s\033[3m logged out, affecting %d row(s)", username, rowsAffected)
 	return err
 }

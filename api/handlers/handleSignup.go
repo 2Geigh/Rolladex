@@ -115,7 +115,7 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	log.Println(fmt.Sprintf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected))
+	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected)
 	return http.StatusOK, err
 }
 

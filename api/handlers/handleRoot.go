@@ -10,9 +10,8 @@ func Root(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 
 	if req.Method == http.MethodGet {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.WriteHeader(http.StatusSeeOther)
-		w.Write([]byte(`Welcome to the headless backend. If you'd like to use a GUI, check out the frontend at <a href="http://localhost:5173/">http://localhost:5173/</a>.`))
+		const filepath = "web/static/index.html"
+		http.ServeFile(w, req, filepath)
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
