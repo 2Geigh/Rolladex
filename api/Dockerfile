@@ -10,15 +10,16 @@ FROM base AS dev
 EXPOSE 3001
 CMD ["go", "run", "./cmd/main.go"]
 
-# Builder stage
-FROM base AS builder
-RUN CGO_ENABLED=0 GOOS=linux go build -o main.out ./cmd/main.go
+# Build stage
+FROM base AS build
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./bin/main.out ./cmd/main.go
 
 # Production dist stage
 FROM alpine:latest AS dist
-WORKDIR /root/
-# Install CA certificates so the app can make HTTPS calls if needed
-RUN apk --no-cache add ca-certificates
-COPY --from=builder /app/main.out .
+WORKDIR /usr/local/app
+
+COPY --from=build /app/bin ./bin
+COPY --from=build /app/web ./web
+
 EXPOSE 3001
-CMD ["./main.out"]
+CMD ["./bin/main.out"]
