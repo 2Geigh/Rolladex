@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rolladex-backend/database"
-	"rolladex-backend/util"
+	"rolladex/database"
+	"rolladex/util"
 )
 
 func Logout(w http.ResponseWriter, req *http.Request) {

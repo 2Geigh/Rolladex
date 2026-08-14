@@ -7,8 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"rolladex-backend/database"
-	"rolladex-backend/util"
+	"rolladex/database"
+	"rolladex/util"
 )
 
 type signupFormData struct {

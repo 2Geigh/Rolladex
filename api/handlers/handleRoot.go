@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"rolladex-backend/util"
+	"rolladex/util"
 )
 
 func Root(w http.ResponseWriter, req *http.Request) {

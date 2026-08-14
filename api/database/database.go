@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"rolladex-backend/util"
+	"rolladex/util"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"

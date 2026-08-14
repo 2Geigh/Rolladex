@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"rolladex-backend/database"
-	"rolladex-backend/handlers"
+	"rolladex/database"
+	"rolladex/handlers"
 
 	"github.com/joho/godotenv"
 )

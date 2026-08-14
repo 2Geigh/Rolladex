@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"rolladex-backend/database"
-	"rolladex-backend/models"
-	"rolladex-backend/util"
+	"rolladex/database"
+	"rolladex/models"
+	"rolladex/util"
 	"strconv"
 	"time"
 )

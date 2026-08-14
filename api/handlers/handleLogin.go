@@ -6,9 +6,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"rolladex-backend/database"
-	"rolladex-backend/models"
-	"rolladex-backend/util"
+	"rolladex/database"
+	"rolladex/models"
+	"rolladex/util"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"

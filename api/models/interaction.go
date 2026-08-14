@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 	"fmt"
-	"rolladex-backend/database"
+	"rolladex/database"
 	"time"
 )
 

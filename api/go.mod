@@ -1,4 +1,4 @@
-module rolladex-backend
+module rolladex
 
 go 1.25.7
 
