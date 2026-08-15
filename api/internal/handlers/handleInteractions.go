@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"rolladex/database"
-	"rolladex/models"
-	"rolladex/util"
+	"rolladex/internal/models"
+	"rolladex/internal/util"
 	"time"
 )
 

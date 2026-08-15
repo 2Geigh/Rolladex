@@ -7,8 +7,8 @@ import (
 	"log"
 	"net/http"
 	"rolladex/database"
-	"rolladex/models"
-	"rolladex/util"
+	"rolladex/internal/models"
+	"rolladex/internal/util"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"

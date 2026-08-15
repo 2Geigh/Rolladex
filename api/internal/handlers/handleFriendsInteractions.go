@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"rolladex/database"
-	"rolladex/util"
+	"rolladex/internal/util"
 	"time"
 )
 

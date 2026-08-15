@@ -2,8 +2,8 @@ package logic
 
 import (
 	"fmt"
-	"rolladex/models"
-	"rolladex/util"
+	"rolladex/internal/models"
+	"rolladex/internal/util"
 	"time"
 )
 

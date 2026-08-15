@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"rolladex/database"
-	"rolladex/handlers"
+	"rolladex/internal/handlers"
 
 	"github.com/joho/godotenv"
 )

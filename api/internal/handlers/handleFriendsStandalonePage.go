@@ -8,9 +8,9 @@ import (
 	"log"
 	"net/http"
 	"rolladex/database"
-	"rolladex/logic"
-	"rolladex/models"
-	"rolladex/util"
+	"rolladex/internal/models"
+	"rolladex/internal/util"
+	"rolladex/pkg/logic"
 	"strconv"
 	"time"
 )

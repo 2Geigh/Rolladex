@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 	"rolladex/database"
-	"rolladex/util"
+	"rolladex/internal/util"
 )
 
 type signupFormData struct {
@@ -25,6 +25,10 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
+
+	case http.MethodGet:
+		const filepath = "web/static/signup.html"
+		http.ServeFile(w, req, filepath)
 
 	case http.MethodPost:
 		createUser(w, req)

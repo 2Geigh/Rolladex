@@ -6,7 +6,7 @@ import (
 	"io"
 	"net/http"
 	"rolladex/database"
-	"rolladex/util"
+	"rolladex/internal/util"
 )
 
 func FriendsNotes(w http.ResponseWriter, req *http.Request) {

@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"rolladex/database"
-	"rolladex/util"
+	"rolladex/internal/util"
 )
 
 func Logout(w http.ResponseWriter, req *http.Request) {
@@ -71,7 +71,7 @@ func deleteSession(sessionToken string) error {
         WHERE s.session_token = ?`, sessionToken).Scan(&username)
 	if err != nil {
 		return nil // Returning an actual error here is kinda pointless because that means they're already logged out / weren't even signed in, meaning its not really a failure
-		return fmt.Errorf("could not scan username from database to local variable username: %w", err)
+		// return fmt.Errorf("could not scan username from database to local variable username: %w", err)
 	}
 
 	// Delete session row in database

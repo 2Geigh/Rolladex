@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"net/http"
-	"rolladex/util"
+	"rolladex/internal/util"
 )
 
 func ApiSanityCheck(w http.ResponseWriter, req *http.Request) {

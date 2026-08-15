@@ -1,6 +1,6 @@
 package test
 
-import "rolladex/models"
+import "rolladex/internal/models"
 
 type testCase struct {
 	friend   models.Friend

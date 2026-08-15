@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+		<meta charset="UTF-8" />
+		<link
+			rel="icon"
+			type="image/svg+xml"
+			href="https://rolladex.ca/assets/heart-K3aFXc_w.svg"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			name="A tool for maintaining your IRL social network."
+		/>
+		<meta name="author" content="Nicholas Garcia" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta keywords="crm, networking, network, friendship, management " />
+		<title>Sign Up | Rolladex</title>
+</head>
+<body>
+    <div id="signupContainer">
+				<form id="signupForm" onSubmit={handleSubmit}>
+					<label htmlFor="username">
+						Username
+						<input required name="username" type="text"></input>
+					</label>
+
+					<label htmlFor="password">
+						Password
+						<input required name="password" type="password"></input>
+					</label>
+
+					<div id="agreements">
+						<div className="agreement">
+							<input
+								required
+								type="checkbox"
+								id="tos-agree"
+								name="tos-agree"
+							></input>
+							<label htmlFor="tos-agree">
+								I have read and agree to the{" "}
+								<a href="terms_of_service" target="_blank">
+									terms of service
+								</a>
+							</label>
+						</div>
+						<div className="agreement" id="privacy_policy">
+							<input
+								required
+								type="checkbox"
+								id="privacy-agree"
+								name="privacy-agree"
+							></input>
+							<label htmlFor="privacy-agree">
+								I have read and agree to the{" "}
+								<a href="privacy_policy" target="_blank">
+									privacy policy
+								</a>
+							</label>
+						</div>
+					</div>
+
+					<input
+						id="signupButton"
+						type="submit"
+						value="Sign Up"
+					></input>
+				</form>
+
+				<span id="toLogin">
+					Already have an account? <a href="/login">Login now!</a>
+				</span>
+			</div>
+</body>
+</html>
