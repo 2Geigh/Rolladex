@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"rolladex/internal/database"
 	"rolladex/internal/models"
+	"rolladex/internal/templating"
 	"rolladex/internal/util"
 	"sort"
 	"time"
@@ -18,35 +18,20 @@ func Home(w http.ResponseWriter, req *http.Request) {
 	util.LogHttpRequest(req)
 	util.SetCrossOriginResourceSharing(w, req)
 
+	user_id, err := validateSession(req)
+	if err != nil {
+		http.Redirect(w, req, "/login", http.StatusFound)
+	}
+
 	switch req.Method {
 
 	case http.MethodGet:
+		data := struct {
+			Title    string
+			Username string
+		}{Title: "Home | Rolladex", Username: user_id}
 
-		user_id, err := validateSession(req)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
-			return
-		}
-
-		urgentFriendsForTodayAndNextFiveDays, err := getUrgentFriendsForTodayAndNextFiveDays(user_id)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't get upcoming urgent friends data", http.StatusInternalServerError)
-			return
-		}
-
-		urgentFriendsForTodayAndNextFiveDaysJson, err := json.Marshal(urgentFriendsForTodayAndNextFiveDays)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal upcoming urgent friends data to JSON", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(urgentFriendsForTodayAndNextFiveDaysJson)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't write upcoming urgent friends JSON data", http.StatusInternalServerError)
-			return
-		}
+		templating.RenderAppPage(w, "web/template/pages/Home.html", data)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
