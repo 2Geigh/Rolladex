@@ -34,7 +34,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	case http.MethodGet:
 		data := struct{ Title string }{Title: "Login | Rolladex"}
 
-		err := templating.RenderAppPage(w, "web/template/pages/Login.html", data)
+		err := templating.RenderUnprotectedPage(w, "web/template/pages/Login.html", data)
 		if err != nil {
 			util.ReportHttpError(err, w, "render page failed: %w", http.StatusInternalServerError)
 			return

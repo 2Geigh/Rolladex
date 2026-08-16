@@ -23,7 +23,7 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			Username string
 		}{Title: "Home | Rolladex", Username: "undefined user"}
 
-		templating.RenderAppPage(w, "web/template/pages/Home.html", data)
+		templating.RenderProtectedPage(w, "web/template/pages/Home.html", data)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
