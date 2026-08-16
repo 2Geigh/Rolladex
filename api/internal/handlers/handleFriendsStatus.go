@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"rolladex/database"
+	"rolladex/internal/database"
 	"rolladex/internal/util"
 	"time"
 )

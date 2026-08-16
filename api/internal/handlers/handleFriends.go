@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"rolladex/database"
+	"rolladex/internal/database"
 	"rolladex/internal/models"
 	"rolladex/internal/util"
 	"slices"

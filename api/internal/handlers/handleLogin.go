@@ -6,8 +6,9 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"rolladex/database"
+	"rolladex/internal/database"
 	"rolladex/internal/models"
+	"rolladex/internal/templating"
 	"rolladex/internal/util"
 	"time"
 
@@ -27,14 +28,19 @@ type loginFormData struct {
 
 func Login(w http.ResponseWriter, req *http.Request) {
 
-	// CORS
-	util.SetCrossOriginResourceSharing(w, req)
-	util.LogHttpRequest(req)
-
 	switch req.Method {
 
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
+
+	case http.MethodGet:
+		data := struct{ Title string }{Title: "Login | Rolladex"}
+
+		err := templating.RenderAppPage(w, "web/template/pages/Login.html", data)
+		if err != nil {
+			util.ReportHttpError(err, w, "render page failed: %w", http.StatusInternalServerError)
+			return
+		}
 
 	case http.MethodPost:
 		attemptLogin(w, req)

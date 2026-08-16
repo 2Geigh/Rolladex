@@ -7,7 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"rolladex/database"
+	"rolladex/internal/database"
 	"rolladex/internal/models"
 	"rolladex/internal/util"
 	"rolladex/pkg/logic"

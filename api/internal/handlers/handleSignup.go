@@ -7,7 +7,8 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"rolladex/database"
+	"rolladex/internal/database"
+	"rolladex/internal/templating"
 	"rolladex/internal/util"
 )
 
@@ -18,22 +19,18 @@ type signupFormData struct {
 
 func Signup(w http.ResponseWriter, req *http.Request) {
 
-	// CORS
-	util.SetCrossOriginResourceSharing(w, req)
-
 	switch req.Method {
 
 	case http.MethodOptions:
 		w.WriteHeader(http.StatusNoContent)
 
 	case http.MethodGet:
-		data := struct{ Title string }{
-			Title: "Signup | Rolladex",
-		}
+		data := struct{ Title string }{Title: "Signup | Rolladex"}
 
-		err := util.Templates.ExecuteTemplate(w, "base", data)
+		err := templating.RenderAppPage(w, "web/template/pages/Signup.html", data)
 		if err != nil {
-			util.ReportHttpError(err, w, "execute page template failed", http.StatusInternalServerError)
+			util.ReportHttpError(err, w, "render page failed: %w", http.StatusInternalServerError)
+			return
 		}
 
 	case http.MethodPost:
