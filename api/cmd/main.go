@@ -31,8 +31,8 @@ func main() {
 	http.HandleFunc("/signup", middleware.Logging(handlers.Signup))
 	http.HandleFunc("/logout", middleware.Logging(handlers.Logout))
 
-	// Features
-	http.HandleFunc("/home", middleware.Authorization(handlers.Home))
+	// Protected routes
+	http.HandleFunc("/home", middleware.SessionValidation(handlers.Home))
 
 	// Database
 	err := database.InitializeDB()
