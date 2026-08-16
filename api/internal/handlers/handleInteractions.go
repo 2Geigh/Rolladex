@@ -12,8 +12,6 @@ import (
 )
 
 func InteractionsThisMonth(w http.ResponseWriter, req *http.Request) {
-	// CORS
-	util.SetCrossOriginResourceSharing(w, req)
 
 	switch req.Method {
 	case http.MethodOptions:

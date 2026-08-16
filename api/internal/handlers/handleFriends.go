@@ -49,8 +49,6 @@ var (
 
 func Friends(w http.ResponseWriter, req *http.Request) {
 
-	util.SetCrossOriginResourceSharing(w, req)
-	util.LogHttpRequest(req)
 
 	switch req.Method {
 	case http.MethodOptions:
@@ -64,7 +62,6 @@ func Friends(w http.ResponseWriter, req *http.Request) {
 			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
 			return
 		}
-
 		getFriendsSortedByColumnParams := GetFriendsSortedByColumnParams{
 			sortBy: req.URL.Query().Get("sortby"),
 		}

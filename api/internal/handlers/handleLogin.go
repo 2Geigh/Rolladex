@@ -30,9 +30,6 @@ func Login(w http.ResponseWriter, req *http.Request) {
 
 	switch req.Method {
 
-	case http.MethodOptions:
-		w.WriteHeader(http.StatusNoContent)
-
 	case http.MethodGet:
 		data := struct{ Title string }{Title: "Login | Rolladex"}
 

@@ -7,7 +7,6 @@ import (
 	"rolladex/internal/database"
 	"rolladex/internal/models"
 	"rolladex/internal/templating"
-	"rolladex/internal/util"
 	"sort"
 	"time"
 )
@@ -15,8 +14,6 @@ import (
 type HomepageCalendarData = map[int][]models.Friend
 
 func Home(w http.ResponseWriter, req *http.Request) {
-	util.LogHttpRequest(req)
-	util.SetCrossOriginResourceSharing(w, req)
 
 	user_id, err := validateSession(req)
 	if err != nil {

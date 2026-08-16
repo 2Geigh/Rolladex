@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"rolladex/internal/database"
 	"rolladex/internal/handlers"
+	"rolladex/internal/middleware"
 
 	"github.com/joho/godotenv"
 )
@@ -22,25 +23,25 @@ func main() {
 	godotenv.Load()
 
 	// Meta
-	http.HandleFunc("/", handlers.Root)
-	http.HandleFunc("/api_sanity_check", handlers.ApiSanityCheck)
+	http.HandleFunc("/", middleware.Logging(handlers.Root))
+	http.HandleFunc("/api_sanity_check", middleware.Logging(handlers.ApiSanityCheck))
 
 	// Authentication
-	http.HandleFunc("/login", handlers.Login)
-	http.HandleFunc("/signup", handlers.Signup)
-	http.HandleFunc("/logout", handlers.Logout)
+	http.HandleFunc("/login", middleware.Logging(handlers.Login))
+	http.HandleFunc("/signup", middleware.Logging(handlers.Signup))
+	http.HandleFunc("/logout", middleware.Logging(handlers.Logout))
 
 	// Authorization
-	http.HandleFunc("/session/valid", handlers.SessionValid)
+	http.HandleFunc("/session/valid", middleware.Logging(handlers.SessionValid))
 
 	// Features
-	http.HandleFunc("/home", handlers.Home)
-	http.HandleFunc("/friends", handlers.Friends)
-	http.HandleFunc("/friends/", handlers.FriendStandalonePage)
-	http.HandleFunc("/friends/status", handlers.FriendsStatus)
-	http.HandleFunc("/friends/interactions", handlers.FriendsInteractions)
-	http.HandleFunc("/friends/notes", handlers.FriendsNotes)
-	http.HandleFunc("/interactions/", handlers.InteractionStandalonePage)
+	http.HandleFunc("/home", middleware.Logging(handlers.Home))
+	http.HandleFunc("/friends", middleware.Logging(handlers.Friends))
+	http.HandleFunc("/friends/", middleware.Logging(handlers.FriendStandalonePage))
+	http.HandleFunc("/friends/status", middleware.Logging(handlers.FriendsStatus))
+	http.HandleFunc("/friends/interactions", middleware.Logging(handlers.FriendsInteractions))
+	http.HandleFunc("/friends/notes", middleware.Logging(handlers.FriendsNotes))
+	http.HandleFunc("/interactions/", middleware.Logging(handlers.InteractionStandalonePage))
 
 	// Database
 	err := database.InitializeDB()

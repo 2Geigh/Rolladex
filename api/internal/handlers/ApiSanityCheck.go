@@ -2,14 +2,16 @@ package handlers
 
 import (
 	"net/http"
-	"rolladex/internal/util"
 )
 
 func ApiSanityCheck(w http.ResponseWriter, req *http.Request) {
+	switch req.Method {
 
-	util.LogHttpRequest(req)
-
-	if req.Method == http.MethodGet {
+	case http.MethodGet:
 		w.Write([]byte("Hello, API client!"))
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+
 	}
 }

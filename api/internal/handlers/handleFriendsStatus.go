@@ -14,8 +14,6 @@ var (
 )
 
 func FriendsStatus(w http.ResponseWriter, req *http.Request) {
-	util.LogHttpRequest(req)
-	util.SetCrossOriginResourceSharing(w, req)
 
 	switch req.Method {
 	case http.MethodPost:
