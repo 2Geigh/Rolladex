@@ -1,58 +1,55 @@
 {{ define "content" }}
 
-    <div id="signupContainer">
-				<form id="signupForm" onSubmit={handleSubmit}>
-					<label htmlFor="username">
-						Username
-						<input required name="username" type="text"></input>
-					</label>
+<div id="signupContainer">
+	<h1>Signup</h1>
+	<form id="signupForm" onSubmit="{handleSubmit}">
+		<label htmlFor="username">
+			Username&nbsp;
+			<input required name="username" type="text" />
+		</label>
 
-					<label htmlFor="password">
-						Password&nbsp;
-						<input required name="password" type="password"></input>
-					</label>
+		<label htmlFor="password">
+			Password&nbsp;
+			<input required name="password" type="password" />
+		</label>
 
-					<div id="agreements">
-						<div className="agreement">
-							<input
-								required
-								type="checkbox"
-								id="tos-agree"
-								name="tos-agree"
-							></input>
-							<label htmlFor="tos-agree">
-								I have read and agree to the{" "}
-								<a href="terms_of_service" target="_blank">
-									terms of service
-								</a>
-							</label>
-						</div>
-						<div className="agreement" id="privacy_policy">
-							<input
-								required
-								type="checkbox"
-								id="privacy-agree"
-								name="privacy-agree"
-							></input>
-							<label htmlFor="privacy-agree">
-								I have read and agree to the{" "}
-								<a href="privacy_policy" target="_blank">
-									privacy policy
-								</a>
-							</label>
-						</div>
-					</div>
-
-					<input
-						id="signupButton"
-						type="submit"
-						value="Sign Up"
-					></input>
-				</form>
-
-				<span id="toLogin">
-					Already have an account? <a href="/login">Login now!</a>
-				</span>
+		<div id="agreements">
+			<div className="agreement">
+				<input
+					required
+					type="checkbox"
+					id="tos-agree"
+					name="tos-agree"
+				/>
+				<label htmlFor="tos-agree">
+					I have read and agree to the
+					<a href="terms_of_service" target="_blank">
+						terms of service
+					</a>
+				</label>
 			</div>
-			
+			<div className="agreement" id="privacy_policy">
+				<input
+					required
+					type="checkbox"
+					id="privacy-agree"
+					name="privacy-agree"
+				/>
+				<label htmlFor="privacy-agree">
+					I have read and agree to the
+					<a href="privacy_policy" target="_blank">
+						privacy policy
+					</a>
+				</label>
+			</div>
+		</div>
+
+		<input id="signupButton" type="submit" value="Sign Up" />
+	</form>
+
+	<span id="toLogin">
+		Already have an account? <a href="/login">Login now!</a>
+	</span>
+</div>
+
 {{ end }}
