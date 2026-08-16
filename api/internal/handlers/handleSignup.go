@@ -27,8 +27,17 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 
 	case http.MethodGet:
-		const filepath = "web/static/signup.html"
-		http.ServeFile(w, req, filepath)
+		data := struct{ Title string }{
+			Title: "Signup | Rolladex",
+		}
+
+		err := util.Templates.ExecuteTemplate(w, "base", data)
+		if err != nil {
+			util.ReportHttpError(err, w, "execute page template failed", http.StatusInternalServerError)
+		}
+
+		// const filepath = "web/static/signup.html"
+		// http.ServeFile(w, req, filepath)
 
 	case http.MethodPost:
 		createUser(w, req)

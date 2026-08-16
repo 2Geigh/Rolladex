@@ -1,0 +1,21 @@
+{{ define "Footer" }}
+
+<nav className="footer">
+	<span className="copyrightStatement">
+		Developed with love by&nbsp;
+		<a href="https://nicholasgarcia.com" target="blank_" className="logo">
+			Nicholas Garcia
+		</a>
+		, <span id="footerCopyrightYears"></span>.
+	</span>
+</nav>
+
+<script>
+	const foundingYear = 2025
+	const thisYear = new Date().getFullYear()
+
+	const element = document.getElementById("footerCopyrightYears")
+	element.innerText = `${foundingYear} - ${thisYear}`
+</script>
+
+{{ end }}

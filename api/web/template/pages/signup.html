@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<meta charset="UTF-8" />
-		<link
-			rel="icon"
-			type="image/svg+xml"
-			href="https://rolladex.ca/assets/heart-K3aFXc_w.svg"
-		/>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta
-			name="description"
-			name="A tool for maintaining your IRL social network."
-		/>
-		<meta name="author" content="Nicholas Garcia" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta keywords="crm, networking, network, friendship, management " />
-		<title>Sign Up | Rolladex</title>
-</head>
-<body>
+{{ define "content" }}
+
     <div id="signupContainer">
 				<form id="signupForm" onSubmit={handleSubmit}>
 					<label htmlFor="username">
@@ -27,7 +8,7 @@
 					</label>
 
 					<label htmlFor="password">
-						Password
+						Password&nbsp;
 						<input required name="password" type="password"></input>
 					</label>
 
@@ -73,5 +54,5 @@
 					Already have an account? <a href="/login">Login now!</a>
 				</span>
 			</div>
-</body>
-</html>
+			
+{{ end }}

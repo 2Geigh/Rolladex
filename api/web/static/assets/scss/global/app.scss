@@ -1,0 +1,31 @@
+@use "./variables";
+
+* {
+	margin: 0px;
+	padding: 0px;
+	font-family: "Helvetica", sans-serif;
+	font-size: 16px;
+}
+
+#root {
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+	min-height: 100%;
+	width: 100%;
+	box-sizing: border-box;
+	// background-color: red;
+}
+
+#bodyAndFooter {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+
+	min-height: calc(100vh - variables.$NAVBAR_HEIGHT);
+	width: 100%;
+	box-sizing: border-box;
+
+	// background-color: orange;
+}
