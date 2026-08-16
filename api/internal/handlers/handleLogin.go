@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"rolladex/internal/database"
+	"rolladex/internal/middleware"
 	"rolladex/internal/models"
 	"rolladex/internal/templating"
 	"rolladex/internal/util"
@@ -74,7 +75,7 @@ func attemptLogin(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
-		Name:     LoginSessionCookieName,
+		Name:     middleware.LoginSessionCookieName,
 		Value:    sessionToken,
 		Path:     "/",
 		MaxAge:   loginSessionLifetime_seconds,

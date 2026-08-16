@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"rolladex/internal/database"
+	"rolladex/internal/middleware"
 	"rolladex/internal/util"
 )
 
@@ -26,7 +27,7 @@ func Logout(w http.ResponseWriter, req *http.Request) {
 }
 
 func logoutUser(w http.ResponseWriter, req *http.Request) {
-	cookie, err := req.Cookie(LoginSessionCookieName)
+	cookie, err := req.Cookie(middleware.LoginSessionCookieName)
 	if err != nil {
 		util.ReportHttpError(err, w, "login session cookie not recognized", http.StatusBadRequest)
 		return

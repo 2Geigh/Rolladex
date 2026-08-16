@@ -31,17 +31,8 @@ func main() {
 	http.HandleFunc("/signup", middleware.Logging(handlers.Signup))
 	http.HandleFunc("/logout", middleware.Logging(handlers.Logout))
 
-	// Authorization
-	http.HandleFunc("/session/valid", middleware.Logging(handlers.SessionValid))
-
 	// Features
-	http.HandleFunc("/home", middleware.Logging(handlers.Home))
-	http.HandleFunc("/friends", middleware.Logging(handlers.Friends))
-	http.HandleFunc("/friends/", middleware.Logging(handlers.FriendStandalonePage))
-	http.HandleFunc("/friends/status", middleware.Logging(handlers.FriendsStatus))
-	http.HandleFunc("/friends/interactions", middleware.Logging(handlers.FriendsInteractions))
-	http.HandleFunc("/friends/notes", middleware.Logging(handlers.FriendsNotes))
-	http.HandleFunc("/interactions/", middleware.Logging(handlers.InteractionStandalonePage))
+	http.HandleFunc("/home", middleware.Authorization(handlers.Home))
 
 	// Database
 	err := database.InitializeDB()

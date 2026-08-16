@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -14,7 +15,7 @@ func Logging(nextHandler http.HandlerFunc) http.HandlerFunc {
 
 		nextHandler.ServeHTTP(w, req)
 
-		log.Println(req.RemoteAddr, req.Method, req.RequestURI, time.Since(start))
+		log.Println(req.RemoteAddr, req.Method, req.RequestURI, fmt.Sprintf("(%v)", time.Since(start)))
 
 	}
 }

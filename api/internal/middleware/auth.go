@@ -1,54 +1,36 @@
-package handlers
+package middleware
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"rolladex/internal/database"
 	"rolladex/internal/models"
-	"rolladex/internal/util"
 	"strconv"
 	"time"
 )
 
-var (
+const (
 	LoginSessionCookieName = "myFriends_session_token"
 )
 
-func SessionValid(w http.ResponseWriter, req *http.Request) {
+func SessionValidation(nextHandler http.HandlerFunc) http.HandlerFunc {
 
-	switch req.Method {
+	return func(w http.ResponseWriter, req *http.Request) {
 
-	case http.MethodGet:
 		user_id, err := validateSession(req)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't validate session", http.StatusUnauthorized)
+			http.Redirect(w, req, "/login", http.StatusFound)
 			return
 		}
 
-		user, err := getSessionUser(user_id)
+		_, err = strconv.ParseInt(user_id, 10, 64)
 		if err != nil {
-			util.ReportHttpError(err, w, "couldn't find user data", http.StatusInternalServerError)
+			http.Redirect(w, req, "/login", http.StatusFound)
 			return
 		}
 
-		userJson, err := json.Marshal(user)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't marshal user data to JSON", http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		_, err = w.Write(userJson)
-		if err != nil {
-			util.ReportHttpError(err, w, "couldn't write user JSON data", http.StatusInternalServerError)
-			return
-		}
-
-	default:
-		w.WriteHeader(http.StatusMethodNotAllowed)
+		Logging(nextHandler)
 	}
 }
 

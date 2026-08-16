@@ -15,18 +15,13 @@ type HomepageCalendarData = map[int][]models.Friend
 
 func Home(w http.ResponseWriter, req *http.Request) {
 
-	user_id, err := validateSession(req)
-	if err != nil {
-		http.Redirect(w, req, "/login", http.StatusFound)
-	}
-
 	switch req.Method {
 
 	case http.MethodGet:
 		data := struct {
 			Title    string
 			Username string
-		}{Title: "Home | Rolladex", Username: user_id}
+		}{Title: "Home | Rolladex", Username: "undefined user"}
 
 		templating.RenderAppPage(w, "web/template/pages/Home.html", data)
 
