@@ -8,7 +8,6 @@ import (
 	"os"
 	"rolladex/internal/util"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
@@ -27,11 +26,6 @@ var (
 
 func InitializeDB() error {
 	log.Println("Connecting to Postgresql...")
-	var err error
-
-	// Optional, in the event that the environment variables
-	// aren't alreay instantiated in the Docker container
-	_ = godotenv.Load("../.env")
 
 	var (
 		username string = os.Getenv("DB_USERNAME")
@@ -41,22 +35,23 @@ func InitializeDB() error {
 		dbName   string = os.Getenv("DB_NAME")
 
 		dsn string = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable", username, password, dbHost, dbPort, dbName)
+
+		err error
 	)
 
 	if username == "" {
 		log.Println("Warning: DB_USERNAME is empty. Connection might fail.")
 	}
 
-	// Open (or create) the SQLite database
 	DB, err = sql.Open("postgres", dsn)
 	if err != nil {
-		return fmt.Errorf("failed to open database: %w", err)
+		return fmt.Errorf("open database connection failed: %w", err)
 	}
 
-	// Check if the database is reachable
+	// Verify database connection
 	err = DB.Ping()
 	if err != nil {
-		return fmt.Errorf("failed to reach database: %w", err)
+		return fmt.Errorf("verify database connection failed: %w", err)
 	}
 	log.Println("Database connection successful.")
 
