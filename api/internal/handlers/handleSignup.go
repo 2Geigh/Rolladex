@@ -41,7 +41,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		http.Redirect(w, req, "/login", http.StatusOK)
+		http.Redirect(w, req, "/login", http.StatusSeeOther)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
