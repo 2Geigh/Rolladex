@@ -32,7 +32,7 @@ func main() {
 	http.HandleFunc("/logout", middleware.Logging(handlers.Logout))
 
 	// Protected routes
-	http.HandleFunc("/home", middleware.SessionValidation(handlers.Home))
+	http.HandleFunc("/home", middleware.Logging(middleware.SessionValidation(handlers.Home)))
 
 	// Database
 	err := database.InitializeDB()

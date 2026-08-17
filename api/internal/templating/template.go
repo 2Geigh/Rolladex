@@ -7,26 +7,26 @@ import (
 )
 
 var (
-	unprotectedTemplates = []string{
-		"web/template/partials/head.html",
+	unprotectedPageTemplates = []string{
 		"web/template/layouts/base.html",
-		"web/template/partials/Footer.html",
-		"web/template/partials/Navbar/Navbar.html",
-	}
-	protectedTemplates = []string{
 		"web/template/partials/head.html",
-		"web/template/layouts/base_PROTECTED.html",
+		"web/template/partials/Navbar/Navbar.html",
 		"web/template/partials/Footer.html",
+	}
+	protectedPageTemplates = []string{
+		"web/template/layouts/base_PROTECTED.html",
+		"web/template/partials/head.html",
 		"web/template/partials/Navbar/Navbar_PROTECTED.html",
+		"web/template/partials/Footer.html",
 	}
 )
 
 func RenderUnprotectedPage(w http.ResponseWriter, page_path string, data any) error {
-	files := append(unprotectedTemplates, page_path)
+	files := append(unprotectedPageTemplates, page_path)
 
 	tmpl, err := template.ParseFiles(files...)
 	if err != nil {
-
+		return fmt.Errorf("parse template files failed: %w", err)
 	}
 
 	err = tmpl.ExecuteTemplate(w, "base", data)
@@ -38,11 +38,11 @@ func RenderUnprotectedPage(w http.ResponseWriter, page_path string, data any) er
 }
 
 func RenderProtectedPage(w http.ResponseWriter, page_path string, data any) error {
-	files := append(protectedTemplates, page_path)
+	files := append(protectedPageTemplates, page_path)
 
 	tmpl, err := template.ParseFiles(files...)
 	if err != nil {
-
+		return fmt.Errorf("parse template files failed: %w", err)
 	}
 
 	err = tmpl.ExecuteTemplate(w, "base", data)

@@ -30,7 +30,7 @@ func SessionValidation(nextHandler http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		Logging(nextHandler)
+		nextHandler.ServeHTTP(w, req)
 	}
 }
 

@@ -2,12 +2,9 @@ package handlers
 
 import (
 	"net/http"
-	"rolladex/internal/models"
 	"rolladex/internal/templating"
 	"rolladex/internal/util"
 )
-
-type HomepageCalendarData = map[int][]models.Friend
 
 func Home(w http.ResponseWriter, req *http.Request) {
 
