@@ -15,7 +15,7 @@ const Footer = () => {
 		<>
 			<nav className="footer">
 				<span className="copyrightStatement">
-					Developed with love by{" "}
+					Developed with love by&nbsp;
 					<a
 						href="https://nicholasgarcia.com"
 						target="blank_"
