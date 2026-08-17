@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"net/http"
 	"rolladex/internal/database"
 	"rolladex/internal/templating"
@@ -110,35 +111,42 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("salt password failed: %w", err)
 	}
 
-	passwordHash, err = util.HashPassword(signupData.password + passwordSalt)
+	saltedPassword := signupData.password + passwordSalt
+	passwordHash, err = util.HashPassword(saltedPassword)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("hash salted password failed: %w", err)
 	}
 
-	// tx, err := database.DB.Begin()
-	// if err != nil {
-	// 	return http.StatusInternalServerError, fmt.Errorf("begin tx: %w", err)
-	// }
-	// defer tx.Rollback()
-	// stmt, err := tx.Prepare("INSERT INTO Users (username, passwordHash, passwordSalt) VALUES (?, ?, ?)")
-	// if err != nil {
-	// 	return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %w", err)
-	// }
-	// defer stmt.Close()
-	// result, err := stmt.Exec(signupData.username, passwordHash, passwordSalt)
-	// if err != nil {
-	// 	return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %v", err)
-	// }
-	// rowsAffected, err := result.RowsAffected()
-	// if err != nil {
-	// 	return http.StatusInternalServerError, err
-	// }
-	// err = tx.Commit()
-	// if err != nil {
-	// 	return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
-	// }
+	// We're wrapping the insert in a transaction
+	// just in case someone happens to be deleting
+	// a user of the same name at the same time
+	// or some other conflict like that we wan't to
+	// protect against #thinkingDefensively
 
-	// log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("begin tx: %w", err)
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`INSERT INTO Users (username, passwordHash, passwordSalt) VALUES ($1, $2, $3);`)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("prepare user database insertion statement failed: %w", err)
+	}
+	defer stmt.Close()
+	result, err := stmt.Exec(signupData.username, passwordHash, passwordSalt)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("execute user database insertion statement failed: %v", err)
+	}
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("commit user database insertion transaction failed: %w", err)
+	}
+
+	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
 	return http.StatusOK, err
 }
 
@@ -149,7 +157,7 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 		err   error
 	)
 
-	stmt, err := DB.Prepare("SELECT COUNT(*) FROM Users WHERE username = ?")
+	stmt, err := DB.Prepare(`SELECT COUNT(*) FROM Users WHERE username = $1;`)
 	if err != nil {
 		return false, fmt.Errorf("failed to prepare SQL statement: %v", err)
 	}

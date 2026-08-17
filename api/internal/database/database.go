@@ -9,6 +9,7 @@ import (
 	"rolladex/internal/util"
 
 	_ "github.com/lib/pq"
+	"github.com/pressly/goose/v3"
 )
 
 type SqlId interface {
@@ -55,36 +56,37 @@ func InitializeDB() error {
 	}
 	log.Println("Database connection successful.")
 
-	// // Run Goose Migrations
-	// if err := runMigrations(); err != nil {
-	// 	return fmt.Errorf("run migrations failed: %w", err)
-	// }
-	// log.Println("Database migration successful.")
+	if err := runMigrations(); err != nil {
+		return fmt.Errorf("run migrations failed: %w", err)
+	}
+	log.Println("Database migration successful.")
 
-	// // Password update logic for the seed template/testing users
-	// if err := updateSeedPasswords(); err != nil {
-	// 	log.Printf("Warning: Seed password update skipped or failed: %v", err)
-	// }
+	// Password update logic for the seed template/testing users
+	if err := updateSeedPasswords(); err != nil {
+		log.Printf("Warning: Seed password update skipped or failed: %v", err)
+	}
 
 	return nil
 }
 
-// func runMigrations() error {
-// 	log.Println("Running migrations...")
+func runMigrations() error {
+	log.Println("Running migrations...")
 
-// 	goose.SetBaseFS(embedMigrations)
+	goose.SetBaseFS(embedMigrations)
 
-// 	if err := goose.SetDialect("mysql"); err != nil {
-// 		return fmt.Errorf("goose set SQL dialect failed: %w", err)
-// 	}
+	err := goose.SetDialect("postgres")
+	if err != nil {
+		return fmt.Errorf("goose set SQL dialect failed: %w", err)
+	}
 
-// 	// This runs all migrations in the 'migrations' directory
-// 	if err := goose.Up(DB, "migrations"); err != nil {
-// 		return fmt.Errorf("goose up failed: %w", err)
-// 	}
+	// This runs all migrations in the 'migrations' directory
+	err = goose.Up(DB, "migrations")
+	if err != nil {
+		return fmt.Errorf("goose up (execute migrations) failed: %w", err)
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
 func updateSeedPasswords() error {
 	var (
@@ -120,8 +122,8 @@ func updateSeedPasswords() error {
 
 		result, err := tx.Exec(`
 			UPDATE Users
-			SET passwordHash = ?, passwordSalt = ?
-			WHERE username = ?`, passwordHash, passwordSalt, user.username)
+			SET passwordHash = $1, passwordSalt = $2
+			WHERE username = $3`, passwordHash, passwordSalt, user.username)
 		if err != nil {
 			return err
 		}
