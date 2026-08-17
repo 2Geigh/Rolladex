@@ -3,7 +3,6 @@ package handlers
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"rolladex/internal/database"
 	"rolladex/internal/templating"
@@ -108,38 +107,38 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 
 	passwordSalt, err = util.GenerateSalt(util.SaltLength)
 	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("could not salt password: %w", err)
+		return http.StatusInternalServerError, fmt.Errorf("salt password failed: %w", err)
 	}
 
 	passwordHash, err = util.HashPassword(signupData.password + passwordSalt)
 	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("could not hash salted password: %w", err)
+		return http.StatusInternalServerError, fmt.Errorf("hash salted password failed: %w", err)
 	}
 
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("begin tx: %w", err)
-	}
-	defer tx.Rollback()
-	stmt, err := tx.Prepare("INSERT INTO Users (username, passwordHash, passwordSalt) VALUES (?, ?, ?)")
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %w", err)
-	}
-	defer stmt.Close()
-	result, err := stmt.Exec(signupData.username, passwordHash, passwordSalt)
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %v", err)
-	}
-	rowsAffected, err := result.RowsAffected()
-	if err != nil {
-		return http.StatusInternalServerError, err
-	}
-	err = tx.Commit()
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
-	}
+	// tx, err := database.DB.Begin()
+	// if err != nil {
+	// 	return http.StatusInternalServerError, fmt.Errorf("begin tx: %w", err)
+	// }
+	// defer tx.Rollback()
+	// stmt, err := tx.Prepare("INSERT INTO Users (username, passwordHash, passwordSalt) VALUES (?, ?, ?)")
+	// if err != nil {
+	// 	return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %w", err)
+	// }
+	// defer stmt.Close()
+	// result, err := stmt.Exec(signupData.username, passwordHash, passwordSalt)
+	// if err != nil {
+	// 	return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %v", err)
+	// }
+	// rowsAffected, err := result.RowsAffected()
+	// if err != nil {
+	// 	return http.StatusInternalServerError, err
+	// }
+	// err = tx.Commit()
+	// if err != nil {
+	// 	return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
+	// }
 
-	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
+	// log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
 	return http.StatusOK, err
 }
 
