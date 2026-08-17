@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"database/sql"
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"rolladex/internal/database"
@@ -13,8 +11,10 @@ import (
 )
 
 type signupFormData struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	username              string
+	password              string
+	agreedToTOS           bool
+	agreedToPrivacyPolicy bool
 }
 
 func Signup(w http.ResponseWriter, req *http.Request) {
@@ -34,7 +34,14 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 		}
 
 	case http.MethodPost:
-		createUser(w, req)
+		statusCode, err := createUser(req)
+		if err != nil {
+			w.WriteHeader(statusCode)
+			fmt.Fprint(w, err)
+			return
+		}
+
+		http.Redirect(w, req, "/login", http.StatusOK)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -42,36 +49,54 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func createUser(w http.ResponseWriter, req *http.Request) {
-	reqBody, err := io.ReadAll(req.Body)
+func createUser(req *http.Request) (int, error) {
+
+	err := req.ParseForm()
 	if err != nil {
-		util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
-		return
+		return http.StatusInternalServerError, fmt.Errorf("parse singup form failed: %w", err)
 	}
 
-	var signupData signupFormData
-	err = json.Unmarshal(reqBody, &signupData)
-	if err != nil {
-		util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
-		return
+	signupData := signupFormData{
+		username:              req.Form["username"][0],
+		password:              req.Form["password"][0],
+		agreedToTOS:           req.Form["tos-agree"][0] == "on",
+		agreedToPrivacyPolicy: req.Form["privacy-agree"][0] == "on",
 	}
 
-	if len(signupData.Username) > 255 {
-		util.ReportHttpError(fmt.Errorf("inputted username too long"), w, "username can't be longer than 255 characters", http.StatusBadRequest)
-		return
+	if !signupData.agreedToPrivacyPolicy {
+		return http.StatusBadRequest, fmt.Errorf("private policy agreement required")
 	}
-	if len(signupData.Password) > 255 {
-		util.ReportHttpError(fmt.Errorf("inputted password too long"), w, "password can't be longer than 255 characters", http.StatusBadRequest)
-		return
+
+	if !signupData.agreedToTOS {
+		return http.StatusBadRequest, fmt.Errorf("terms of service agreement required")
+	}
+
+	const (
+		maxPasswordLength = 255
+		maxUsernameLength = 255
+	)
+
+	if len(signupData.username) > maxUsernameLength {
+		return http.StatusRequestEntityTooLarge, fmt.Errorf("inputted username too long (max %d characters)", maxUsernameLength)
+	}
+	if len(signupData.password) > maxPasswordLength {
+		return http.StatusRequestEntityTooLarge, fmt.Errorf("inputted password too long (max %d characters)", maxPasswordLength)
+	}
+
+	userExists, err := UserExists(database.DB, signupData.username)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("failed to verify user %s exists in database: %w", signupData.username, err)
+	}
+	if userExists {
+		return http.StatusConflict, fmt.Errorf("username %s already taken", signupData.username)
 	}
 
 	statusCode, err := insertUserIntoDB(signupData)
 	if err != nil {
-		util.ReportHttpError(err, w, "couldn't create user", statusCode)
-		return
+		return statusCode, fmt.Errorf("insert user data into database failed: %w", err)
 	}
 
-	w.WriteHeader(http.StatusOK)
+	return http.StatusOK, nil
 }
 
 func insertUserIntoDB(signupData signupFormData) (int, error) {
@@ -81,20 +106,12 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		err          error
 	)
 
-	userExists, err := UserExists(database.DB, signupData.Username)
-	if err != nil {
-		return http.StatusInternalServerError, fmt.Errorf("failed to check if user already exists in database: %w", err)
-	}
-	if userExists {
-		return http.StatusConflict, fmt.Errorf("username already taken")
-	}
-
 	passwordSalt, err = util.GenerateSalt(util.SaltLength)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not salt password: %w", err)
 	}
 
-	passwordHash, err = util.HashPassword(signupData.Password + passwordSalt)
+	passwordHash, err = util.HashPassword(signupData.password + passwordSalt)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("could not hash salted password: %w", err)
 	}
@@ -109,7 +126,7 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %w", err)
 	}
 	defer stmt.Close()
-	result, err := stmt.Exec(signupData.Username, passwordHash, passwordSalt)
+	result, err := stmt.Exec(signupData.username, passwordHash, passwordSalt)
 	if err != nil {
 		return http.StatusInternalServerError, fmt.Errorf("failed to add user to database: %v", err)
 	}
@@ -122,7 +139,7 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("could not commit transaction: %w", err)
 	}
 
-	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.Username, rowsAffected)
+	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
 	return http.StatusOK, err
 }
 
@@ -133,14 +150,12 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 		err   error
 	)
 
-	// Prepare SQL statement
 	stmt, err := DB.Prepare("SELECT COUNT(*) FROM Users WHERE username = ?")
 	if err != nil {
 		return false, fmt.Errorf("failed to prepare SQL statement: %v", err)
 	}
 	defer stmt.Close()
 
-	// Execute the query
 	err = stmt.QueryRow(username).Scan(&count)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -150,6 +165,5 @@ func UserExists(DB *sql.DB, username string) (bool, error) {
 		return false, fmt.Errorf("failed to execute query: %v", err)
 	}
 
-	// Check if count is greater than 0
 	return count > 0, nil
 }
