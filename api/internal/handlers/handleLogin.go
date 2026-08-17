@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"rolladex/internal/database"
@@ -23,8 +21,8 @@ var (
 )
 
 type loginFormData struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	username string
+	password string
 }
 
 func Login(w http.ResponseWriter, req *http.Request) {
@@ -41,7 +39,14 @@ func Login(w http.ResponseWriter, req *http.Request) {
 		}
 
 	case http.MethodPost:
-		attemptLogin(w, req)
+		statusCode, err := attemptLogin(w, req)
+		if err != nil {
+			w.WriteHeader(statusCode)
+			fmt.Fprint(w, err)
+			return
+		}
+
+		http.Redirect(w, req, "/home", http.StatusSeeOther)
 
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -49,31 +54,24 @@ func Login(w http.ResponseWriter, req *http.Request) {
 
 }
 
-func attemptLogin(w http.ResponseWriter, req *http.Request) {
-	reqBody, err := io.ReadAll(req.Body)
+func attemptLogin(w http.ResponseWriter, req *http.Request) (int, error) {
+	err := req.ParseForm()
 	if err != nil {
-		util.ReportHttpError(err, w, "failed to read request body", http.StatusInternalServerError)
-		return
+		return http.StatusInternalServerError, fmt.Errorf("parse singup form failed: %w", err)
 	}
 
-	var loginFormData loginFormData
-	err = json.Unmarshal(reqBody, &loginFormData)
-	if err != nil {
-		util.ReportHttpError(err, w, "failed to unmarshall request body JSON", http.StatusInternalServerError)
-		return
-	}
+	loginFormData := loginFormData{username: req.Form["username"][0], password: req.Form["password"][0]}
 
-	loginStatusCode, err := authenticateUser(loginFormData.Username, loginFormData.Password)
+	loginStatusCode, err := authenticateUser(loginFormData.username, loginFormData.password)
 	if err != nil || loginStatusCode >= 400 {
-		util.ReportHttpError(err, w, fmt.Sprintf("%s couldn't log in", loginFormData.Username), loginStatusCode)
-		return
+		return http.StatusInternalServerError, fmt.Errorf("login user %s failed: %w", loginFormData.username, err)
 	}
 
-	sessionToken, err := createSession(loginFormData.Username)
+	sessionToken, err := createSession(loginFormData.username)
 	if err != nil {
-		util.ReportHttpError(err, w, "could not create login session", http.StatusInternalServerError)
-		return
+		return http.StatusInternalServerError, fmt.Errorf("create login session for user %s failed: %w", loginFormData.username, err)
 	}
+
 	http.SetCookie(w, &http.Cookie{
 		Name:     middleware.LoginSessionCookieName,
 		Value:    sessionToken,
@@ -84,7 +82,7 @@ func attemptLogin(w http.ResponseWriter, req *http.Request) {
 		SameSite: http.SameSiteLaxMode,
 	})
 
-	w.WriteHeader(http.StatusOK)
+	return loginStatusCode, err
 }
 
 func authenticateUser(username string, passwordFromClient string) (int, error) {
@@ -131,7 +129,7 @@ func getPasswordHashAndSalt(username string) (string, string, error) {
 	defer tx.Rollback() // The rollback will be ignored if the tx has been committed later in the function.
 
 	// Use a single statement to fetch both passwordHash and passwordSalt
-	stmt, err := tx.Prepare("SELECT passwordHash, passwordSalt FROM Users WHERE Username = ?")
+	stmt, err := tx.Prepare("SELECT passwordHash, passwordSalt FROM Users WHERE Username = $1")
 	if err != nil {
 		return "", "", fmt.Errorf("failed to prepare statement: %w", err)
 	}
@@ -158,13 +156,13 @@ func createSession(username string) (string, error) {
 	)
 
 	// Get user_id from username
-	stmt, err := database.DB.Prepare("SELECT id FROM Users WHERE username = ?")
+	stmt, err := database.DB.Prepare("SELECT id FROM Users WHERE username = $1")
 	if err != nil {
-		return token, fmt.Errorf("sql statement preparation for user_id selection via username failed: %v", err)
+		return token, fmt.Errorf("statement preparation for user_id selection via username failed: %v", err)
 	}
 	err = stmt.QueryRow(username).Scan(&user_id)
 	if err != nil {
-		return token, fmt.Errorf("could not scan user_id from database to local variable user_id: %v", err)
+		return token, fmt.Errorf("scan user_id from database to local variable user_id failed: %v", err)
 	}
 	stmt.Close()
 
@@ -172,13 +170,13 @@ func createSession(username string) (string, error) {
 	tokenLength := 255 // Because we wanna store this as VARCHAR(255) in database
 	token, err = models.GenerateSessionToken(int64(tokenLength))
 	if err != nil {
-		return token, fmt.Errorf("couldn't create session token: %w", err)
+		return token, fmt.Errorf("create session token failed: %w", err)
 	}
 
 	// Create session row
-	stmt, err = database.DB.Prepare("INSERT INTO Sessions (user_id, session_token, expires_at, is_revoked) VALUES (?, ?, ?, ?)")
+	stmt, err = database.DB.Prepare(`INSERT INTO Sessions (user_id, session_token, expires_at, is_revoked) VALUES ($1, $2, $3, $4)`)
 	if err != nil {
-		return token, fmt.Errorf("sql statement preparation for creating session failed: %w", err)
+		return token, fmt.Errorf("prepare statement for create session failed: %w", err)
 	}
 	var (
 		isRevoked = false
@@ -187,7 +185,7 @@ func createSession(username string) (string, error) {
 	)
 	result, err := stmt.Exec(user_id, token, expiresAt, isRevoked)
 	if err != nil {
-		return token, fmt.Errorf("could not create session: %w", err)
+		return token, fmt.Errorf("create session failed: %w", err)
 	}
 	rowsAffected, _ := result.RowsAffected()
 	stmt.Close()

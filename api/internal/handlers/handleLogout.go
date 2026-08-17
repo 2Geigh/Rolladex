@@ -66,14 +66,14 @@ func deleteSession(sessionToken string) error {
 	err = tx.QueryRow(`
         SELECT u.username FROM Sessions s 
         JOIN Users u ON s.user_id = u.id 
-        WHERE s.session_token = ?`, sessionToken).Scan(&username)
+        WHERE s.session_token = $1`, sessionToken).Scan(&username)
 	if err != nil {
 		return nil // Returning an actual error here is kinda pointless because that means they're already logged out / weren't even signed in, meaning its not really a failure
 		// return fmt.Errorf("could not scan username from database to local variable username: %w", err)
 	}
 
 	// Delete session row in database
-	result, err = tx.Exec("DELETE FROM Sessions WHERE session_token = ?", sessionToken)
+	result, err = tx.Exec("DELETE FROM Sessions WHERE session_token = $1", sessionToken)
 	if err != nil {
 		return fmt.Errorf("could not delete session: %w", err)
 	}

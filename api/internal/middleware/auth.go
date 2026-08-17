@@ -57,7 +57,7 @@ func validateSession(req *http.Request) (string, error) {
 		SELECT u.id
 		FROM Sessions s
 		JOIN Users u ON s.user_id = u.id
-		WHERE s.session_token = ?;`,
+		WHERE s.session_token = $1;`,
 	)
 	if err != nil {
 		return user_id, fmt.Errorf("couldn't prepare statement: %w", err)
@@ -95,7 +95,7 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	stmt, err := tx.Prepare(`
 		SELECT expires_at, is_revoked
 		FROM Sessions
-		WHERE session_token = ?`)
+		WHERE session_token = $1`)
 	if err != nil {
 		return fmt.Errorf("failed to prepare SQL statement: %w", err)
 	}
@@ -149,7 +149,7 @@ func getSessionUser(user_id string) (models.User, error) {
 	stmt, err := tx.Prepare(`
 		SELECT username, email, profile_image_id, birthday_month, birthday_day, created_at
 		FROM Users
-		WHERE id = ?;`,
+		WHERE id = $1;`,
 	)
 	if err != nil {
 		return user, fmt.Errorf("couldn't prepare statement: %w", err)

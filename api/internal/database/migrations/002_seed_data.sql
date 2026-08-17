@@ -171,6 +171,17 @@ VALUES
   (164, '/images/friend_149_profile.png'),
   (165, '/images/friend_150_profile.png');
 
+SELECT
+  setval(
+    pg_get_serial_sequence('Images', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Images
+    )
+  );
+
 ------------------------------------------------------------
 -- NotificationPreferences
 ------------------------------------------------------------
@@ -181,6 +192,17 @@ VALUES
   (2, false, false, true),
   (3, false, false, false),
   (4, true, true, true);
+
+SELECT
+  setval(
+    pg_get_serial_sequence('NotificationPreferences', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        NotificationPreferences
+    )
+  );
 
 ------------------------------------------------------------
 -- Users
@@ -236,6 +258,17 @@ VALUES
     15,
     12,
     31
+  );
+
+SELECT
+  setval(
+    pg_get_serial_sequence('Users', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Users
+    )
   );
 
 ------------------------------------------------------------
@@ -419,6 +452,17 @@ UPDATE Friends
 SET
   created_at = '2023-01-01'::TIMESTAMP + (MOD(id * 37, 730) * INTERVAL '1 day');
 
+SELECT
+  setval(
+    pg_get_serial_sequence('Friends', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Friends
+    )
+  );
+
 ------------------------------------------------------------
 -- Relationships
 ------------------------------------------------------------
@@ -591,6 +635,17 @@ VALUES
   (164, 4, 162, 2),
   (165, 4, 163, 1);
 
+SELECT
+  setval(
+    pg_get_serial_sequence('Relationships', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Relationships
+    )
+  );
+
 ------------------------------------------------------------
 -- Interactions
 ------------------------------------------------------------
@@ -667,6 +722,17 @@ VALUES
     'meetup',
     'The Testing Grounds',
     'Mega Tester Meetup'
+  );
+
+SELECT
+  setval(
+    pg_get_serial_sequence('Interactions', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Interactions
+    )
   );
 
 ------------------------------------------------------------
@@ -844,6 +910,17 @@ VALUES
   (167, 8, 162),
   (168, 8, 163);
 
+SELECT
+  setval(
+    pg_get_serial_sequence('InteractionsAttendees', 'id'),
+    (
+      SELECT
+        COALESCE(MAX(id), 0)
+      FROM
+        Users
+    )
+  );
+
 ------------------------------------------------------------
 -- UserSettings
 ------------------------------------------------------------
@@ -855,49 +932,14 @@ VALUES
   (3, 3, 3, NULL),
   (4, 4, 4, 'dark');
 
-------------------------------------------------------------
--- Sessions
-------------------------------------------------------------
-INSERT INTO
-  Sessions (
-    id,
-    user_id,
-    session_token,
-    expires_at,
-    is_revoked
-  )
-VALUES
-  (
-    1,
-    1,
-    'SESSION_TOKEN_JESUS_ABC',
-    '2026-01-01',
-    false
-  ),
-  (
-    2,
-    2,
-    'SESSION_TOKEN_ALICE_DEF',
-    '2026-06-01',
-    false
-  ),
-  (3, 3, 'SESSION_TOKEN_BOB_GHI', '2026-03-01', true),
-  (
-    4,
-    4,
-    'SESSION_TOKEN_MAXTESTER_XYZ',
-    '2026-12-31',
-    false
-  );
-
 SELECT
   setval(
-    pg_get_serial_sequence('Users', 'id'),
+    pg_get_serial_sequence('UserSettings', 'id'),
     (
       SELECT
         COALESCE(MAX(id), 0)
       FROM
-        Users
+        UserSettings
     )
   );
 
