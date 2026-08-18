@@ -41,8 +41,7 @@ func Login(w http.ResponseWriter, req *http.Request) {
 	case http.MethodPost:
 		statusCode, err := attemptLogin(w, req)
 		if err != nil {
-			w.WriteHeader(statusCode)
-			fmt.Fprint(w, err)
+			util.ReportHttpError(err, w, "login attempt failed", statusCode)
 			return
 		}
 
@@ -111,7 +110,7 @@ func authenticateUser(username string, passwordFromClient string) (int, error) {
 		return http.StatusBadRequest, fmt.Errorf("incorrect password: %w", err)
 	}
 
-	log.Printf("\033[3m%s\033[0m was authenticated", username)
+	log.Printf("%s was authenticated", util.Italicize(username))
 	return http.StatusOK, err
 }
 
@@ -190,6 +189,6 @@ func createSession(username string) (string, error) {
 	rowsAffected, _ := result.RowsAffected()
 	stmt.Close()
 
-	log.Printf("\033[3m%s\033[3m logged in, affecting %d row(s)", username, rowsAffected)
+	log.Printf("%s logged in, affecting %d row(s)", util.Italicize(username), rowsAffected)
 	return token, err
 }

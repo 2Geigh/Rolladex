@@ -1,6 +1,9 @@
 package util
 
-import "unicode"
+import (
+	"fmt"
+	"unicode"
+)
 
 func IsEmpty(s string) bool {
 	for _, runeValue := range s {
@@ -9,4 +12,8 @@ func IsEmpty(s string) bool {
 		}
 	}
 	return true
+}
+
+func Italicize(s string) string {
+	return fmt.Sprintf("\033[3m%s\033[3m", s)
 }

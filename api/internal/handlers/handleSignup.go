@@ -33,8 +33,7 @@ func Signup(w http.ResponseWriter, req *http.Request) {
 	case http.MethodPost:
 		statusCode, err := createUser(req)
 		if err != nil {
-			w.WriteHeader(statusCode)
-			fmt.Fprint(w, err)
+			util.ReportHttpError(err, w, "create user failed: %w", statusCode)
 			return
 		}
 
@@ -143,7 +142,7 @@ func insertUserIntoDB(signupData signupFormData) (int, error) {
 		return http.StatusInternalServerError, fmt.Errorf("commit user database insertion transaction failed: %w", err)
 	}
 
-	log.Printf("Registered user \033[3m%s\033[0m, affecting %d row(s)", signupData.username, rowsAffected)
+	log.Printf("Registered user %s, affecting %d row(s)", util.Italicize(signupData.username), rowsAffected)
 	return http.StatusOK, err
 }
 
