@@ -23,16 +23,17 @@ func main() {
 	godotenv.Load()
 
 	// Meta
-	http.HandleFunc("/", middleware.Logging(handlers.Root))
-	http.HandleFunc("/api_sanity_check", middleware.Logging(handlers.ApiSanityCheck))
+	http.HandleFunc("/", middleware.UnprotectedRouteMiddleware(handlers.Root))
+	http.HandleFunc("/*", middleware.UnprotectedRouteMiddleware(handlers.NotFound))
+	http.HandleFunc("/api_sanity_check", middleware.UnprotectedRouteMiddleware(handlers.ApiSanityCheck))
 
 	// Authentication
-	http.HandleFunc("/login", middleware.Logging(handlers.Login))
-	http.HandleFunc("/signup", middleware.Logging(handlers.Signup))
-	http.HandleFunc("/logout", middleware.Logging(handlers.Logout))
+	http.HandleFunc("/login", middleware.UnprotectedRouteMiddleware(handlers.Login))
+	http.HandleFunc("/signup", middleware.UnprotectedRouteMiddleware(handlers.Signup))
+	http.HandleFunc("/logout", middleware.UnprotectedRouteMiddleware(handlers.Logout))
 
 	// Protected routes
-	http.HandleFunc("/home", middleware.Logging(middleware.SessionValidation(handlers.Home)))
+	http.HandleFunc("/home", middleware.ProtectedRouteMiddleware(handlers.Home))
 
 	// Database
 	err := database.InitializeDB()
