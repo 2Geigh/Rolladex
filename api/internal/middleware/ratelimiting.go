@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"rolladex/internal/api"
 	"time"
-
-	"golang.org/x/time/rate"
 )
 
 func RateLimit(nextHandler http.Handler) http.HandlerFunc {
@@ -21,7 +19,7 @@ func RateLimit(nextHandler http.Handler) http.HandlerFunc {
 			// Fallback if SplitHostPort fails (e.g., no port present)
 			host = req.RemoteAddr
 		}
-		client := saveClient(host)
+		client := api.SaveClient(host)
 
 		api.ClientManagementMutex.Lock()
 		blocked := time.Now().Before(client.BlockedUntil)
@@ -47,39 +45,4 @@ func RateLimit(nextHandler http.Handler) http.HandlerFunc {
 		nextHandler.ServeHTTP(w, req)
 	}
 
-}
-
-func saveClient(ip string) *api.Client {
-	var (
-		rateLimit  rate.Limit = 10
-		burstLimit int        = 10
-	)
-
-	api.ClientManagementMutex.Lock()
-	defer api.ClientManagementMutex.Unlock()
-
-	client, clientExists := api.Clients[ip]
-	if clientExists {
-		client.LastSeen = time.Now()
-		return client
-	}
-
-	limiter := rate.NewLimiter(rateLimit, burstLimit)
-	newClient := api.Client{Limiter: limiter}
-	api.Clients[ip] = &newClient
-	return &newClient
-}
-
-func removeStaleClients() {
-	for {
-		api.ClientManagementMutex.Lock()
-		for ip, client := range api.Clients {
-			if time.Since(client.LastSeen) > 24*time.Hour {
-				delete(api.Clients, ip)
-			}
-		}
-		api.ClientManagementMutex.Unlock()
-
-		time.Sleep(15 * time.Minute)
-	}
 }

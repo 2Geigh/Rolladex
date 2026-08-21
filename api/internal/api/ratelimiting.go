@@ -19,10 +19,8 @@ var (
 	ClientManagementMutex sync.Mutex // Used as a locking mechanism to prevent race conditions
 )
 
-func CleanupClients() {
+func RemoveStaleClients() {
 	for {
-		time.Sleep(15 * time.Minute)
-
 		ClientManagementMutex.Lock()
 		for ip, client := range Clients {
 			if time.Since(client.LastSeen) > 24*time.Hour {
@@ -30,5 +28,28 @@ func CleanupClients() {
 			}
 		}
 		ClientManagementMutex.Unlock()
+
+		time.Sleep(15 * time.Minute)
 	}
+}
+
+func SaveClient(ip string) *Client {
+	var (
+		rateLimit  rate.Limit = 10
+		burstLimit int        = 10
+	)
+
+	ClientManagementMutex.Lock()
+	defer ClientManagementMutex.Unlock()
+
+	client, clientExists := Clients[ip]
+	if clientExists {
+		client.LastSeen = time.Now()
+		return client
+	}
+
+	limiter := rate.NewLimiter(rateLimit, burstLimit)
+	newClient := Client{Limiter: limiter}
+	Clients[ip] = &newClient
+	return &newClient
 }

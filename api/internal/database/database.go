@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"rolladex/internal/util"
+	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -67,6 +68,16 @@ func InitializeDB() error {
 	}
 
 	return nil
+}
+
+func ReportDatabaseHealth() {
+	for {
+		stats := DB.Stats()
+		log.Printf(`[DB STATS] InUse: %d | Idle: %d | Open: %d | WaitCount: %d`,
+			stats.InUse, stats.Idle, stats.OpenConnections, stats.WaitCount)
+
+		time.Sleep(5 * time.Second)
+	}
 }
 
 func runMigrations() error {

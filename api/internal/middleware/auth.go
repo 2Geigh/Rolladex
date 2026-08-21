@@ -34,6 +34,68 @@ func SessionValidation(nextHandler http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func getSessionUser(user_id string) (models.User, error) {
+	var (
+		user models.User
+
+		username         sql.NullString
+		email            sql.NullString
+		profile_image_id sql.NullInt64
+		birthday_month   sql.NullInt64
+		birthday_day     sql.NullInt64
+		created_at       sql.NullTime
+
+		err error
+	)
+
+	user_id_int, err := strconv.ParseInt(user_id, 10, 64)
+	if err != nil {
+		return user, err
+	}
+	user.ID = uint(user_id_int)
+
+	tx, err := database.DB.Begin()
+	if err != nil {
+		return user, fmt.Errorf("couldn't begin transaction: %w", err)
+	}
+	defer tx.Rollback()
+	stmt, err := tx.Prepare(`
+		SELECT username, email, profile_image_id, birthday_month, birthday_day, created_at
+		FROM Users
+		WHERE id = $1;`,
+	)
+	if err != nil {
+		return user, fmt.Errorf("couldn't prepare statement: %w", err)
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday_month, &birthday_day, &created_at)
+	if err != nil {
+		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
+	}
+
+	if username.Valid {
+		user.Username = username.String
+	}
+	if email.Valid {
+		user.Email = models.Email(email.String)
+	}
+	if profile_image_id.Valid {
+		user.ProfileImageID = uint(profile_image_id.Int64)
+	}
+	if birthday_month.Valid {
+		user.BirthdayMonth = int(birthday_month.Int64)
+	}
+	if birthday_day.Valid {
+		user.BirthdayDay = int(birthday_day.Int64)
+	}
+	if created_at.Valid {
+		user.CreatedAt = created_at.Time
+	}
+
+	tx.Commit()
+	return user, err
+}
+
 func validateSession(req *http.Request) (string, error) {
 	var (
 		sessionCookie *http.Cookie
@@ -119,66 +181,4 @@ func validateSessionCookie(loginCookie *http.Cookie) error {
 	}
 
 	return err
-}
-
-func getSessionUser(user_id string) (models.User, error) {
-	var (
-		user models.User
-
-		username         sql.NullString
-		email            sql.NullString
-		profile_image_id sql.NullInt64
-		birthday_month   sql.NullInt64
-		birthday_day     sql.NullInt64
-		created_at       sql.NullTime
-
-		err error
-	)
-
-	user_id_int, err := strconv.ParseInt(user_id, 10, 64)
-	if err != nil {
-		return user, err
-	}
-	user.ID = uint(user_id_int)
-
-	tx, err := database.DB.Begin()
-	if err != nil {
-		return user, fmt.Errorf("couldn't begin transaction: %w", err)
-	}
-	defer tx.Rollback()
-	stmt, err := tx.Prepare(`
-		SELECT username, email, profile_image_id, birthday_month, birthday_day, created_at
-		FROM Users
-		WHERE id = $1;`,
-	)
-	if err != nil {
-		return user, fmt.Errorf("couldn't prepare statement: %w", err)
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(user_id).Scan(&username, &email, &profile_image_id, &birthday_month, &birthday_day, &created_at)
-	if err != nil {
-		return user, fmt.Errorf("couldn't scan database entries to local server-side user variable: %w", err)
-	}
-
-	if username.Valid {
-		user.Username = username.String
-	}
-	if email.Valid {
-		user.Email = models.Email(email.String)
-	}
-	if profile_image_id.Valid {
-		user.ProfileImageID = uint(profile_image_id.Int64)
-	}
-	if birthday_month.Valid {
-		user.BirthdayMonth = int(birthday_month.Int64)
-	}
-	if birthday_day.Valid {
-		user.BirthdayDay = int(birthday_day.Int64)
-	}
-	if created_at.Valid {
-		user.CreatedAt = created_at.Time
-	}
-
-	tx.Commit()
-	return user, err
 }

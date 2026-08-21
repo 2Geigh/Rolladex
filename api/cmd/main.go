@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"rolladex/internal/api"
 	"rolladex/internal/database"
 	"rolladex/internal/handlers"
 	"rolladex/internal/middleware"
@@ -40,6 +41,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("couldn't initialize database connection: %v", err)
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
+
+	// API maintenance
+	go database.ReportDatabaseHealth()
+	go api.DeleteExpiredSessions()
+	go api.RemoveStaleClients()
 
 	// Server
 	log.Printf("Listening on %s (check the Docker Compose config what host machine port that maps to!)\n", address)
