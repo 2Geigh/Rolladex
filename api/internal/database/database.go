@@ -7,7 +7,6 @@ import (
 	"log"
 	"os"
 	"rolladex/internal/util"
-	"time"
 
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -50,7 +49,6 @@ func InitializeDB() error {
 		return fmt.Errorf("open database connection failed: %w", err)
 	}
 
-	// Verify database connection
 	err = DB.Ping()
 	if err != nil {
 		return fmt.Errorf("verify database connection failed: %w", err)
@@ -71,13 +69,13 @@ func InitializeDB() error {
 }
 
 func ReportDatabaseHealth() {
-	for {
-		stats := DB.Stats()
-		log.Printf(`[DB STATS] InUse: %d | Idle: %d | Open: %d | WaitCount: %d`,
-			stats.InUse, stats.Idle, stats.OpenConnections, stats.WaitCount)
+	// for {
+	stats := DB.Stats()
+	log.Printf(`[DB STATS] InUse: %d | Idle: %d | Open: %d | WaitCount: %d`,
+		stats.InUse, stats.Idle, stats.OpenConnections, stats.WaitCount)
 
-		time.Sleep(5 * time.Second)
-	}
+	// time.Sleep(5 * time.Second)
+	// }
 }
 
 func runMigrations() error {

@@ -8,11 +8,19 @@ import (
 	"rolladex/internal/database"
 	"rolladex/internal/handlers"
 	"rolladex/internal/middleware"
+	"rolladex/internal/util"
+	"time"
 
 	"github.com/joho/godotenv"
 )
 
+var (
+	ApiUptimeStart = time.Now()
+)
+
 func main() {
+	util.ApiUptimeStart = time.Now()
+
 	const (
 		listening_port int = 3001
 	)
@@ -26,7 +34,7 @@ func main() {
 	// Meta
 	http.HandleFunc("/", middleware.UnprotectedRouteMiddleware(handlers.Root))
 	http.HandleFunc("/*", middleware.UnprotectedRouteMiddleware(handlers.NotFound))
-	http.HandleFunc("/api_sanity_check", middleware.UnprotectedRouteMiddleware(handlers.ApiSanityCheck))
+	http.HandleFunc("/api/health", middleware.UnprotectedRouteMiddleware(handlers.ApiHealth))
 
 	// Authentication
 	http.HandleFunc("/login", middleware.UnprotectedRouteMiddleware(handlers.Login))
@@ -43,7 +51,6 @@ func main() {
 	} // database auto-closes on ctrl+c, so no need to manually defer database closing for HTTP servers
 
 	// API maintenance
-	go database.ReportDatabaseHealth()
 	go api.DeleteExpiredSessions()
 	go api.RemoveStaleClients()
 

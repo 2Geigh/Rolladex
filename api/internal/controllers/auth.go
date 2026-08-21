@@ -117,7 +117,6 @@ func createSession(username string) (string, error) {
 	if err != nil {
 		return token, fmt.Errorf("scan user_id from database to local variable user_id failed: %v", err)
 	}
-	stmt.Close()
 
 	// Create sesssion token
 	tokenLength := 255 // Because we wanna store this as VARCHAR(255) in database
@@ -211,6 +210,7 @@ func getPasswordHashAndSalt(username string) (string, string, error) {
 	if err != nil {
 		return "", "", fmt.Errorf("could not grab credentials for %s: %w", username, err)
 	}
+	defer stmt.Close()
 
 	err = tx.Commit()
 	if err != nil {

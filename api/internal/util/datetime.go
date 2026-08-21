@@ -32,7 +32,10 @@ func IsValidDate(date string) (bool, error) {
 
 }
 
-var DatetimeFormat string = "2006-01-02 15:04:05"
+var (
+	ApiUptimeStart time.Time
+	DatetimeFormat string = "2006-01-02 15:04:05"
+)
 
 func DateEqual(date1, date2 time.Time) bool {
 	y1, m1, d1 := date1.Date()
