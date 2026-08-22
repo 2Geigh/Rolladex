@@ -1,4 +1,4 @@
-# Rolladex
+# Rolladex 📇
 
 A webapp to help manage and maintain the relationships in your IRL social network.
 
