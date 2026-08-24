@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"rolladex/internal/controllers"
 	"rolladex/internal/middleware"
 	"rolladex/internal/models"
 	"rolladex/internal/templating"
@@ -24,14 +25,18 @@ func Home(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		// urgentFriends, err = controllers.GetUrgentFriends(userContext.User_id)
+		urgentFriends, err := controllers.GetUrgentFriends(userContext.User_id)
+		if err != nil {
+			util.ReportHttpError(err, w, "get urgent friends failed", http.StatusInternalServerError)
+			return
+		}
 
 		data := struct {
 			Title           string
 			Username        string
 			UrgentFriends   []models.Friend
 			TopThreeFriends []models.Friend
-		}{Title: "Home | Rolladex", Username: userContext.Username}
+		}{Title: "Home | Rolladex", Username: userContext.Username, UrgentFriends: urgentFriends}
 
 		err = templating.RenderProtectedPage(w, "web/template/pages/Home.html", data)
 		if err != nil {
