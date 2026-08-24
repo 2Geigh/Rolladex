@@ -2,21 +2,38 @@ package handlers
 
 import (
 	"net/http"
+	"rolladex/internal/middleware"
+	"rolladex/internal/models"
 	"rolladex/internal/templating"
 	"rolladex/internal/util"
 )
 
 func Home(w http.ResponseWriter, req *http.Request) {
-
 	switch req.Method {
 
 	case http.MethodGet:
-		data := struct {
-			Title    string
-			Username string
-		}{Title: "Home | Rolladex", Username: "undefined user"}
+		var (
+			// urgentFriends          []models.Friend
+			// threeMostRecentFriends []models.Friend
+			err error
+		)
 
-		err := templating.RenderProtectedPage(w, "web/template/pages/Home.html", data)
+		userContext, err := middleware.GetUserContext(req)
+		if err != nil {
+			util.ReportHttpError(err, w, "get user session context failed", http.StatusInternalServerError)
+			return
+		}
+
+		// urgentFriends, err = controllers.GetUrgentFriends(userContext.User_id)
+
+		data := struct {
+			Title           string
+			Username        string
+			UrgentFriends   []models.Friend
+			TopThreeFriends []models.Friend
+		}{Title: "Home | Rolladex", Username: userContext.Username}
+
+		err = templating.RenderProtectedPage(w, "web/template/pages/Home.html", data)
 		if err != nil {
 			util.ReportHttpError(err, w, "render page failed: %w", http.StatusInternalServerError)
 			return
