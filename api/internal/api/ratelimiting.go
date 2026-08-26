@@ -7,7 +7,6 @@ import (
 	"golang.org/x/time/rate"
 )
 
-// A type to hold each client's rate limiter
 type Client struct {
 	Limiter      *rate.Limiter
 	BlockedUntil time.Time

@@ -14,7 +14,6 @@ func Home(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodGet:
 		var (
-			// urgentFriends          []models.Friend
 			// threeMostRecentFriends []models.Friend
 			err error
 		)
