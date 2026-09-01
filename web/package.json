@@ -5,22 +5,29 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite --host 0.0.0.0",
-		"build": "tsc -b && vite build",
+		"build": "tsc -b && vite build && cap sync",
+		"build:android:apk": "node ./scripts/build/android/build-apk.ts",
+		"build:android:aab": "node ./scripts/build/android/build-aab.ts",
 		"lint": "eslint .",
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@capacitor/android": "^8.2.0",
+		"@capacitor/core": "^8.2.0",
+		"@capacitor/ios": "^8.2.0",
 		"@shadcn/ui": "^0.0.4",
 		"date-fns": "^4.1.0",
+		"dotenv": "^17.3.1",
 		"react": "^19.1.1",
 		"react-calendar": "^6.0.0",
 		"react-dom": "^19.1.1",
 		"react-router-dom": "^7.11.0"
 	},
 	"devDependencies": {
+		"@capacitor/cli": "^8.2.0",
 		"@eslint/js": "^9.36.0",
 		"@types/express": "^5.0.6",
-		"@types/node": "^24.10.1",
+		"@types/node": "^24.12.0",
 		"@types/react": "^19.1.16",
 		"@types/react-dom": "^19.1.9",
 		"@vitejs/plugin-react-swc": "^4.1.0",

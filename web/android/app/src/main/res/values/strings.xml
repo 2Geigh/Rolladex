@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Rolladex</string>
+    <string name="title_activity_main">Rolladex</string>
+    <string name="package_name">ca.rolladex.app</string>
+    <string name="custom_url_scheme">ca.rolladex.app</string>
+</resources>
